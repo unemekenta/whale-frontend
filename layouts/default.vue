@@ -103,9 +103,14 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          icon: 'mdi-checkbox-marked',
+          title: 'Tasks',
+          to: '/tasks'
+        },
+        {
+          icon: 'mdi-login-variant',
+          title: 'Login',
+          to: '/login'
         }
       ],
       miniVariant: false,

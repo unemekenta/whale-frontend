@@ -25,7 +25,10 @@
     },
     "types": [
       "@nuxt/types",
-      "@types/node"
+      "@types/node",
+      "@nuxtjs/axios",
+      "@nuxtjs/auth",
+      "@types/nuxtjs__auth"
     ]
   },
   "exclude": [
