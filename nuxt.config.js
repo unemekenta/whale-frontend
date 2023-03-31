@@ -65,7 +65,8 @@ export default {
           property: 'access_token'
         },
         user: {
-          property: false
+          property: false,
+          autoFetch: true
         },
         endpoints: {
           login: { url: '/api/v1/auth/sign_in', method: 'post', propertyName: 'access_token'},

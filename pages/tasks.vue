@@ -1,11 +1,11 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row justify="justify-space-between">
       <v-col cols="12" md="6">
         <h1>タスク一覧</h1>
       </v-col>
       <v-col cols="12" md="6">
-        <v-btn color="primary" class="mt-2 mt-md-0" @click="showTaskForm = true">タスク追加</v-btn>
+        <v-btn color="primary" @click="showTaskForm = true">タスク追加</v-btn>
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
@@ -71,7 +71,11 @@ export default class TaskList extends Vue {
   selectedTask: Task | null = null;
   taskForm = {
     title: '',
-    description: ''
+    description: '',
+    uid: '',
+    priority: '',
+    status: '',
+    deadline: ''
   };
   showTaskForm = false;
 
@@ -94,6 +98,8 @@ export default class TaskList extends Vue {
 
   async submitTask() {
     // タスクを追加する
+    const POST_TASK_API = "/api/v1/tasks"
+    
   }
 }
 
