@@ -5,6 +5,9 @@ import { AxiosResponse, AxiosError } from 'axios';
 export const accessor: Plugin = ({ $axios }): void => {
   initializeAxios($axios);
 
+  // axiosの共通設定
+  $axios.defaults.timeout = 10000
+
   $axios.onRequest(config => {
     config.headers.client = window.localStorage.getItem("client")
     config.headers["access-token"] = window.localStorage.getItem("access-token")
