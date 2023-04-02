@@ -5,17 +5,19 @@
         <h1>タスク一覧</h1>
       </v-col>
       <v-col cols="12" md="6">
-        <v-btn color="primary" @click="showTaskForm = true">タスク追加</v-btn>
+        <v-row justify="end">
+          <div class="ma-3" v-if="displaySuccessModal">
+            <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
+          </div>
+          <div class="ma-3" v-if="displayErrorModal">
+            <ErrorAlert :txt="errorModalTxt"/>
+          </div>
+          <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
+        </v-row>
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
     <v-row>
-      <div v-if="displaySuccessModal">
-        <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
-      </div>
-      <div v-if="displayErrorModal">
-        <ErrorAlert :txt="errorModalTxt"/>
-      </div>
       <v-col cols="12" v-if="tasks.length === 0">
         <p>現在、タスクはありません。</p>
       </v-col>
