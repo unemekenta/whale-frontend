@@ -29,8 +29,10 @@
               :key="task.id"
             >
               <v-list-item-content>
-                <v-list-item-title>{{ task.title }}</v-list-item-title>
-                <v-list-item-subtitle>{{ task.description }}</v-list-item-subtitle>
+                <nuxt-link :to="'/task/detail/' + task.id" class="text-decoration-none">
+                  <v-list-item-title>{{ task.title }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ task.description }}</v-list-item-subtitle>
+                </nuxt-link>
               </v-list-item-content>
               <v-list-item-action @click="editTask(task)">
                 <v-icon>mdi-pencil</v-icon>
