@@ -6,15 +6,15 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - whale-frontend',
-    title: 'whale-frontend',
+    titleTemplate: '%s - Book Share',
+    title: 'Book Share',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ja'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: '「Book Share」は、本好きなあなたにぴったりのアプリです。書籍についてのレビューを投稿、閲覧することができます。さらに、自分が読んだ本を管理することができ、今後の読書計画に役立てることができます。' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
