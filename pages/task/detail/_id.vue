@@ -198,7 +198,15 @@ interface Tag {
   created_at: string;
 }
 
-@Component
+@Component({
+async asyncData({$axios, params}) {
+  const TASK_API = "/api/v1/tasks/" + `${params.id}`
+  const task = await $axios.$get(TASK_API)
+  return {
+    task: task.data
+  }
+}})
+
 export default class TaskDetail extends Vue {
 
   task: Task = {
@@ -254,10 +262,6 @@ export default class TaskDetail extends Vue {
   displayErrorModal = false;
   errorModalTxt = '';
 
-  created() {
-    this.fetchTask();
-  }
-
   getStatusColor(status: number): string {
     console.log(status)
     switch (status) {
@@ -278,8 +282,6 @@ export default class TaskDetail extends Vue {
     // // タスクをAPIから取得する
     const TASK_API = "/api/v1/tasks/" + this.$route.params.id
     const task = await this.$axios.$get(TASK_API)
-    // const response = await fetch('/api/tasks');
-    // const tasks = await response.json();
     this.task = task.data;
   }
 

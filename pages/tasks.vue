@@ -131,7 +131,15 @@ interface Task {
   description: string;
 }
 
-@Component
+@Component({
+async asyncData({$axios}) {
+  const TASK_API = "/api/v1/tasks"
+  const tasks = await $axios.$get(TASK_API)
+  return {
+    tasks: tasks.data
+  }
+}})
+
 export default class TaskList extends Vue {
 
   tasks: Task[] = [];
@@ -178,16 +186,11 @@ export default class TaskList extends Vue {
   displayErrorModal = false;
   errorModalTxt = '';
 
-  created() {
-    this.fetchTasks();
-  }
 
   async fetchTasks() {
     // // タスク一覧をAPIから取得する
     const TASK_API = "/api/v1/tasks"
     const tasks = await this.$axios.$get(TASK_API)
-    // const response = await fetch('/api/tasks');
-    // const tasks = await response.json();
     this.tasks = tasks.data;
   }
 
