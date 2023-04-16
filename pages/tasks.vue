@@ -45,6 +45,7 @@
         </v-list>
       </v-col>
     </v-row>
+    <!-- 新規追加フォーム -->
     <v-dialog v-model="showTaskForm" max-width="500px">
       <v-card>
         <v-toolbar color="primary" dark>
@@ -65,6 +66,7 @@
               item-text="priorityName"
               item-value="id"
             ></v-select>
+
             <v-select
               v-model="taskForm.status"
               label="ステータス"
@@ -77,11 +79,60 @@
               label="完了予定日"
               type="datetime-local"
             />
+
+            <v-chip
+              v-for="(tag, index) in selectedTags"
+              :key="index"
+              @click="removeTag(tag)"
+              class="ma-1"
+              color="primary"
+            >
+              {{ tag.name }}
+              <v-icon small>mdi-close</v-icon>
+            </v-chip>
+
+            <v-text-field
+              v-model="inputName"
+              label="タグ追加"
+              @input="searchTag"
+              @change="hideSuggestTagList"
+              class="mx-7 my-1"
+            />
+            <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
+              <!-- <v-subheader>タグ候補</v-subheader> -->
+              <v-list-item-group>
+                <v-list-item
+                  v-for="(tag, index) in suggestTags"
+                  :key="index"
+                  @click="addTag(tag)"
+                >
+                  <v-list-item-content class="pa-1">
+                    <v-list-item-title class="subtitle-2">
+                      {{ tag.name }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-icon small>mdi-plus</v-icon>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+
+            <v-alert
+              v-if="suggestTags.length === 0 && inputName.length > 0"
+              :value="true"
+              color="error"
+              class="mt-1 mx-7 subtitle-2"
+            >
+              検索結果がありません
+            </v-alert>
             <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
     </v-dialog>
+
+    <!-- 編集フォーム -->
     <v-dialog v-model="showEditTaskForm" max-width="500px">
       <v-card>
         <v-toolbar color="primary" dark>
@@ -114,6 +165,53 @@
               label="完了予定日"
               type="datetime-local"
             />
+
+            <v-chip
+              v-for="(tag, index) in editSelectedTags"
+              :key="index"
+              @click="removeEditTag(tag)"
+              class="ma-1"
+              color="primary"
+            >
+              {{ tag.name }}
+              <v-icon small>mdi-close</v-icon>
+            </v-chip>
+
+            <v-text-field
+              v-model="editInputName"
+              label="タグ追加"
+              @input="editSearchTag"
+              @change="hideEditSuggestTagList"
+              class="mx-7 my-1"
+            />
+            <v-list v-if="editInputName.length > 0 && editSuggestTags.length > 0" class="mx-7 my-0">
+              <!-- <v-subheader>タグ候補</v-subheader> -->
+              <v-list-item-group>
+                <v-list-item
+                  v-for="(tag, index) in editSuggestTags"
+                  :key="index"
+                  @click="addEditTag(tag)"
+                >
+                  <v-list-item-content class="pa-1">
+                    <v-list-item-title class="subtitle-2">
+                      {{ tag.name }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-icon small>mdi-plus</v-icon>
+                  </v-list-item-action>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+
+            <v-alert
+              v-if="editSuggestTags.length === 0 && inputName.length > 0"
+              :value="true"
+              color="error"
+              class="mt-1 mx-7 subtitle-2"
+            >
+              検索結果がありません
+            </v-alert>
             <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
           </v-form>
         </v-card-text>
@@ -131,6 +229,15 @@ interface Task {
   description: string;
 }
 
+interface Tag {
+  id: number;
+  name: string;
+}
+
+interface Tagging {
+  tag_id: number;
+}
+
 @Component({
 async asyncData({$axios}) {
   const TASK_API = "/api/v1/tasks"
@@ -145,6 +252,14 @@ export default class TaskList extends Vue {
   tasks: Task[] = [];
 
   selectedTask: Task | null = null;
+  inputName = '';
+  editInputName = '';
+  suggestTags: Tag[] = [];
+  selectedTags: Tag[] = [];
+  taggingForm: Tagging[] = [];
+  editSuggestTags: Tag[] = [];
+  editSelectedTags: Tag[] = [];
+  editTaggingForm: Tagging[] = [];
 
   taskForm = {
     title: '',
@@ -152,7 +267,8 @@ export default class TaskList extends Vue {
     uid: '',
     priority: '',
     status: '',
-    deadline: ''
+    deadline: '',
+    taggings: this.taggingForm,
   };
 
   editTaskForm = {
@@ -161,7 +277,8 @@ export default class TaskList extends Vue {
     description: '',
     priority: '',
     status: '',
-    deadline: ''
+    deadline: '',
+    taggings: this.editTaggingForm,
   };
 
   priorities = [
@@ -203,6 +320,11 @@ export default class TaskList extends Vue {
     this.editTaskForm.priority = res.data.priority;
     this.editTaskForm.status = res.data.status;
     this.editTaskForm.deadline = res.data.deadline;
+    this.editTaskForm.taggings = [];
+    this.editSelectedTags = [];
+    this.editSelectedTags = res.data.tags.map(( t: Tag ) => {
+      return {id: t.id, name: t.name}
+    });
 
     this.showEditTaskForm = true;
   }
@@ -232,30 +354,37 @@ export default class TaskList extends Vue {
       const uid = window.localStorage.getItem("uid");
       if (uid === null) {
         return
-      }
+      };
       this.taskForm.uid = uid;
-      const POST_TASK_API = "/api/v1/tasks"
-      const response = await this.$axios.$post(POST_TASK_API, this.taskForm)
+      const POST_TASK_API = "/api/v1/tasks";
+      this.selectedTags.forEach ((tag) => {
+        this.taskForm.taggings.push({"tag_id": tag.id});
+      });
+      const response = await this.$axios.$post(POST_TASK_API, this.taskForm);
       this.successModalTxt = response.data.title + 'を登録しました。';
       this.displaySuccessModal = true;
       this.showTaskForm = false;
       setTimeout(() => {
-        this.displaySuccessModal = false
+        this.displaySuccessModal = false;
       }, 4000);
-      this.fetchTasks()
+      this.fetchTasks();
     }
     catch(error) {
       this.errorModalTxt = '登録に失敗しました。';
       this.displayErrorModal = true;
       this.showTaskForm = false;
       setTimeout(() => {
-        this.displayErrorModal = false
+        this.displayErrorModal = false;
       }, 4000);
     }
   }
 
   async updateTask() {
     const UPDATE_TASK_API = "/api/v1/tasks/" + this.editTaskForm.id;
+    this.editTaskForm.taggings = [];
+    this.editSelectedTags.forEach ((tag) => {
+      this.editTaskForm.taggings.push({"tag_id": tag.id});
+    });
     const response = await this.$axios.$put(UPDATE_TASK_API, this.editTaskForm);
     try {
       this.successModalTxt = response.data.title + 'を更新しました。';
@@ -271,9 +400,43 @@ export default class TaskList extends Vue {
       this.displayErrorModal = true;
       this.showEditTaskForm = false;
       setTimeout(() => {
-        this.displayErrorModal = false
+        this.displayErrorModal = false;
       }, 4000);
     }
+  }
+
+  async searchTag() {
+    const SEARCH_TAG_API = "/api/v1/tags/search?keyword=" + this.inputName;
+    const response = await this.$axios.$get(SEARCH_TAG_API);
+    this.suggestTags = response.data;
+  }
+
+  async editSearchTag() {
+    const SEARCH_TAG_API = "/api/v1/tags/search?keyword=" + this.editInputName;
+    const response = await this.$axios.$get(SEARCH_TAG_API);
+    this.editSuggestTags = response.data;
+  }
+
+  removeTag(tag: Tag) {
+    const index = this.selectedTags.indexOf(tag);
+    if (index !== -1) {
+      this.selectedTags.splice(index, 1);
+    }
+  }
+
+  addTag(tag: Tag) {
+    this.selectedTags.push(tag);
+  }
+
+  removeEditTag(tag: Tag) {
+    const index = this.editSelectedTags.indexOf(tag);
+    if (index !== -1) {
+      this.editSelectedTags.splice(index, 1);
+    }
+  }
+
+  addEditTag(tag: Tag) {
+    this.editSelectedTags.push(tag);
   }
 }
 
