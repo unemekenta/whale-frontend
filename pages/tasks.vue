@@ -88,7 +88,7 @@
               color="primary"
             >
               {{ tag.name }}
-              <v-icon small>mdi-close</v-icon>
+              <v-icon small class="ml-2">mdi-close</v-icon>
             </v-chip>
 
             <v-text-field
@@ -173,7 +173,7 @@
               color="primary"
             >
               {{ tag.name }}
-              <v-icon small>mdi-close</v-icon>
+              <v-icon small class="ml-2">mdi-close</v-icon>
             </v-chip>
 
             <v-text-field

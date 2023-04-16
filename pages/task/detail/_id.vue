@@ -38,7 +38,7 @@
         <p class="text-body-2">{{ task.description }}</p>
         <v-row class="my-2">
           <v-col cols="12" md="6">
-            <h2>コメント ({{ task.comments.length }})</h2>
+            <h3>コメント ({{ task.comments.length }})</h3>
           </v-col>
           <v-col cols="12" md="6">
             <v-row justify="end">
@@ -54,7 +54,7 @@
             <v-list-item
               v-for="comment in task.comments"
               :key="comment.id"
-              class="comment"
+              class="comment py-0"
             >
               <v-list-item-content>
                 <v-row no-gutters>
@@ -72,7 +72,7 @@
                       </v-col>
                     </v-row>
                   </v-col>
-                  <v-col cols="11">
+                  <v-col cols="11" class="px-2 py-2">
                     <v-list-item-title>{{ comment.content }}</v-list-item-title>
                     <v-list-item-subtitle class="mr-3 text-right">
                       <div>
@@ -82,10 +82,10 @@
                   </v-col>
                 </v-row>
               </v-list-item-content>
-              <v-list-item-action @click="editComment(comment)">
+              <v-list-item-action @click="editComment(comment)" class="ml-3">
                 <v-icon>mdi-pencil</v-icon>
               </v-list-item-action>
-              <v-list-item-action @click="deleteComment(comment)">
+              <v-list-item-action @click="deleteComment(comment)" class="ml-3">
                 <v-icon>mdi-delete</v-icon>
               </v-list-item-action>
             </v-list-item>
