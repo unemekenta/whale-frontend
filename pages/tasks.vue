@@ -95,7 +95,6 @@
               v-model="inputName"
               label="タグ追加"
               @input="searchTag"
-              @change="hideSuggestTagList"
               class="mx-7 my-1"
             />
             <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
@@ -181,7 +180,6 @@
               v-model="editInputName"
               label="タグ追加"
               @input="editSearchTag"
-              @change="hideEditSuggestTagList"
               class="mx-7 my-1"
             />
             <v-list v-if="editInputName.length > 0 && editSuggestTags.length > 0" class="mx-7 my-0">
