@@ -56,10 +56,10 @@ export default {
 
   auth: {
     redirect: {
-      login: '/login',
-      logout: '/',
+      login: false,
+      logout: false,
       callback: false,
-      home: '/'
+      home: false,
     },
     strategies: {
       local: {
@@ -68,7 +68,7 @@ export default {
         },
         user: {
           property: false,
-          autoFetch: true
+          autoFetch: false
         },
         endpoints: {
           login: { url: '/api/v1/auth/sign_in', method: 'post', propertyName: 'access_token'},

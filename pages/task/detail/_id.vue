@@ -263,7 +263,6 @@ export default class TaskDetail extends Vue {
   errorModalTxt = '';
 
   getStatusColor(status: number): string {
-    console.log(status)
     switch (status) {
       case 1:
         return "grey";

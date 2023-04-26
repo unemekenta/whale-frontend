@@ -31,11 +31,14 @@
         </v-form>
       </v-col>
     </v-row>
+    <Modal ref="modal" />
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import Modal from '@/components/Modal.vue';
+
 
 interface User {
   nickname: string;
@@ -44,6 +47,7 @@ interface User {
 
 @Component
 export default class Login extends Vue {
+
   user: User = {
     nickname: "",
     image: ""
@@ -54,21 +58,33 @@ export default class Login extends Vue {
     password: ""
   };
 
-
   async userLogin() {
-    await this.$auth.loginWith('local', { data: this.form })
-    .then(() => {
-      this.getUserInfo()
-    });
-    await this.$auth.fetchUser();
+    try {
+      const response: any = await this.$auth.loginWith('local', { data: this.form })
+      if (response.data && response.data.success === false) {
+        (this.$refs.modal as Modal).open('エラー', 'ログインに失敗しました');
+        this.userLogout();
+        throw new Error('ログインエラー');
+      }
+      await this.getUserInfo();
+      await this.$auth.fetchUser();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async getUserInfo() {
-    const USER_API = "/api/v1/auth/sessions";
-    return this.$axios.$get(USER_API)
-    .then((response) => {
-      this.$auth.setUser(response.$data);
-    });
+    try {
+      const USER_API = "/api/v1/auth/sessions";
+      const response = await this.$axios.$get(USER_API)
+      if (response.data && !response.data.error) {
+        this.$auth.setUser(response.$data);
+      } else {
+        throw new Error('ログイン情報取得エラー')
+      }
+    } catch (error) {
+      throw new Error(error + ' ユーザー情報の取得に失敗しました。')
+    }
   }
 
   async userLogout() {
