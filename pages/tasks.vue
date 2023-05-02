@@ -317,7 +317,7 @@ export default class TaskList extends Vue {
     this.editTaskForm.description = res.data.description;
     this.editTaskForm.priority = res.data.priority;
     this.editTaskForm.status = res.data.status;
-    this.editTaskForm.deadline = res.data.deadline;
+    this.editTaskForm.deadline = new Date(res.data.deadline).toISOString().slice(0, -1);
     this.editTaskForm.taggings = [];
     this.editSelectedTags = [];
     this.editSelectedTags = res.data.tags.map(( t: Tag ) => {

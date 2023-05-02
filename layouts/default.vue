@@ -108,6 +108,11 @@ export default {
           to: '/tasks'
         },
         {
+          icon: 'mdi-book-open',
+          title: 'Diaries',
+          to: '/diaries'
+        },
+        {
           icon: 'mdi-login-variant',
           title: 'Login',
           to: '/login'
