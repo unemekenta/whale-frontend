@@ -99,7 +99,7 @@
               v-model="editDiaryForm.public"
               label="一般公開する"
             ></v-checkbox>
-            <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+            <v-btn type="submit" color="primary" class="mt-2">保存</v-btn>
           </v-form>
         </v-card-text>
       </v-card>
@@ -109,6 +109,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import DateFormat from '@/plugins/date-format'
 
 interface Diary {
   id: number;
@@ -170,7 +171,7 @@ export default class DiaryList extends Vue {
     this.editDiaryForm.title = res.data.title;
     this.editDiaryForm.content = res.data.content;
     this.editDiaryForm.public = res.data.public;
-    this.editDiaryForm.date = new Date(res.data.date).toISOString().slice(0, -1);
+    this.editDiaryForm.date = DateFormat.stringToISOString(res.data.date);
 
     this.showEditDiaryForm = true;
   }

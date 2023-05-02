@@ -29,6 +29,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/axios-accessor',
+    '@/plugins/date-format',
     '@/plugins/filter/date-filter',
     '@/plugins/filter/label-filter',
   ],

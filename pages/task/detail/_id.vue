@@ -439,4 +439,8 @@ export default class TaskDetail extends Vue {
 .comment .v-list-item-subtitle {
   font-size: 0.9rem;
 }
+
+.text-body-2 {
+  white-space: pre-wrap;
+}
 </style>
