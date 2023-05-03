@@ -1,6 +1,6 @@
 import { Plugin } from '@nuxt/types';
+import { AxiosError } from 'axios';
 import { initializeAxios } from '~/utils/api';
-import { AxiosResponse, AxiosError } from 'axios';
 
 export const accessor: Plugin = ({ $axios }): void => {
   initializeAxios($axios);

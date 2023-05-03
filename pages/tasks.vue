@@ -6,10 +6,10 @@
       </v-col>
       <v-col cols="12" md="6">
         <v-row justify="end">
-          <div class="ma-3" v-if="displaySuccessModal">
+          <div v-if="displaySuccessModal" class="ma-3">
             <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
           </div>
-          <div class="ma-3" v-if="displayErrorModal">
+          <div v-if="displayErrorModal" class="ma-3">
             <ErrorAlert :txt="errorModalTxt"/>
           </div>
           <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
@@ -18,10 +18,10 @@
     </v-row>
     <v-divider class="my-3"></v-divider>
     <v-row>
-      <v-col cols="12" v-if="tasks.length === 0">
+      <v-col v-if="tasks.length === 0" cols="12">
         <p>現在、タスクはありません。</p>
       </v-col>
-      <v-col cols="12" v-else>
+      <v-col v-else cols="12">
         <v-list>
           <v-list-item-group v-model="selectedTask">
             <v-list-item
@@ -83,9 +83,9 @@
             <v-chip
               v-for="(tag, index) in selectedTags"
               :key="index"
-              @click="removeTag(tag)"
               class="ma-1"
               color="primary"
+              @click="removeTag(tag)"
             >
               {{ tag.name }}
               <v-icon small class="ml-2">mdi-close</v-icon>
@@ -94,8 +94,8 @@
             <v-text-field
               v-model="inputName"
               label="タグ追加"
-              @input="searchTag"
               class="mx-7 my-1"
+              @input="searchTag"
             />
             <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
               <!-- <v-subheader>タグ候補</v-subheader> -->
@@ -168,9 +168,9 @@
             <v-chip
               v-for="(tag, index) in editSelectedTags"
               :key="index"
-              @click="removeEditTag(tag)"
               class="ma-1"
               color="primary"
+              @click="removeEditTag(tag)"
             >
               {{ tag.name }}
               <v-icon small class="ml-2">mdi-close</v-icon>
@@ -179,8 +179,8 @@
             <v-text-field
               v-model="editInputName"
               label="タグ追加"
-              @input="editSearchTag"
               class="mx-7 my-1"
+              @input="editSearchTag"
             />
             <v-list v-if="editInputName.length > 0 && editSuggestTags.length > 0" class="mx-7 my-0">
               <!-- <v-subheader>タグ候補</v-subheader> -->
@@ -220,7 +220,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import DateFormat from '@/plugins/date-format'
+import { stringToISOString } from '@/plugins/date-format'
 
 interface Task {
   id: number;
@@ -318,7 +318,7 @@ export default class TaskList extends Vue {
     this.editTaskForm.description = res.data.description;
     this.editTaskForm.priority = res.data.priority;
     this.editTaskForm.status = res.data.status;
-    this.editTaskForm.deadline = DateFormat.stringToISOString(res.data.deadline);
+    this.editTaskForm.deadline = stringToISOString(res.data.deadline);
     this.editTaskForm.taggings = [];
     this.editSelectedTags = [];
     this.editSelectedTags = res.data.tags.map(( t: Tag ) => {

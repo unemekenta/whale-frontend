@@ -1,10 +1,8 @@
-import Vue from 'vue'
-
-const dateFilter = (value: string): string => {
+export const dateFilter = (value: string): string => {
   return formatDate(value);
 };
 
-const dateWithoutTimeFilter = (value: string): string => {
+export const dateWithoutTimeFilter = (value: string): string => {
   return formatDateWithoutTime(value);
 };
 
@@ -27,8 +25,3 @@ function formatDateWithoutTime(inputDate: string) {
   const formattedDate = `${year}/${month}/${day}`;
   return formattedDate;
 }
-
-
-Vue.filter('toDate', dateFilter)
-
-Vue.filter('toDateWithoutTime', dateWithoutTimeFilter)

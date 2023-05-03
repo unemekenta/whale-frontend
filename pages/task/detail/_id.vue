@@ -6,10 +6,10 @@
       </v-col>
       <v-col cols="12" md="6">
         <v-row justify="end">
-          <div class="ma-3" v-if="displaySuccessModal">
+          <div v-if="displaySuccessModal" class="ma-3">
             <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
           </div>
-          <div class="ma-3" v-if="displayErrorModal">
+          <div v-if="displayErrorModal" class="ma-3">
             <ErrorAlert :txt="errorModalTxt"/>
           </div>
           <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
@@ -20,7 +20,7 @@
     <v-row>
       <v-col cols="12">
         <v-chip class="ma-1" :color="getStatusColor(task.status)" dark>
-          {{ task.status | toStatus }}
+          {{ fmtStatus(task.status) }}
         </v-chip>
         <v-row no-gutters>
           <v-col
@@ -46,7 +46,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-col cols="12" v-if="task.comments.length === 0">
+        <v-col v-if="task.comments.length === 0" cols="12">
           <p>コメントはありません。</p>
         </v-col>
         <v-list>
@@ -76,16 +76,16 @@
                     <v-list-item-title>{{ comment.content }}</v-list-item-title>
                     <v-list-item-subtitle class="mr-3 text-right">
                       <div>
-                        <small>{{ comment.updated_at | toDate }}</small>
+                        <small>{{ fmtDate(comment.updated_at) }}</small>
                       </div>
                     </v-list-item-subtitle>
                   </v-col>
                 </v-row>
               </v-list-item-content>
-              <v-list-item-action @click="editComment(comment)" class="ml-3">
+              <v-list-item-action class="ml-3" @click="editComment(comment)">
                 <v-icon>mdi-pencil</v-icon>
               </v-list-item-action>
-              <v-list-item-action @click="deleteComment(comment)" class="ml-3">
+              <v-list-item-action class="ml-3" @click="deleteComment(comment)">
                 <v-icon>mdi-delete</v-icon>
               </v-list-item-action>
             </v-list-item>
@@ -169,14 +169,13 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import { statusFilter } from '@/plugins/filter/label-filter'
+import { dateFilter } from '@/plugins/filter/date-filter'
 
-interface Task {
+interface User {
   id: number;
-  title: string;
-  status: number;
-  description: string;
-  comments: Comment[];
-  tags: Tag[];
+  image: string;
+  nickname: string;
 }
 
 interface Comment {
@@ -186,16 +185,19 @@ interface Comment {
   user: User;
 }
 
-interface User {
-  id: number;
-  image: string;
-  nickname: string;
-}
-
 interface Tag {
   id: number;
   name: string;
   created_at: string;
+}
+
+interface Task {
+  id: number;
+  title: string;
+  status: number;
+  description: string;
+  comments: Comment[];
+  tags: Tag[];
 }
 
 @Component({
@@ -277,6 +279,14 @@ export default class TaskDetail extends Vue {
     }
   }
 
+  fmtStatus(statusNum: number) {
+    return statusFilter(statusNum)
+  }
+
+  fmtDate(date: string) {
+    return dateFilter(date)
+  }
+
   async fetchTask() {
     // // タスクをAPIから取得する
     const TASK_API = "/api/v1/tasks/" + this.$route.params.id
@@ -301,7 +311,7 @@ export default class TaskDetail extends Vue {
       }
       this.commentForm.uid = uid;
       const POST_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments"
-      const response = await this.$axios.$post(POST_COMMENT_API, this.commentForm)
+      await this.$axios.$post(POST_COMMENT_API, this.commentForm)
       this.successModalTxt = 'コメントを登録しました。';
       this.displaySuccessModal = true;
       this.showCommentForm = false;
@@ -322,7 +332,7 @@ export default class TaskDetail extends Vue {
 
   async deleteComment(comment: Comment) {
     const DELETE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id;
-    const response = await this.$axios.$delete(DELETE_COMMENT_API);
+    await this.$axios.$delete(DELETE_COMMENT_API);
     try {
       this.successModalTxt = 'コメントを削除しました。';
       this.displaySuccessModal = true;
@@ -340,9 +350,9 @@ export default class TaskDetail extends Vue {
     }
   }
 
-  async updateComment(comment: Comment) {
+  async updateComment() {
     const UPDATE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + this.editCommentForm.id;
-    const response = await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm);
+    await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm);
     try {
       this.successModalTxt = 'コメントを更新しました。';
       this.displaySuccessModal = true;

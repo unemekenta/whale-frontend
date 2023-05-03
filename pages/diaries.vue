@@ -6,10 +6,10 @@
       </v-col>
       <v-col cols="12" md="6">
         <v-row justify="end">
-          <div class="ma-3" v-if="displaySuccessModal">
+          <div v-if="displaySuccessModal" class="ma-3">
             <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
           </div>
-          <div class="ma-3" v-if="displayErrorModal">
+          <div v-if="displayErrorModal" class="ma-3">
             <ErrorAlert :txt="errorModalTxt"/>
           </div>
           <v-btn class="ma-3" color="primary" @click="showDiaryForm = true">日記をつける</v-btn>
@@ -18,10 +18,10 @@
     </v-row>
     <v-divider class="my-3"></v-divider>
     <v-row>
-      <v-col cols="12" v-if="diaries.length === 0">
+      <v-col v-if="diaries.length === 0" cols="12">
         <p>現在、日記はありません。</p>
       </v-col>
-      <v-col cols="12" v-else>
+      <v-col v-else cols="12">
         <v-list>
           <v-list-item-group v-model="selectedDiary">
             <v-list-item
@@ -30,7 +30,7 @@
             >
               <v-list-item-content>
                 <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
-                  <v-list-item-title>{{ diary.date | toDateWithoutTime }}</v-list-item-title>
+                  <v-list-item-title>{{ fmtDateWithoutTime(diary.date) }}</v-list-item-title>
                   <v-list-item-title>{{ diary.title }}</v-list-item-title>
                 </nuxt-link>
               </v-list-item-content>
@@ -109,7 +109,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import DateFormat from '@/plugins/date-format'
+import { stringToISOString } from '@/plugins/date-format'
+import { dateWithoutTimeFilter } from '@/plugins/filter/date-filter'
 
 interface Diary {
   id: number;
@@ -157,6 +158,10 @@ export default class DiaryList extends Vue {
     date: '',
   };
 
+  fmtDateWithoutTime(date: string) {
+    return dateWithoutTimeFilter(date)
+  }
+
   async fetchDiaries() {
     // // 日記一覧をAPIから取得する
     const DIARY_API = "/api/v1/diaries"
@@ -171,7 +176,7 @@ export default class DiaryList extends Vue {
     this.editDiaryForm.title = res.data.title;
     this.editDiaryForm.content = res.data.content;
     this.editDiaryForm.public = res.data.public;
-    this.editDiaryForm.date = DateFormat.stringToISOString(res.data.date);
+    this.editDiaryForm.date = stringToISOString(res.data.date);
 
     this.showEditDiaryForm = true;
   }

@@ -9,7 +9,7 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <div v-html="message"></div>
+        <p>{{ message }}</p>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -24,9 +24,9 @@ import { Component, Vue } from 'nuxt-property-decorator'
 
 @Component
 export default class Modal extends Vue {
-  dialog: boolean = false
-  title: string = 'Error'
-  message: string = ''
+  dialog = false
+  title = 'Error'
+  message = ''
 
   open (title: string, message: string) {
     this.title = title

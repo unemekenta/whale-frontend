@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
-    <small>{{ diary.date | toDateWithoutTime }}</small>
+    <small>{{ fmtDateWithoutTime(diary.date) }}</small>
     <h2 class="my-2">概要</h2>
     <p class="text-body-2" >{{ diary.content }}</p>
   </v-container>
@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
+import { dateWithoutTimeFilter } from '@/plugins/filter/date-filter'
 
 interface Diary {
   id: number;
@@ -41,6 +42,10 @@ export default class DiaryDetail extends Vue {
     public: false,
     date: '',
   };
+
+  fmtDateWithoutTime(date: string) {
+    return dateWithoutTimeFilter(date)
+  }
 
   async fetchDiary() {
     const DIARY_API = "/api/v1/diaries/" + this.$route.params.id

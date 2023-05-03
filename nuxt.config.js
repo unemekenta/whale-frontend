@@ -31,7 +31,7 @@ export default {
     '@/plugins/axios-accessor',
     '@/plugins/date-format',
     '@/plugins/filter/date-filter',
-    '@/plugins/filter/label-filter',
+    '@/plugins/filter/label-filter'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -42,17 +42,17 @@ export default {
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
+    '@nuxtjs/auth'
   ],
 
   axios: {
-    baseURL: "http://localhost:3000"
+    baseURL: 'http://localhost:3000'
   },
 
   auth: {
@@ -60,7 +60,7 @@ export default {
       login: false,
       logout: false,
       callback: false,
-      home: false,
+      home: false
     },
     strategies: {
       local: {
@@ -72,9 +72,9 @@ export default {
           autoFetch: false
         },
         endpoints: {
-          login: { url: '/api/v1/auth/sign_in', method: 'post', propertyName: 'access_token'},
-          logout: { url: '/api/v1/auth/sign_out', method: 'delete'},
-          user: { url: '/api/v1/auth/sessions', method: 'get', propertyName: false}
+          login: { url: '/api/v1/auth/sign_in', method: 'post', propertyName: 'access_token' },
+          logout: { url: '/api/v1/auth/sign_out', method: 'delete' },
+          user: { url: '/api/v1/auth/sessions', method: 'get', propertyName: false }
         }
       }
     }

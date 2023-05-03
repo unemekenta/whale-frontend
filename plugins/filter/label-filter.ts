@@ -1,6 +1,4 @@
-import Vue from 'vue'
-
-const statusFilter = (statusNum: number): string => {
+export const statusFilter = (statusNum: number): string => {
   return formatStatus(statusNum);
 };
 
@@ -18,5 +16,3 @@ function formatStatus(inputStatusNum: number) {
       return '未分類';
   }
 }
-
-Vue.filter('toStatus', statusFilter)

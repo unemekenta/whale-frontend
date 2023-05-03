@@ -1,32 +1,32 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="12" v-if="$auth.loggedIn">
+      <v-col v-if="$auth.loggedIn" cols="12">
         <h1 class="my-5">Logout</h1>
         <v-btn variant="outlined" @click="userLogout">
           ログアウト
         </v-btn>
       </v-col>
-      <v-col cols="12" v-else>
+      <v-col v-else cols="12">
         <h1 class="my-5">Login</h1>
-        <v-form class="mx-9" ref="form">
+        <v-form ref="form" class="mx-9">
           <v-text-field
+            v-model="form.email"
             placeholder="メールアドレス"
             outlined
             dense
             type="email"
-            v-model="form.email"
           ></v-text-field>
           <v-text-field
+            v-model="form.password"
             placeholder="パスワード"
             outlined
             dense
             type="password"
-            v-model="form.password"
           ></v-text-field>
           <!-- <p class="pointer" @click="forgetPw">パスワードを忘れた方</p> -->
           <div class="text-center">
-            <v-btn @click="userLogin" class="primary">ログイン</v-btn>
+            <v-btn class="primary" @click="userLogin">ログイン</v-btn>
           </div>
         </v-form>
       </v-col>
@@ -69,7 +69,6 @@ export default class Login extends Vue {
       await this.getUserInfo();
       await this.$auth.fetchUser();
     } catch (error) {
-      console.error(error);
     }
   }
 

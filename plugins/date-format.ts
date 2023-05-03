@@ -1,5 +1,3 @@
-export default {
-  stringToISOString(date: string) {
-    return new Date(date).toISOString().slice(0, -1);
-  }
-}
+export const stringToISOString = (date: string): string => {
+  return new Date(date).toISOString().slice(0, -1);
+};
