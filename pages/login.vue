@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/Modal.vue'
 
 
 interface User {
@@ -51,33 +51,33 @@ export default class Login extends Vue {
   user: User = {
     nickname: "",
     image: ""
-  };
+  }
 
   form = {
     email: "",
     password: ""
-  };
+  }
 
   async userLogin() {
     try {
       const response: any = await this.$auth.loginWith('local', { data: this.form })
       if (response.data && response.data.success === false) {
-        (this.$refs.modal as Modal).open('エラー', 'ログインに失敗しました');
-        this.userLogout();
-        throw new Error('ログインエラー');
+        (this.$refs.modal as Modal).open('エラー', 'ログインに失敗しました')
+        this.userLogout()
+        throw new Error('ログインエラー')
       }
-      await this.getUserInfo();
-      await this.$auth.fetchUser();
+      await this.getUserInfo()
+      await this.$auth.fetchUser()
     } catch (error) {
     }
   }
 
   async getUserInfo() {
     try {
-      const USER_API = "/api/v1/auth/sessions";
+      const USER_API = "/api/v1/auth/sessions"
       const response = await this.$axios.$get(USER_API)
       if (response.data && !response.data.error) {
-        this.$auth.setUser(response.$data);
+        this.$auth.setUser(response.$data)
       } else {
         throw new Error('ログイン情報取得エラー')
       }
@@ -95,8 +95,8 @@ export default class Login extends Vue {
           localStorage.removeItem("uid")
           localStorage.removeItem("token-type")
         }
-      );
-    await this.$auth.fetchUser();
+      )
+    await this.$auth.fetchUser()
   }
 }
 

@@ -218,19 +218,19 @@ export default class TaskDetail extends Vue {
     description: '',
     comments: [],
     tags: [],
-  };
+  }
 
-  selectedTask: Task | null = null;
+  selectedTask: Task | null = null
 
   commentForm = {
     content: '',
     uid: '',
-  };
+  }
 
   editCommentForm = {
     id: 0,
     content: '',
-  };
+  }
 
   // editTaskForm = {
   //   id: 0,
@@ -246,36 +246,36 @@ export default class TaskDetail extends Vue {
     { priorityName: "高い", id: 2 },
     { priorityName: "通常", id: 3 },
     { priorityName: "低い", id: 4 }
-  ];
+  ]
 
   statuses = [
     { statusName: "未実施", id: 1 },
     { statusName: "進行中", id: 2 },
     { statusName: "確認待ち", id: 3 },
     { statusName: "完了", id: 4 }
-  ];
+  ]
 
-  showCommentForm = false;
-  showEditCommentForm = false;
-  showEditTaskForm = false;
+  showCommentForm = false
+  showEditCommentForm = false
+  showEditTaskForm = false
 
-  displaySuccessModal = false;
-  successModalTxt = '';
-  displayErrorModal = false;
-  errorModalTxt = '';
+  displaySuccessModal = false
+  successModalTxt = ''
+  displayErrorModal = false
+  errorModalTxt = ''
 
   getStatusColor(status: number): string {
     switch (status) {
       case 1:
-        return "grey";
+        return "grey"
       case 2:
-        return "orange";
+        return "orange"
       case 3:
-        return "blue";
+        return "blue"
       case 4:
-        return "green";
+        return "green"
       default:
-        return "grey";
+        return "grey"
     }
   }
 
@@ -291,84 +291,84 @@ export default class TaskDetail extends Vue {
     // // タスクをAPIから取得する
     const TASK_API = "/api/v1/tasks/" + this.$route.params.id
     const task = await this.$axios.$get(TASK_API)
-    this.task = task.data;
+    this.task = task.data
   }
 
   async editComment(comment: Comment) {
-    const EDIT_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id;
-    const res = await this.$axios.$get(EDIT_COMMENT_API);
-    this.editCommentForm.id = comment.id;
-    this.editCommentForm.content = res.data.content;
+    const EDIT_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
+    const res = await this.$axios.$get(EDIT_COMMENT_API)
+    this.editCommentForm.id = comment.id
+    this.editCommentForm.content = res.data.content
 
-    this.showEditCommentForm = true;
+    this.showEditCommentForm = true
   }
 
   async submitComment() {
     try {
-      const uid = window.localStorage.getItem("uid");
+      const uid = window.localStorage.getItem("uid")
       if (uid === null) {
         return
       }
-      this.commentForm.uid = uid;
+      this.commentForm.uid = uid
       const POST_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments"
       await this.$axios.$post(POST_COMMENT_API, this.commentForm)
-      this.successModalTxt = 'コメントを登録しました。';
-      this.displaySuccessModal = true;
-      this.showCommentForm = false;
+      this.successModalTxt = 'コメントを登録しました。'
+      this.displaySuccessModal = true
+      this.showCommentForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
-      }, 4000);
+      }, 4000)
       this.fetchTask()
     }
     catch(error) {
-      this.errorModalTxt = '登録に失敗しました。';
-      this.displayErrorModal = true;
-      this.showCommentForm = false;
+      this.errorModalTxt = '登録に失敗しました。'
+      this.displayErrorModal = true
+      this.showCommentForm = false
       setTimeout(() => {
         this.displayErrorModal = false
-      }, 4000);
+      }, 4000)
     }
   }
 
   async deleteComment(comment: Comment) {
-    const DELETE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id;
-    await this.$axios.$delete(DELETE_COMMENT_API);
+    const DELETE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
+    await this.$axios.$delete(DELETE_COMMENT_API)
     try {
-      this.successModalTxt = 'コメントを削除しました。';
-      this.displaySuccessModal = true;
+      this.successModalTxt = 'コメントを削除しました。'
+      this.displaySuccessModal = true
       setTimeout(() => {
         this.displaySuccessModal = false
-      }, 4000);
+      }, 4000)
       this.fetchTask()
     }
     catch(error) {
-      this.errorModalTxt = '削除に失敗しました。';
-      this.displayErrorModal = true;
+      this.errorModalTxt = '削除に失敗しました。'
+      this.displayErrorModal = true
       setTimeout(() => {
         this.displayErrorModal = false
-      }, 4000);
+      }, 4000)
     }
   }
 
   async updateComment() {
-    const UPDATE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + this.editCommentForm.id;
-    await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm);
+    const UPDATE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + this.editCommentForm.id
+    await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
     try {
-      this.successModalTxt = 'コメントを更新しました。';
-      this.displaySuccessModal = true;
-      this.showEditCommentForm = false;
+      this.successModalTxt = 'コメントを更新しました。'
+      this.displaySuccessModal = true
+      this.showEditCommentForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
-      }, 4000);
+      }, 4000)
       this.fetchTask()
     }
     catch(error) {
-      this.errorModalTxt = '更新に失敗しました。';
-      this.displayErrorModal = true;
-      this.showEditCommentForm = false;
+      this.errorModalTxt = '更新に失敗しました。'
+      this.displayErrorModal = true
+      this.showEditCommentForm = false
       setTimeout(() => {
         this.displayErrorModal = false
-      }, 4000);
+      }, 4000)
     }
   }
 

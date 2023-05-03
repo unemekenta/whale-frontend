@@ -130,16 +130,16 @@ async asyncData({$axios}) {
 }})
 
 export default class DiaryList extends Vue {
-  diaries: Diary[] = [];
+  diaries: Diary[] = []
 
-  selectedDiary: Diary | null = null;
+  selectedDiary: Diary | null = null
 
-  showDiaryForm = false;
-  showEditDiaryForm = false;
-  displaySuccessModal = false;
-  successModalTxt = '';
-  displayErrorModal = false;
-  errorModalTxt = '';
+  showDiaryForm = false
+  showEditDiaryForm = false
+  displaySuccessModal = false
+  successModalTxt = ''
+  displayErrorModal = false
+  errorModalTxt = ''
 
   diaryForm = {
     id: 0,
@@ -148,7 +148,7 @@ export default class DiaryList extends Vue {
     public: false,
     date: '',
     uid: '',
-  };
+  }
 
   editDiaryForm = {
     id: 0,
@@ -156,7 +156,7 @@ export default class DiaryList extends Vue {
     content: '',
     public: false,
     date: '',
-  };
+  }
 
   fmtDateWithoutTime(date: string) {
     return dateWithoutTimeFilter(date)
@@ -166,87 +166,87 @@ export default class DiaryList extends Vue {
     // // 日記一覧をAPIから取得する
     const DIARY_API = "/api/v1/diaries"
     const diaries = await this.$axios.$get(DIARY_API)
-    this.diaries = diaries.data;
+    this.diaries = diaries.data
   }
 
   async editDiary(diary: Diary) {
-    const EDIT_DIARY_API = "/api/v1/diaries/" + diary.id;
-    const res = await this.$axios.$get(EDIT_DIARY_API);
-    this.editDiaryForm.id = diary.id;
-    this.editDiaryForm.title = res.data.title;
-    this.editDiaryForm.content = res.data.content;
-    this.editDiaryForm.public = res.data.public;
-    this.editDiaryForm.date = stringToISOString(res.data.date);
+    const EDIT_DIARY_API = "/api/v1/diaries/" + diary.id
+    const res = await this.$axios.$get(EDIT_DIARY_API)
+    this.editDiaryForm.id = diary.id
+    this.editDiaryForm.title = res.data.title
+    this.editDiaryForm.content = res.data.content
+    this.editDiaryForm.public = res.data.public
+    this.editDiaryForm.date = stringToISOString(res.data.date)
 
-    this.showEditDiaryForm = true;
+    this.showEditDiaryForm = true
   }
 
   async deleteDiary(diary: Diary) {
-    const DELETE_DIARY_API = "/api/v1/diaries/" + diary.id;
-    const response = await this.$axios.$delete(DELETE_DIARY_API);
+    const DELETE_DIARY_API = "/api/v1/diaries/" + diary.id
+    const response = await this.$axios.$delete(DELETE_DIARY_API)
     try {
-      this.successModalTxt = response.data.title + 'を削除しました。';
-      this.displaySuccessModal = true;
+      this.successModalTxt = response.data.title + 'を削除しました。'
+      this.displaySuccessModal = true
       setTimeout(() => {
         this.displaySuccessModal = false
-      }, 4000);
+      }, 4000)
       this.fetchDiaries()
     }
     catch(error) {
-      this.errorModalTxt = '削除に失敗しました。';
-      this.displayErrorModal = true;
+      this.errorModalTxt = '削除に失敗しました。'
+      this.displayErrorModal = true
       setTimeout(() => {
         this.displayErrorModal = false
-      }, 4000);
+      }, 4000)
     }
   }
 
   async submitDiary() {
     try {
-      const uid = window.localStorage.getItem("uid");
+      const uid = window.localStorage.getItem("uid")
       if (uid === null) {
         return
       };
-      this.diaryForm.uid = uid;
-      const POST_DIARY_API = "/api/v1/diaries";
-      const response = await this.$axios.$post(POST_DIARY_API, this.diaryForm);
-      this.successModalTxt = response.data.title + 'を登録しました。';
-      this.displaySuccessModal = true;
-      this.showDiaryForm = false;
+      this.diaryForm.uid = uid
+      const POST_DIARY_API = "/api/v1/diaries"
+      const response = await this.$axios.$post(POST_DIARY_API, this.diaryForm)
+      this.successModalTxt = response.data.title + 'を登録しました。'
+      this.displaySuccessModal = true
+      this.showDiaryForm = false
       setTimeout(() => {
-        this.displaySuccessModal = false;
-      }, 4000);
-      this.fetchDiaries();
+        this.displaySuccessModal = false
+      }, 4000)
+      this.fetchDiaries()
     }
     catch(error) {
-      this.errorModalTxt = '登録に失敗しました。';
-      this.displayErrorModal = true;
-      this.showDiaryForm = false;
+      this.errorModalTxt = '登録に失敗しました。'
+      this.displayErrorModal = true
+      this.showDiaryForm = false
       setTimeout(() => {
-        this.displayErrorModal = false;
-      }, 4000);
+        this.displayErrorModal = false
+      }, 4000)
     }
   }
 
   async updateDiary() {
-    const UPDATE_DIARY_API = "/api/v1/diaries/" + this.editDiaryForm.id;
-    const response = await this.$axios.$put(UPDATE_DIARY_API, this.editDiaryForm);
+    const UPDATE_DIARY_API = "/api/v1/diaries/" + this.editDiaryForm.id
+    const response = await this.$axios.$put(UPDATE_DIARY_API, this.editDiaryForm)
     try {
-      this.successModalTxt = response.data.title + 'を更新しました。';
-      this.displaySuccessModal = true;
-      this.showEditDiaryForm = false;
+      this.successModalTxt = response.data.title + 'を更新しました。'
+      this.displaySuccessModal = true
+      this.showEditDiaryForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
-      }, 4000);
+      }, 4000)
       this.fetchDiaries()
     }
     catch(error) {
-      this.errorModalTxt = '更新に失敗しました。';
-      this.displayErrorModal = true;
-      this.showEditDiaryForm = false;
+      this.errorModalTxt = '更新に失敗しました。'
+      this.displayErrorModal = true
+      this.showEditDiaryForm = false
       setTimeout(() => {
-        this.displayErrorModal = false;
-      }, 4000);
+        this.displayErrorModal = false
+      }, 4000)
     }
   }
 

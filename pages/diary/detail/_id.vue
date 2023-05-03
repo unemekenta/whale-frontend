@@ -41,7 +41,7 @@ export default class DiaryDetail extends Vue {
     content: '',
     public: false,
     date: '',
-  };
+  }
 
   fmtDateWithoutTime(date: string) {
     return dateWithoutTimeFilter(date)
@@ -50,7 +50,7 @@ export default class DiaryDetail extends Vue {
   async fetchDiary() {
     const DIARY_API = "/api/v1/diaries/" + this.$route.params.id
     const diary = await this.$axios.$get(DIARY_API)
-    this.diary = diary.data;
+    this.diary = diary.data
   }
 }
 

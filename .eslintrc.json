@@ -21,6 +21,7 @@
   },
   "plugins": ["vue", "@typescript-eslint"],
   "rules": {
-    "prefer-const": "off"
+    "prefer-const": "off",
+    "semi": ["error", "never"]
   }
 }

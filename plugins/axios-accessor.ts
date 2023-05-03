@@ -1,9 +1,9 @@
-import { Plugin } from '@nuxt/types';
-import { AxiosError } from 'axios';
-import { initializeAxios } from '~/utils/api';
+import { Plugin } from '@nuxt/types'
+import { AxiosError } from 'axios'
+import { initializeAxios } from '~/utils/api'
 
 export const accessor: Plugin = ({ $axios }): void => {
-  initializeAxios($axios);
+  initializeAxios($axios)
 
   // axiosの共通設定
   $axios.defaults.timeout = 10000
@@ -27,7 +27,7 @@ export const accessor: Plugin = ({ $axios }): void => {
   // エラー処理共通化
   $axios.onError((error: AxiosError) => {
     return Promise.resolve(error.response)
-  });
-};
+  })
+}
 
-export default accessor;
+export default accessor

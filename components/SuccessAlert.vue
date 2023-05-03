@@ -15,7 +15,7 @@ import { Component, Prop, Vue } from 'nuxt-property-decorator'
 export default class SuccessAlert extends Vue {
 
   @Prop({ type: String, required: true })
-  txt: string;
+  txt: string
 }
 
 </script>
