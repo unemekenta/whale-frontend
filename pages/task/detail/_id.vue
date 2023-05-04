@@ -7,10 +7,10 @@
       <v-col cols="12" md="6">
         <v-row justify="end">
           <div v-if="displaySuccessModal" class="ma-3">
-            <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
+            <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
           </div>
           <div v-if="displayErrorModal" class="ma-3">
-            <ErrorAlert :txt="errorModalTxt"/>
+            <ErrorAlert :txt="errorModalTxt" />
           </div>
           <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
         </v-row>
@@ -23,12 +23,7 @@
           {{ fmtStatus(task.status) }}
         </v-chip>
         <v-row no-gutters>
-          <v-col
-            v-for="tag in task.tags"
-            :key="tag.id"
-            cols="auto"
-            dark
-          >
+          <v-col v-for="tag in task.tags" :key="tag.id" cols="auto" dark>
             <v-chip class="ma-1">
               {{ tag.name }}
             </v-chip>
@@ -42,7 +37,9 @@
           </v-col>
           <v-col cols="12" md="6">
             <v-row justify="end">
-              <v-btn class="ma-3" color="primary" @click="showCommentForm = true">コメント追加</v-btn>
+              <v-btn class="ma-3" color="primary" @click="showCommentForm = true"
+                >コメント追加</v-btn
+              >
             </v-row>
           </v-col>
         </v-row>
@@ -51,11 +48,7 @@
         </v-col>
         <v-list>
           <v-list-item-group>
-            <v-list-item
-              v-for="comment in task.comments"
-              :key="comment.id"
-              class="comment py-0"
-            >
+            <v-list-item v-for="comment in task.comments" :key="comment.id" class="comment py-0">
               <v-list-item-content>
                 <v-row no-gutters>
                   <v-col cols="1">
@@ -168,54 +161,53 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-import { statusFilter } from '@/plugins/filter/label-filter'
-import { dateFilter } from '@/plugins/filter/date-filter'
+import { Component, Vue } from "nuxt-property-decorator"
+import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
+import { dateFilter } from "@/plugins/filter/date-filter"
 
 interface User {
-  id: number;
-  image: string;
-  nickname: string;
+  id: number
+  image: string
+  nickname: string
 }
 
 interface Comment {
-  id: number;
-  content: string;
-  updated_at: string;
-  user: User;
+  id: number
+  content: string
+  updated_at: string
+  user: User
 }
 
 interface Tag {
-  id: number;
-  name: string;
-  created_at: string;
+  id: number
+  name: string
+  created_at: string
 }
 
 interface Task {
-  id: number;
-  title: string;
-  status: number;
-  description: string;
-  comments: Comment[];
-  tags: Tag[];
+  id: number
+  title: string
+  status: number
+  description: string
+  comments: Comment[]
+  tags: Tag[]
 }
 
 @Component({
-async asyncData({$axios, params}) {
-  const TASK_API = "/api/v1/tasks/" + `${params.id}`
-  const task = await $axios.$get(TASK_API)
-  return {
-    task: task.data
-  }
-}})
-
+  async asyncData({ $axios, params }) {
+    const TASK_API = "/api/v1/tasks/" + `${params.id}`
+    const task = await $axios.$get(TASK_API)
+    return {
+      task: task.data,
+    }
+  },
+})
 export default class TaskDetail extends Vue {
-
   task: Task = {
     id: 0,
-    title: '',
+    title: "",
     status: 0,
-    description: '',
+    description: "",
     comments: [],
     tags: [],
   }
@@ -223,13 +215,13 @@ export default class TaskDetail extends Vue {
   selectedTask: Task | null = null
 
   commentForm = {
-    content: '',
-    uid: '',
+    content: "",
+    uid: "",
   }
 
   editCommentForm = {
     id: 0,
-    content: '',
+    content: "",
   }
 
   // editTaskForm = {
@@ -245,14 +237,14 @@ export default class TaskDetail extends Vue {
     { priorityName: "緊急", id: 1 },
     { priorityName: "高い", id: 2 },
     { priorityName: "通常", id: 3 },
-    { priorityName: "低い", id: 4 }
+    { priorityName: "低い", id: 4 },
   ]
 
   statuses = [
     { statusName: "未実施", id: 1 },
     { statusName: "進行中", id: 2 },
     { statusName: "確認待ち", id: 3 },
-    { statusName: "完了", id: 4 }
+    { statusName: "完了", id: 4 },
   ]
 
   showCommentForm = false
@@ -260,23 +252,12 @@ export default class TaskDetail extends Vue {
   showEditTaskForm = false
 
   displaySuccessModal = false
-  successModalTxt = ''
+  successModalTxt = ""
   displayErrorModal = false
-  errorModalTxt = ''
+  errorModalTxt = ""
 
   getStatusColor(status: number): string {
-    switch (status) {
-      case 1:
-        return "grey"
-      case 2:
-        return "orange"
-      case 3:
-        return "blue"
-      case 4:
-        return "green"
-      default:
-        return "grey"
-    }
+    return statusColor(status)
   }
 
   fmtStatus(statusNum: number) {
@@ -312,16 +293,15 @@ export default class TaskDetail extends Vue {
       this.commentForm.uid = uid
       const POST_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments"
       await this.$axios.$post(POST_COMMENT_API, this.commentForm)
-      this.successModalTxt = 'コメントを登録しました。'
+      this.successModalTxt = "コメントを登録しました。"
       this.displaySuccessModal = true
       this.showCommentForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTask()
-    }
-    catch(error) {
-      this.errorModalTxt = '登録に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "登録に失敗しました。"
       this.displayErrorModal = true
       this.showCommentForm = false
       setTimeout(() => {
@@ -334,15 +314,14 @@ export default class TaskDetail extends Vue {
     const DELETE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
     await this.$axios.$delete(DELETE_COMMENT_API)
     try {
-      this.successModalTxt = 'コメントを削除しました。'
+      this.successModalTxt = "コメントを削除しました。"
       this.displaySuccessModal = true
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTask()
-    }
-    catch(error) {
-      this.errorModalTxt = '削除に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "削除に失敗しました。"
       this.displayErrorModal = true
       setTimeout(() => {
         this.displayErrorModal = false
@@ -351,19 +330,19 @@ export default class TaskDetail extends Vue {
   }
 
   async updateComment() {
-    const UPDATE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + this.editCommentForm.id
+    const UPDATE_COMMENT_API =
+      "/api/v1/tasks/" + this.task.id + "/comments/" + this.editCommentForm.id
     await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
     try {
-      this.successModalTxt = 'コメントを更新しました。'
+      this.successModalTxt = "コメントを更新しました。"
       this.displaySuccessModal = true
       this.showEditCommentForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTask()
-    }
-    catch(error) {
-      this.errorModalTxt = '更新に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "更新に失敗しました。"
       this.displayErrorModal = true
       this.showEditCommentForm = false
       setTimeout(() => {
@@ -427,7 +406,6 @@ export default class TaskDetail extends Vue {
   //   }
   // }
 }
-
 </script>
 
 <style>

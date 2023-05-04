@@ -9,8 +9,8 @@
       <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="4">
         <v-card>
           <v-img src="/vuetify-logo.svg" :aspect-ratio="16 / 9"></v-img>
-          <v-card-title class="line-clamp-2"
-            ><p class="line-clamp-2">{{ diary.title }}</p></v-card-title
+          <v-card-title
+            ><p class="line-clamp-1">{{ diary.title }}</p></v-card-title
           >
           <v-card-subtitle>{{ fmtDateWithoutTime(diary.date) }}</v-card-subtitle>
           <v-card-text
@@ -53,6 +53,13 @@ export default class Index extends Vue {
 </script>
 
 <style>
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 .line-clamp-2 {
   overflow: hidden;
   display: -webkit-box;

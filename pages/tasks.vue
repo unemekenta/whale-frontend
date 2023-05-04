@@ -2,15 +2,15 @@
   <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="12" md="6">
-        <h1>タスク一覧</h1>
+        <h1>タスク</h1>
       </v-col>
       <v-col cols="12" md="6">
         <v-row justify="end">
           <div v-if="displaySuccessModal" class="ma-3">
-            <SuccessAlert :txt="successModalTxt" transition="fade-transition"/>
+            <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
           </div>
           <div v-if="displayErrorModal" class="ma-3">
-            <ErrorAlert :txt="errorModalTxt"/>
+            <ErrorAlert :txt="errorModalTxt" />
           </div>
           <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
         </v-row>
@@ -24,14 +24,19 @@
       <v-col v-else cols="12">
         <v-list>
           <v-list-item-group v-model="selectedTask">
-            <v-list-item
-              v-for="task in tasks"
-              :key="task.id"
-            >
+            <v-list-item v-for="task in tasks" :key="task.id">
               <v-list-item-content>
                 <nuxt-link :to="'/task/detail/' + task.id" class="text-decoration-none">
-                  <v-list-item-title>{{ task.title }}</v-list-item-title>
-                  <v-list-item-subtitle>{{ task.description }}</v-list-item-subtitle>
+                  <v-row justify="justify-space-between">
+                    <v-col cols="2">
+                      <v-chip class="ma-1" :color="getStatusColor(task.status)" dark>
+                        {{ fmtStatus(task.status) }}
+                      </v-chip>
+                    </v-col>
+                    <v-col cols="10">
+                      <v-list-item-title class="task-title">{{ task.title }}</v-list-item-title>
+                    </v-col>
+                  </v-row>
                 </nuxt-link>
               </v-list-item-content>
               <v-list-item-action @click="editTask(task)">
@@ -74,11 +79,7 @@
               item-text="statusName"
               item-value="id"
             ></v-select>
-            <v-text-field
-              v-model="taskForm.deadline"
-              label="完了予定日"
-              type="datetime-local"
-            />
+            <v-text-field v-model="taskForm.deadline" label="完了予定日" type="datetime-local" />
 
             <v-chip
               v-for="(tag, index) in selectedTags"
@@ -100,11 +101,7 @@
             <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
               <!-- <v-subheader>タグ候補</v-subheader> -->
               <v-list-item-group>
-                <v-list-item
-                  v-for="(tag, index) in suggestTags"
-                  :key="index"
-                  @click="addTag(tag)"
-                >
+                <v-list-item v-for="(tag, index) in suggestTags" :key="index" @click="addTag(tag)">
                   <v-list-item-content class="pa-1">
                     <v-list-item-title class="subtitle-2">
                       {{ tag.name }}
@@ -219,40 +216,41 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-import { stringToISOString } from '@/plugins/date-format'
+import { Component, Vue } from "nuxt-property-decorator"
+import { stringToISOString } from "@/plugins/date-format"
+import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
 
 interface Task {
-  id: number;
-  title: string;
-  description: string;
+  id: number
+  title: string
+  description: string
+  status: number
 }
 
 interface Tag {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
 interface Tagging {
-  tag_id: number;
+  tag_id: number
 }
 
 @Component({
-async asyncData({$axios}) {
-  const TASK_API = "/api/v1/tasks"
-  const tasks = await $axios.$get(TASK_API)
-  return {
-    tasks: tasks.data
-  }
-}})
-
+  async asyncData({ $axios }) {
+    const TASK_API = "/api/v1/tasks"
+    const tasks = await $axios.$get(TASK_API)
+    return {
+      tasks: tasks.data,
+    }
+  },
+})
 export default class TaskList extends Vue {
-
   tasks: Task[] = []
 
   selectedTask: Task | null = null
-  inputName = ''
-  editInputName = ''
+  inputName = ""
+  editInputName = ""
   suggestTags: Tag[] = []
   selectedTags: Tag[] = []
   taggingForm: Tagging[] = []
@@ -261,22 +259,22 @@ export default class TaskList extends Vue {
   editTaggingForm: Tagging[] = []
 
   taskForm = {
-    title: '',
-    description: '',
-    uid: '',
-    priority: '',
-    status: '',
-    deadline: '',
+    title: "",
+    description: "",
+    uid: "",
+    priority: "",
+    status: "",
+    deadline: "",
     taggings: this.taggingForm,
   }
 
   editTaskForm = {
     id: 0,
-    title: '',
-    description: '',
-    priority: '',
-    status: '',
-    deadline: '',
+    title: "",
+    description: "",
+    priority: "",
+    status: "",
+    deadline: "",
     taggings: this.editTaggingForm,
   }
 
@@ -284,24 +282,31 @@ export default class TaskList extends Vue {
     { priorityName: "緊急", id: 1 },
     { priorityName: "高い", id: 2 },
     { priorityName: "通常", id: 3 },
-    { priorityName: "低い", id: 4 }
+    { priorityName: "低い", id: 4 },
   ]
 
   statuses = [
     { statusName: "未実施", id: 1 },
     { statusName: "進行中", id: 2 },
     { statusName: "確認待ち", id: 3 },
-    { statusName: "完了", id: 4 }
+    { statusName: "完了", id: 4 },
   ]
 
   showTaskForm = false
   showEditTaskForm = false
 
   displaySuccessModal = false
-  successModalTxt = ''
+  successModalTxt = ""
   displayErrorModal = false
-  errorModalTxt = ''
+  errorModalTxt = ""
 
+  fmtStatus(statusNum: number) {
+    return statusFilter(statusNum)
+  }
+
+  getStatusColor(status: number): string {
+    return statusColor(status)
+  }
 
   async fetchTasks() {
     // // タスク一覧をAPIから取得する
@@ -321,8 +326,8 @@ export default class TaskList extends Vue {
     this.editTaskForm.deadline = stringToISOString(res.data.deadline)
     this.editTaskForm.taggings = []
     this.editSelectedTags = []
-    this.editSelectedTags = res.data.tags.map(( t: Tag ) => {
-      return {id: t.id, name: t.name}
+    this.editSelectedTags = res.data.tags.map((t: Tag) => {
+      return { id: t.id, name: t.name }
     })
 
     this.showEditTaskForm = true
@@ -332,15 +337,14 @@ export default class TaskList extends Vue {
     const DELETE_TASK_API = "/api/v1/tasks/" + task.id
     const response = await this.$axios.$delete(DELETE_TASK_API)
     try {
-      this.successModalTxt = response.data.title + 'を削除しました。'
+      this.successModalTxt = response.data.title + "を削除しました。"
       this.displaySuccessModal = true
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTasks()
-    }
-    catch(error) {
-      this.errorModalTxt = '削除に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "削除に失敗しました。"
       this.displayErrorModal = true
       setTimeout(() => {
         this.displayErrorModal = false
@@ -353,23 +357,22 @@ export default class TaskList extends Vue {
       const uid = window.localStorage.getItem("uid")
       if (uid === null) {
         return
-      };
+      }
       this.taskForm.uid = uid
       const POST_TASK_API = "/api/v1/tasks"
-      this.selectedTags.forEach ((tag) => {
-        this.taskForm.taggings.push({"tag_id": tag.id})
+      this.selectedTags.forEach((tag) => {
+        this.taskForm.taggings.push({ tag_id: tag.id })
       })
       const response = await this.$axios.$post(POST_TASK_API, this.taskForm)
-      this.successModalTxt = response.data.title + 'を登録しました。'
+      this.successModalTxt = response.data.title + "を登録しました。"
       this.displaySuccessModal = true
       this.showTaskForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTasks()
-    }
-    catch(error) {
-      this.errorModalTxt = '登録に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "登録に失敗しました。"
       this.displayErrorModal = true
       this.showTaskForm = false
       setTimeout(() => {
@@ -381,21 +384,20 @@ export default class TaskList extends Vue {
   async updateTask() {
     const UPDATE_TASK_API = "/api/v1/tasks/" + this.editTaskForm.id
     this.editTaskForm.taggings = []
-    this.editSelectedTags.forEach ((tag) => {
-      this.editTaskForm.taggings.push({"tag_id": tag.id})
+    this.editSelectedTags.forEach((tag) => {
+      this.editTaskForm.taggings.push({ tag_id: tag.id })
     })
     const response = await this.$axios.$put(UPDATE_TASK_API, this.editTaskForm)
     try {
-      this.successModalTxt = response.data.title + 'を更新しました。'
+      this.successModalTxt = response.data.title + "を更新しました。"
       this.displaySuccessModal = true
       this.showEditTaskForm = false
       setTimeout(() => {
         this.displaySuccessModal = false
       }, 4000)
       this.fetchTasks()
-    }
-    catch(error) {
-      this.errorModalTxt = '更新に失敗しました。'
+    } catch (error) {
+      this.errorModalTxt = "更新に失敗しました。"
       this.displayErrorModal = true
       this.showEditTaskForm = false
       setTimeout(() => {
@@ -438,5 +440,12 @@ export default class TaskList extends Vue {
     this.editSelectedTags.push(tag)
   }
 }
-
 </script>
+
+<style scoped>
+.task-title {
+  align-items: center;
+  height: 100%;
+  display: flex;
+}
+</style>

@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="12" md="6">
-        <h1>日記一覧</h1>
+        <h1>日記</h1>
       </v-col>
       <v-col cols="12" md="6">
         <v-row justify="end">
