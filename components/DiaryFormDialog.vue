@@ -18,7 +18,7 @@
             label="一般公開する"
             :input-value="diaryForm.public"
           ></v-checkbox>
-          <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+          <v-btn type="submit" color="primary" class="mt-2">保存</v-btn>
         </v-form>
       </v-card-text>
     </v-card>
