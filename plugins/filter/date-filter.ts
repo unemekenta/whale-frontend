@@ -1,3 +1,5 @@
+import dayjs from "dayjs"
+
 export const dateFilter = (value: string): string => {
   return formatDate(value)
 }
@@ -7,21 +9,11 @@ export const dateWithoutTimeFilter = (value: string): string => {
 }
 
 function formatDate(inputDate: string) {
-  const date = new Date(inputDate)
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
-  const formattedDate = `${year}/${month}/${day} ${hours}:${minutes}`
+  const formattedDate = dayjs(inputDate).format("YYYY/MM/DD hh:mm")
   return formattedDate
 }
 
 function formatDateWithoutTime(inputDate: string) {
-  const date = new Date(inputDate)
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const formattedDate = `${year}/${month}/${day}`
+  const formattedDate = dayjs(inputDate).format("YYYY/MM/DD")
   return formattedDate
 }
