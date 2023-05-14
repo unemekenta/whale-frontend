@@ -31,7 +31,7 @@
     </v-app-bar>
     <v-main>
       <v-container>
-        <Nuxt />
+        <Nuxt class="main-container" />
       </v-container>
     </v-main>
     <v-navigation-drawer v-model="rightDrawer" :right="right" temporary fixed>
@@ -88,3 +88,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.main-container {
+  max-width: 70rem;
+  margin: 0 auto;
+}
+</style>

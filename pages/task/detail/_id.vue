@@ -24,9 +24,7 @@
         </v-chip>
         <v-row no-gutters>
           <v-col v-for="tag in task.tags" :key="tag.id" cols="auto" dark>
-            <v-chip class="ma-1">
-              {{ tag.name }}
-            </v-chip>
+            <Tag :txt="tag.name"></Tag>
           </v-col>
         </v-row>
         <h2 class="my-2">概要</h2>
@@ -430,5 +428,18 @@ export default class TaskDetail extends Vue {
 
 .text-body-2 {
   white-space: pre-wrap;
+}
+
+.tag-nomal {
+  background-color: #ebeced;
+  border-radius: 0 2px 2px 0;
+  color: #55606a;
+  display: inline-block;
+  font-size: 0.8rem;
+  line-height: 1.4rem;
+  margin: 3px 4px 3px 8px;
+  padding: 0 6px 0 8px;
+  position: relative;
+  text-decoration: none;
 }
 </style>
