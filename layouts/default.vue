@@ -61,22 +61,22 @@ export default {
       items: [
         {
           icon: "mdi-apps",
-          title: "Home",
+          title: "ホーム",
           to: "/",
         },
         {
           icon: "mdi-checkbox-marked",
-          title: "Tasks",
+          title: "タスクを管理する",
           to: "/tasks",
         },
         {
           icon: "mdi-book-open",
-          title: "Diaries",
+          title: "日記を書く",
           to: "/diaries",
         },
         {
           icon: "mdi-login-variant",
-          title: "Login",
+          title: "ログイン",
           to: "/login",
         },
       ],

@@ -31,7 +31,9 @@
         <p class="text-body-2">{{ task.description }}</p>
         <v-row class="my-2">
           <v-col cols="12" md="6">
-            <h3>コメント ({{ task.comments.length }})</h3>
+            <h3>
+              <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ task.comments.length }})
+            </h3>
           </v-col>
           <v-col cols="12" md="6">
             <v-row justify="end">
