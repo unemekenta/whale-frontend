@@ -38,7 +38,7 @@ interface Diary {
 
 @Component({
   async asyncData({ $axios }) {
-    const TIMELINE_API = "/api/v1//diaries/timeline"
+    const TIMELINE_API = "/api/v1/diaries/timeline"
     const diaries = await $axios.$get(TIMELINE_API)
     return {
       diaries: diaries.data,

@@ -75,8 +75,8 @@ export default {
           to: "/diaries",
         },
         {
-          icon: "mdi-login-variant",
-          title: "ログイン",
+          icon: "mdi-cog",
+          title: "ログイン・設定",
           to: "/login",
         },
       ],
