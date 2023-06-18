@@ -34,7 +34,7 @@ export const accessor: Plugin = ({ $axios }): void => {
       const transformedResponse = {
         message: responseData.message || "", // message プロパティ
         status: responseData.status || "", // status プロパティ
-        data: responseData.data || {}, // data プロパティ
+        data: responseData.data || {} || [], // data プロパティ
       }
 
       return { ...response, data: transformedResponse }
