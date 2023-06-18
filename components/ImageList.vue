@@ -32,7 +32,7 @@ interface ImageUrl {
 }
 
 interface Image {
-  id: string
+  id: number
   image: ImageUrl
   caption: string
 }
