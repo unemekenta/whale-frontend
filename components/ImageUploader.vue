@@ -16,7 +16,7 @@
     ></v-file-input>
     <v-text-field v-model="caption" label="キャプション"></v-text-field>
 
-    <v-btn color="primary" @click="uploadImage">アップロード</v-btn>
+    <v-btn color="accent" @click="uploadImage">アップロード</v-btn>
   </v-container>
 </template>
 

@@ -3,7 +3,7 @@
     <v-row>
       <v-col v-if="$auth.loggedIn" cols="12">
         <h1 class="my-5">設定</h1>
-        <v-btn variant="outlined" @click="userLogout"> ログアウト </v-btn>
+        <v-btn color="primary" variant="outlined" @click="userLogout"> ログアウト </v-btn>
       </v-col>
       <v-col v-else cols="12">
         <h2 class="my-5">ログイン</h2>

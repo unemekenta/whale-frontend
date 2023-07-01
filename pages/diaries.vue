@@ -66,12 +66,30 @@ import { Component, Vue } from "nuxt-property-decorator"
 import { stringToISOString } from "@/plugins/date-format"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 
+interface ImageUrl {
+  url: string
+}
+
+interface Image {
+  id: number
+  image: ImageUrl
+  caption: string
+}
+
+interface DiariesImageRelation {
+  id: number
+  diary_id: number
+  image_id: number
+}
+
 interface Diary {
   id: number
   title: string
   content: string
   public: boolean
   date: string
+  images: Image[]
+  diaries_image_relations: number[]
 }
 
 @Component({
@@ -102,6 +120,7 @@ export default class DiaryList extends Vue {
     public: false,
     date: "",
     uid: "",
+    diaries_image_relations: "",
   }
 
   editDiaryForm = {
@@ -110,6 +129,7 @@ export default class DiaryList extends Vue {
     content: "",
     public: false,
     date: "",
+    diaries_image_relations: "",
   }
 
   fmtDateWithoutTime(date: string) {
@@ -147,14 +167,19 @@ export default class DiaryList extends Vue {
     this.editDiaryForm.content = res.data.content
     this.editDiaryForm.public = res.data.public
     this.editDiaryForm.date = stringToISOString(res.data.date)
+    this.editDiaryForm.diaries_image_relations = res.data.diaries_image_relations.map(
+      (item: DiariesImageRelation) => {
+        return item.image_id
+      }
+    )
 
     this.openEditDialog()
   }
 
   async deleteDiary(diary: Diary) {
-    const DELETE_DIARY_API = "/api/v1/diaries/" + diary.id
-    const response = await this.$axios.$delete(DELETE_DIARY_API)
     try {
+      const DELETE_DIARY_API = "/api/v1/diaries/" + diary.id
+      const response = await this.$axios.$delete(DELETE_DIARY_API)
       this.successModalTxt = response.data.title + "を削除しました。"
       this.displaySuccessModal = true
       setTimeout(() => {
@@ -192,9 +217,9 @@ export default class DiaryList extends Vue {
   }
 
   async updateDiary() {
-    const UPDATE_DIARY_API = "/api/v1/diaries/" + this.editDiaryForm.id
-    const response = await this.$axios.$put(UPDATE_DIARY_API, this.editDiaryForm)
     try {
+      const UPDATE_DIARY_API = "/api/v1/diaries/" + this.editDiaryForm.id
+      const response = await this.$axios.$put(UPDATE_DIARY_API, this.editDiaryForm)
       this.successModalTxt = response.data.title + "を更新しました。"
       this.displaySuccessModal = true
       this.closeEditDialog()

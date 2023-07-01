@@ -95,6 +95,19 @@ export default {
     theme: {
       dark: false,
       themes: {
+        /* 以下追加 */
+        light: {
+          primary: "#350d36",
+          surface: "#FFFFFF",
+          accent: "#d1417e",
+          secondary: "#61275a",
+          background: "#1f0a1e",
+          fontColor: "#ffffff",
+          info: colors.teal.lighten1,
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+        },
         dark: {
           primary: colors.blue.darken2,
           accent: colors.grey.darken3,

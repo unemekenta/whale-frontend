@@ -6,41 +6,60 @@
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
-    <small>{{ fmtDateWithoutTime(diary.date) }}</small>
-    <h2 class="my-2">概要</h2>
-    <p class="text-body-2" >{{ diary.content }}</p>
+    <p class="my-3 text-right">
+      <small>{{ fmtDateWithoutTime(diary.date) }}</small>
+    </p>
+    <p class="text-body-2">{{ diary.content }}</p>
+    <v-row>
+      <v-col v-for="image in diary.images" :key="image.id" cols="4">
+        <v-card class="py-1 px-3">
+          <v-img :src="image.image.url" :aspect-ratio="16 / 9"></v-img>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
-import { dateWithoutTimeFilter } from '@/plugins/filter/date-filter'
+import { Component, Vue } from "nuxt-property-decorator"
+import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
+
+interface ImageUrl {
+  url: string
+}
+
+interface Image {
+  id: number
+  image: ImageUrl
+  caption: string
+}
 
 interface Diary {
-  id: number;
-  title: string;
-  content: string;
-  public: boolean;
-  date: string;
+  id: number
+  title: string
+  content: string
+  public: boolean
+  date: string
+  images: Image[]
 }
 
 @Component({
-async asyncData({$axios, params}) {
-  const DIARY_API = "/api/v1/diaries/" + `${params.id}`
-  const diary = await $axios.$get(DIARY_API)
-  return {
-    diary: diary.data
-  }
-}})
-
+  async asyncData({ $axios, params }) {
+    const DIARY_API = "/api/v1/diaries/" + `${params.id}`
+    const diary = await $axios.$get(DIARY_API)
+    return {
+      diary: diary.data,
+    }
+  },
+})
 export default class DiaryDetail extends Vue {
-
   diary: Diary = {
     id: 0,
-    title: '',
-    content: '',
+    title: "",
+    content: "",
     public: false,
-    date: '',
+    date: "",
+    images: [],
   }
 
   fmtDateWithoutTime(date: string) {
@@ -53,7 +72,6 @@ export default class DiaryDetail extends Vue {
     this.diary = diary.data
   }
 }
-
 </script>
 
 <style>

@@ -1,6 +1,14 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer v-model="drawer" :mini-variant="miniVariant" :clipped="clipped" fixed app>
+    <v-navigation-drawer
+      v-model="drawer"
+      :mini-variant="miniVariant"
+      :clipped="clipped"
+      class="sidebar-componment"
+      fixed
+      app
+      color="primary"
+    >
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
@@ -12,7 +20,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar :clipped-left="clipped" fixed app color="secondary" class="header-componment">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
@@ -93,5 +101,16 @@ export default {
 .main-container {
   max-width: 70rem;
   margin: 0 auto;
+}
+
+.sidebar-componment div,
+.sidebar-componment a,
+.sidebar-componment p,
+.sidebar-componment i,
+.header-componment div,
+.header-componment a,
+.header-componment p,
+.header-componment i {
+  color: #ffffff !important;
 }
 </style>

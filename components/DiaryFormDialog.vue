@@ -18,6 +18,10 @@
             label="一般公開する"
             :input-value="diaryForm.public"
           ></v-checkbox>
+          <SelectImage
+            :callback="addToDiariesImageRelation"
+            :selected-images="diaryForm.diaries_image_relations"
+          />
           <v-btn type="submit" color="primary" class="mt-2">保存</v-btn>
         </v-form>
       </v-card-text>
@@ -35,6 +39,7 @@ interface DiaryForm {
   public: boolean
   date: string
   uid: string
+  diaries_image_relations: string
 }
 
 @Component
@@ -45,6 +50,17 @@ export default class AddDiaryFormDialog extends Vue {
   @Prop({ type: Boolean, required: true })
   showDiaryForm: boolean
 
+  selectedDiariesImageRelation: number[] = []
+
+  addToDiariesImageRelation(selectedImageIds: number[]) {
+    // 配列を初期化
+    this.selectedDiariesImageRelation = []
+    // 選択された画像のimage_idをdiaries_image_relationに追加する処理]
+    selectedImageIds.forEach((imageId) => {
+      this.selectedDiariesImageRelation.push(imageId)
+    })
+  }
+
   submitDiary() {
     // フォームの入力内容を親コンポーネントに送信する
     const uid = window.localStorage.getItem("uid")
@@ -52,7 +68,12 @@ export default class AddDiaryFormDialog extends Vue {
       return
     }
     this.diaryForm.uid = uid
-    this.$emit("submitDiaryForm", this.diaryForm)
+    this.diaryForm.diaries_image_relations = JSON.stringify(this.selectedDiariesImageRelation)
+    try {
+      this.$emit("submitDiaryForm", this.diaryForm)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   closeFormDialog() {
