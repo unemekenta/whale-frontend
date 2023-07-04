@@ -54,6 +54,10 @@ export default class Login extends Vue {
     password: "",
   }
 
+  async created() {
+    await this.sessionCheck()
+  }
+
   async userLogin() {
     try {
       const response: any = await this.$auth.loginWith("local", { data: this.form })
@@ -65,6 +69,20 @@ export default class Login extends Vue {
       await this.getUserInfo()
       await this.$auth.fetchUser()
     } catch (error) {}
+  }
+
+  async sessionCheck() {
+    try {
+      const USER_API = "/api/v1/auth/sessions"
+      const response = await this.$axios.$get(USER_API)
+      if (response.data && !response.data.error) {
+        return
+      } else {
+        this.userLogout()
+      }
+    } catch (error) {
+      this.userLogout()
+    }
   }
 
   async getUserInfo() {
