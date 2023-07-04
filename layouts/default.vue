@@ -84,7 +84,7 @@ export default {
         },
         {
           icon: "mdi-folder-image",
-          title: "画像管理",
+          title: "画像フォルダ",
           to: "/images",
         },
         {
