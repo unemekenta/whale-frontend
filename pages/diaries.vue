@@ -167,10 +167,10 @@ export default class DiaryList extends Vue {
     this.editDiaryForm.content = res.data.content
     this.editDiaryForm.public = res.data.public
     this.editDiaryForm.date = stringToISOString(res.data.date)
-    this.editDiaryForm.diaries_image_relations = res.data.diaries_image_relations.map(
-      (item: DiariesImageRelation) => {
+    this.editDiaryForm.diaries_image_relations = JSON.stringify(
+      res.data.diaries_image_relations.map((item: DiariesImageRelation) => {
         return item.image_id
-      }
+      })
     )
 
     this.openEditDialog()

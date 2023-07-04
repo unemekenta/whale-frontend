@@ -9,7 +9,10 @@
       <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="4">
         <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
           <v-card>
-            <v-img src="/vuetify-logo.svg" :aspect-ratio="16 / 9"></v-img>
+            <v-img
+              :src="require('@/assets/images/common/reading-glasses.png')"
+              :aspect-ratio="16 / 9"
+            ></v-img>
             <v-card-title
               ><p class="line-clamp-1">{{ diary.title }}</p></v-card-title
             >

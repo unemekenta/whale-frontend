@@ -30,8 +30,6 @@
       </v-col>
     </v-row>
     <Modal ref="modal" />
-    <ImageUploader class="my-3"></ImageUploader>
-    <ImageList class="my-3"></ImageList>
   </v-container>
 </template>
 

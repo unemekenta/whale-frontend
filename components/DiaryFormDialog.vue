@@ -20,7 +20,7 @@
           ></v-checkbox>
           <SelectImage
             :callback="addToDiariesImageRelation"
-            :selected-images="diaryForm.diaries_image_relations"
+            :selected-images="selectedImagesArray(diaryForm.diaries_image_relations)"
           />
           <v-btn type="submit" color="primary" class="mt-2">保存</v-btn>
         </v-form>
@@ -50,15 +50,31 @@ export default class AddDiaryFormDialog extends Vue {
   @Prop({ type: Boolean, required: true })
   showDiaryForm: boolean
 
+  selectedImagesArray(selectedImages: string): number[] {
+    try {
+      return JSON.parse(selectedImages)
+    } catch (error) {
+      console.error("Invalid selectedImages format")
+      return []
+    }
+  }
+
+  selectedImagesString(selectedImages: number[]): string {
+    try {
+      return JSON.stringify(selectedImages)
+    } catch (error) {
+      console.error("Invalid selectedImages format")
+      return "[]"
+    }
+  }
+
   selectedDiariesImageRelation: number[] = []
 
   addToDiariesImageRelation(selectedImageIds: number[]) {
     // 配列を初期化
     this.selectedDiariesImageRelation = []
     // 選択された画像のimage_idをdiaries_image_relationに追加する処理]
-    selectedImageIds.forEach((imageId) => {
-      this.selectedDiariesImageRelation.push(imageId)
-    })
+    this.selectedDiariesImageRelation = selectedImageIds.slice()
   }
 
   submitDiary() {
@@ -68,7 +84,9 @@ export default class AddDiaryFormDialog extends Vue {
       return
     }
     this.diaryForm.uid = uid
-    this.diaryForm.diaries_image_relations = JSON.stringify(this.selectedDiariesImageRelation)
+    this.diaryForm.diaries_image_relations = this.selectedImagesString(
+      this.selectedDiariesImageRelation
+    )
     try {
       this.$emit("submitDiaryForm", this.diaryForm)
     } catch (error) {

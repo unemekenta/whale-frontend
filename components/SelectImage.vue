@@ -4,7 +4,7 @@
       <v-col v-for="image in images" :key="image.id" cols="4">
         <v-card class="py-1 px-3">
           <v-checkbox
-            v-model="selectedImages"
+            v-model="localSelectedImages"
             :value="image.id"
             class="image-checkbox"
           ></v-checkbox>
@@ -14,14 +14,14 @@
     </v-row>
     <v-row>
       <v-btn color="accent" class="ml-auto" @click.prevent="executeParentFunction"
-        >選択した画像を追加</v-btn
+        >選択した画像を保存</v-btn
       >
     </v-row>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "nuxt-property-decorator"
+import { Component, Prop, Watch, Vue } from "nuxt-property-decorator"
 
 interface ImageUrl {
   url: string
@@ -36,6 +36,7 @@ interface Image {
 @Component({})
 export default class SelectImage extends Vue {
   images: Image[] = []
+  localSelectedImages: number[] = []
 
   @Prop({ type: Function, required: true })
   callback: Function
@@ -43,12 +44,18 @@ export default class SelectImage extends Vue {
   @Prop({ type: Array, required: true })
   selectedImages: number[]
 
+  @Watch("selectedImages", { immediate: true, deep: true })
+  onSelectedImagesChanged() {
+    this.localSelectedImages = this.selectedImages
+    this.callback(this.localSelectedImages)
+  }
+
   created() {
     this.fetchImages()
   }
 
   executeParentFunction() {
-    this.callback(this.selectedImages) // 親の関数を呼び出します
+    this.callback(this.localSelectedImages) // 親の関数を呼び出します
   }
 
   async fetchImages() {

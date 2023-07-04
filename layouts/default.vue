@@ -83,6 +83,11 @@ export default {
           to: "/diaries",
         },
         {
+          icon: "mdi-folder-image",
+          title: "画像管理",
+          to: "/images",
+        },
+        {
           icon: "mdi-cog",
           title: "ログイン・設定",
           to: "/login",
