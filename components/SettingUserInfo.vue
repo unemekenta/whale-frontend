@@ -4,7 +4,15 @@
       <v-col cols="12" md="2">
         <v-avatar size="100" class="mb-3 avatar">
           <v-img
+            v-if="userInfoForm.image"
             :src="userInfoForm.image"
+            :aspect-ratio="16 / 9"
+            alt="avatarImage"
+            class="avatar-image"
+          />
+          <v-img
+            v-else
+            :src="require('@/assets/images/common/icon-user.png')"
             :aspect-ratio="16 / 9"
             alt="avatarImage"
             class="avatar-image"
@@ -53,6 +61,13 @@ export default class SettingUserInfo extends Vue {
   @Prop({ type: Function, required: true })
   callback: Function
 
+  userInfoSubmitForm: UserInfoForm = {
+    id: 0,
+    name: "",
+    nickname: "",
+    image: "",
+  }
+
   submitUserInfo() {
     // フォームの入力内容を親コンポーネントに送信する
     const uid = window.localStorage.getItem("uid")
@@ -61,7 +76,8 @@ export default class SettingUserInfo extends Vue {
     }
 
     try {
-      this.callback(this.userInfoForm)
+      this.userInfoSubmitForm = this.userInfoForm
+      this.callback(this.userInfoSubmitForm)
     } catch (error) {
       console.error(error)
     }

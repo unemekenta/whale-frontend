@@ -1,22 +1,33 @@
 <template>
   <v-container fluid>
-    <h2>画像をアップロードする</h2>
+    <h2 class="my-3">画像をアップロードする</h2>
     <div v-if="displaySuccessModal" class="ma-3">
       <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
     </div>
     <div v-if="displayErrorModal" class="ma-3">
       <ErrorAlert :txt="errorModalTxt" />
     </div>
-    <v-file-input
-      ref="preview"
-      v-model="selectedFile"
-      label="画像を選択"
-      accept="image/*"
-      @change="changeFile"
-    ></v-file-input>
-    <v-text-field v-model="caption" label="キャプション"></v-text-field>
-
-    <v-btn color="accent" @click="uploadImage">アップロード</v-btn>
+    <v-row justify="justify-space-between" class="align-center">
+      <v-col cols="4">
+        <v-card v-if="previewImage" outlined>
+          <v-img :src="previewImage" :aspect-ratio="16 / 9"></v-img>
+        </v-card>
+        <v-card v-else>
+          <v-img :src="require('@/assets/images/common/noimage.png')" :aspect-ratio="1"></v-img>
+        </v-card>
+      </v-col>
+      <v-col cols="8">
+        <v-file-input
+          ref="preview"
+          v-model="selectedFile"
+          label="画像を選択"
+          accept="image/*"
+          @change="changeFile"
+        ></v-file-input>
+        <v-text-field v-model="caption" label="キャプション"></v-text-field>
+        <v-btn color="accent" @click="uploadImage">アップロード</v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -34,12 +45,18 @@ export default class ImageUploader extends Vue {
   displayErrorModal = false
   errorModalTxt = ""
 
-  changeFile(event: any) {
+  previewImage: string | null = null
+
+  changeFile(event: any): void {
     // ファイルが選択されたときに実行されるメソッド
     const file = event
     if (file) {
       this.imageContentType = file.type
       this.imageFileSize = file.size
+      this.previewImage = URL.createObjectURL(file)
+    } else {
+      // ファイルが選択されていない場合はプレビューをクリアする
+      this.previewImage = null
     }
   }
 
