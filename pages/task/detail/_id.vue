@@ -52,18 +52,25 @@
               <v-list-item-content>
                 <v-row no-gutters>
                   <v-col cols="1">
-                    <v-row no-gutters>
-                      <v-col>
-                        <v-list-item-avatar class="ma-0" tile>
-                          <v-icon>mdi-account</v-icon>
-                        </v-list-item-avatar>
-                      </v-col>
-                    </v-row>
-                    <v-row no-gutters>
-                      <v-col>
-                        <small class="text-center">{{ comment.user.nickname }}</small>
-                      </v-col>
-                    </v-row>
+                    <v-avatar size="40" class="avatar">
+                      <v-img
+                        v-if="comment.user.image"
+                        :src="comment.user.image"
+                        :aspect-ratio="1"
+                        alt="avatarImage"
+                        class="avatar-image"
+                      />
+                      <v-img
+                        v-else
+                        :src="require('@/assets/images/common/icon-user.png')"
+                        :aspect-ratio="1"
+                        alt="avatarImage"
+                        class="avatar-image"
+                      />
+                    </v-avatar>
+                    <p class="text-center">
+                      <small>{{ comment.user.nickname }}</small>
+                    </p>
                   </v-col>
                   <v-col cols="11" class="px-2 py-2">
                     <v-list-item-title>{{ comment.content }}</v-list-item-title>
@@ -443,5 +450,11 @@ export default class TaskDetail extends Vue {
   padding: 0 6px 0 8px;
   position: relative;
   text-decoration: none;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  margin: auto;
 }
 </style>
