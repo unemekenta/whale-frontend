@@ -7,13 +7,13 @@
     </v-row>
     <v-divider justify="justify-space-between" class="my-3"></v-divider>
     <v-row class="align-center my-1">
-      <v-col cols="10">
+      <v-col cols="6">
         <p class="ma-0">
           <small>{{ fmtDateWithoutTime(diary.date) }}</small>
         </p>
       </v-col>
-      <v-col cols="2">
-        <v-row justify="end">
+      <v-col cols="6">
+        <v-row mx-0 justify="end">
           <v-avatar size="40" class="avatar">
             <v-img
               v-if="diary.user.image"
@@ -44,12 +44,78 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row class="mt-4 mb-2">
+      <v-col cols="12" md="6">
+        <h3>
+          <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ diary.diary_comments.length }})
+        </h3>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-row justify="end">
+          <v-btn class="ma-3" color="primary" @click="showCommentForm = true">コメント追加</v-btn>
+        </v-row>
+      </v-col>
+    </v-row>
+    <CommentList
+      :comments="diary.diary_comments"
+      :edit-comment="editComment"
+      :delete-comment="deleteComment"
+    />
+    <v-dialog v-model="showCommentForm" max-width="500px">
+      <v-card>
+        <v-toolbar color="primary" dark>
+          <v-toolbar-title>コメント追加</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="showCommentForm = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <v-form @submit.prevent="submitComment">
+            <v-textarea v-model="commentForm.content" label="コメント"></v-textarea>
+            <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="showEditCommentForm" max-width="500px">
+      <v-card>
+        <v-toolbar color="primary" dark>
+          <v-toolbar-title>コメント編集</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="showEditCommentForm = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-card-text>
+          <v-form @submit.prevent="updateComment">
+            <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
+            <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
+
+interface User {
+  id: number
+  image: string
+  nickname: string
+}
+
+interface Comment {
+  id: number
+  user_id: number
+  diary_id: number
+  content: string
+  updated_at: string
+  user: User
+}
 
 interface ImageUrl {
   url: string
@@ -61,12 +127,6 @@ interface Image {
   caption: string
 }
 
-interface User {
-  id: number
-  image: string
-  nickname: string
-}
-
 interface Diary {
   id: number
   title: string
@@ -75,6 +135,7 @@ interface Diary {
   date: string
   images: Image[]
   user: User
+  diary_comments: Comment[]
 }
 
 @Component({
@@ -99,7 +160,27 @@ export default class DiaryDetail extends Vue {
       nickname: "",
       image: "",
     },
+    diary_comments: [],
   }
+
+  commentForm = {
+    content: "",
+    uid: "",
+  }
+
+  editCommentForm = {
+    id: 0,
+    content: "",
+  }
+
+  showCommentForm = false
+  showEditCommentForm = false
+  showEditDiaryForm = false
+
+  displaySuccessModal = false
+  successModalTxt = ""
+  displayErrorModal = false
+  errorModalTxt = ""
 
   fmtDateWithoutTime(date: string) {
     return dateWithoutTimeFilter(date)
@@ -110,10 +191,86 @@ export default class DiaryDetail extends Vue {
     const diary = await this.$axios.$get(DIARY_API)
     this.diary = diary.data
   }
+
+  async editComment(comment: Comment) {
+    const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
+    const res = await this.$axios.$get(EDIT_COMMENT_API)
+    this.editCommentForm.id = comment.id
+    this.editCommentForm.content = res.data.content
+
+    this.showEditCommentForm = true
+  }
+
+  async submitComment() {
+    try {
+      const uid = window.localStorage.getItem("uid")
+      if (uid === null) {
+        return
+      }
+      this.commentForm.uid = uid
+      const POST_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments"
+      await this.$axios.$post(POST_COMMENT_API, this.commentForm)
+      this.successModalTxt = "コメントを登録しました。"
+      this.displaySuccessModal = true
+      this.showCommentForm = false
+      setTimeout(() => {
+        this.displaySuccessModal = false
+      }, 4000)
+      this.fetchDiary()
+    } catch (error) {
+      this.errorModalTxt = "登録に失敗しました。"
+      this.displayErrorModal = true
+      this.showCommentForm = false
+      setTimeout(() => {
+        this.displayErrorModal = false
+      }, 4000)
+    }
+  }
+
+  async deleteComment(comment: Comment) {
+    const DELETE_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
+    await this.$axios.$delete(DELETE_COMMENT_API)
+    try {
+      this.successModalTxt = "コメントを削除しました。"
+      this.displaySuccessModal = true
+      setTimeout(() => {
+        this.displaySuccessModal = false
+      }, 4000)
+      this.fetchDiary()
+    } catch (error) {
+      this.errorModalTxt = "削除に失敗しました。"
+      this.displayErrorModal = true
+      setTimeout(() => {
+        this.displayErrorModal = false
+      }, 4000)
+    }
+  }
+
+  async updateComment() {
+    const UPDATE_COMMENT_API =
+      "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + this.editCommentForm.id
+    await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
+    try {
+      this.successModalTxt = "コメントを更新しました。"
+      this.displaySuccessModal = true
+      this.showEditCommentForm = false
+      setTimeout(() => {
+        this.displaySuccessModal = false
+      }, 4000)
+      this.fetchDiary()
+    } catch (error) {
+      this.errorModalTxt = "更新に失敗しました。"
+      this.displayErrorModal = true
+      this.showEditCommentForm = false
+      setTimeout(() => {
+        this.displayErrorModal = false
+      }, 4000)
+    }
+  }
 }
 </script>
 
-<style>
+<style scoped>
 .text-body-2 {
   white-space: pre-wrap;
 }

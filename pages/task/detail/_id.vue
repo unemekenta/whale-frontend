@@ -219,8 +219,6 @@ export default class TaskDetail extends Vue {
     tags: [],
   }
 
-  selectedTask: Task | null = null
-
   commentForm = {
     content: "",
     uid: "",
@@ -415,7 +413,7 @@ export default class TaskDetail extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .comment {
   padding: 1rem;
   border-bottom: 1px solid #ccc;

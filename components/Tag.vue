@@ -14,7 +14,7 @@ export default class Tag extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .tag-nomal {
   background-color: #ebeced;
   border-radius: 0 2px 2px 0;
