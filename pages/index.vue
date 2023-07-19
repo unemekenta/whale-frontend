@@ -15,6 +15,12 @@
         <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
           <v-card>
             <v-img
+              v-if="diary.images.length > 0"
+              :src="diary.images[0].image.url"
+              :aspect-ratio="16 / 9"
+            ></v-img>
+            <v-img
+              v-else
               :src="require('@/assets/images/common/reading-glasses.png')"
               :aspect-ratio="16 / 9"
             ></v-img>
@@ -76,13 +82,34 @@ interface User {
   image: string
 }
 
+interface Comment {
+  id: number
+  user_id: number
+  diary_id: number
+  content: string
+  updated_at: string
+  user: User
+}
+
+interface ImageUrl {
+  url: string
+}
+
+interface Image {
+  id: number
+  image: ImageUrl
+  caption: string
+}
+
 interface Diary {
   id: number
   title: string
   content: string
   public: boolean
   date: string
+  images: Image[]
   user: User
+  diary_comments: Comment[]
 }
 
 interface InformationContents {
