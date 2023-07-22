@@ -45,54 +45,7 @@
             </v-row>
           </v-col>
         </v-row>
-        <!-- <v-col v-if="task.comments.length === 0" cols="12">
-          <p>コメントはありません。</p>
-        </v-col>
-        <v-list>
-          <v-list-item-group>
-            <v-list-item v-for="comment in task.comments" :key="comment.id" class="comment pa-0">
-              <v-list-item-content>
-                <v-row no-gutters>
-                  <v-col cols="1">
-                    <v-avatar size="40" class="avatar">
-                      <v-img
-                        v-if="comment.user.image"
-                        :src="comment.user.image"
-                        :aspect-ratio="1"
-                        alt="avatarImage"
-                        class="avatar-image"
-                      />
-                      <v-img
-                        v-else
-                        :src="require('@/assets/images/common/icon-user.png')"
-                        :aspect-ratio="1"
-                        alt="avatarImage"
-                        class="avatar-image"
-                      />
-                    </v-avatar>
-                    <p class="text-center">
-                      <small>{{ comment.user.nickname }}</small>
-                    </p>
-                  </v-col>
-                  <v-col cols="11" class="px-2 py-2">
-                    <v-list-item-title>{{ comment.content }}</v-list-item-title>
-                    <v-list-item-subtitle class="mr-3 text-right">
-                      <div>
-                        <small>{{ fmtDate(comment.updated_at) }}</small>
-                      </div>
-                    </v-list-item-subtitle>
-                  </v-col>
-                </v-row>
-              </v-list-item-content>
-              <v-list-item-action class="ml-3" @click="editComment(comment)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-list-item-action>
-              <v-list-item-action class="ml-3" @click="deleteComment(comment)">
-                <v-icon>mdi-delete</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list> -->
+
         <TaskCommentList
           :comments="task.comments"
           :edit-comment="editComment"
@@ -152,34 +105,7 @@
 import { Component, Vue } from "nuxt-property-decorator"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
 import { dateFilter } from "@/plugins/filter/date-filter"
-
-interface User {
-  id: number
-  image: string
-  nickname: string
-}
-
-interface Comment {
-  id: number
-  content: string
-  updated_at: string
-  user: User
-}
-
-interface Tag {
-  id: number
-  name: string
-  created_at: string
-}
-
-interface Task {
-  id: number
-  title: string
-  status: number
-  description: string
-  comments: Comment[]
-  tags: Tag[]
-}
+import { Task, TaskComment } from "@/@types/common"
 
 @Component({
   async asyncData({ $axios, params }) {
@@ -209,15 +135,6 @@ export default class TaskDetail extends Vue {
     id: 0,
     content: "",
   }
-
-  // editTaskForm = {
-  //   id: 0,
-  //   title: '',
-  //   description: '',
-  //   priority: '',
-  //   status: '',
-  //   deadline: ''
-  // };
 
   priorities = [
     { priorityName: "緊急", id: 1 },
@@ -261,7 +178,7 @@ export default class TaskDetail extends Vue {
     this.task = task.data
   }
 
-  async editComment(comment: Comment) {
+  async editComment(comment: TaskComment) {
     const EDIT_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
     const res = await this.$axios.$get(EDIT_COMMENT_API)
     this.editCommentForm.id = comment.id
@@ -296,7 +213,7 @@ export default class TaskDetail extends Vue {
     }
   }
 
-  async deleteComment(comment: Comment) {
+  async deleteComment(comment: TaskComment) {
     const DELETE_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
     await this.$axios.$delete(DELETE_COMMENT_API)
     try {

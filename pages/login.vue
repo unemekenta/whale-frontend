@@ -42,13 +42,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import Modal from "@/components/Modal.vue"
-
-interface User {
-  id: number
-  name: string
-  nickname: string
-  image: string
-}
+import { User } from "@/@types/common"
 
 @Component
 export default class Login extends Vue {

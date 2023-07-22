@@ -36,13 +36,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
-
-interface User {
-  id: number
-  name: string
-  nickname: string
-  image: string
-}
+import { User } from "@/@types/common"
 
 interface UserInfoForm {
   id: number

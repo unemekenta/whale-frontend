@@ -71,26 +71,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator"
 import { dateFilter } from "@/plugins/filter/date-filter"
-
-interface User {
-  id: number
-  image: string
-  nickname: string
-}
-
-interface Comment {
-  id: number
-  user_id: number
-  diary_id: number
-  content: string
-  updated_at: string
-  user: User
-}
+import { DiaryComment } from "@/@types/common"
 
 @Component
 export default class CommentList extends Vue {
   @Prop({ type: Array, required: true })
-  comments: Comment[]
+  comments: DiaryComment[]
 
   @Prop({ type: Function, required: true })
   editComment: Function
@@ -98,7 +84,7 @@ export default class CommentList extends Vue {
   @Prop({ type: Function, required: true })
   deleteComment: Function
 
-  callEditComment(comment: Comment) {
+  callEditComment(comment: DiaryComment) {
     const uid = window.localStorage.getItem("uid")
     if (uid === null) {
       return
@@ -115,7 +101,7 @@ export default class CommentList extends Vue {
     return dateFilter(date)
   }
 
-  callDeleteComment(comment: Comment) {
+  callDeleteComment(comment: DiaryComment) {
     // フォームの入力内容を親コンポーネントに送信する
     const uid = window.localStorage.getItem("uid")
     if (uid === null) {

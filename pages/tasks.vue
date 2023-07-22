@@ -221,24 +221,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
+import { Task, Tag, Tagging } from "@/@types/common"
 import { stringToISOString } from "@/plugins/date-format"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
-
-interface Task {
-  id: number
-  title: string
-  description: string
-  status: number
-}
-
-interface Tag {
-  id: number
-  name: string
-}
-
-interface Tagging {
-  tag_id: number
-}
 
 @Component({
   async asyncData({ $axios }) {

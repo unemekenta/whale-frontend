@@ -101,42 +101,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
-
-interface User {
-  id: number
-  image: string
-  nickname: string
-}
-
-interface Comment {
-  id: number
-  user_id: number
-  diary_id: number
-  content: string
-  updated_at: string
-  user: User
-}
-
-interface ImageUrl {
-  url: string
-}
-
-interface Image {
-  id: number
-  image: ImageUrl
-  caption: string
-}
-
-interface Diary {
-  id: number
-  title: string
-  content: string
-  public: boolean
-  date: string
-  images: Image[]
-  user: User
-  diary_comments: Comment[]
-}
+import { DiaryComment, Diary } from "@/@types/common"
 
 @Component({
   async asyncData({ $axios, params }) {
@@ -157,6 +122,7 @@ export default class DiaryDetail extends Vue {
     images: [],
     user: {
       id: 0,
+      name: "",
       nickname: "",
       image: "",
     },
@@ -192,7 +158,7 @@ export default class DiaryDetail extends Vue {
     this.diary = diary.data
   }
 
-  async editComment(comment: Comment) {
+  async editComment(comment: DiaryComment) {
     const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
     const res = await this.$axios.$get(EDIT_COMMENT_API)
     this.editCommentForm.id = comment.id
@@ -227,7 +193,7 @@ export default class DiaryDetail extends Vue {
     }
   }
 
-  async deleteComment(comment: Comment) {
+  async deleteComment(comment: DiaryComment) {
     const DELETE_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
     await this.$axios.$delete(DELETE_COMMENT_API)
     try {

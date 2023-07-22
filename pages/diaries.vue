@@ -65,32 +65,7 @@
 import { Component, Vue } from "nuxt-property-decorator"
 import { stringToISOString } from "@/plugins/date-format"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
-
-interface ImageUrl {
-  url: string
-}
-
-interface Image {
-  id: number
-  image: ImageUrl
-  caption: string
-}
-
-interface DiariesImageRelation {
-  id: number
-  diary_id: number
-  image_id: number
-}
-
-interface Diary {
-  id: number
-  title: string
-  content: string
-  public: boolean
-  date: string
-  images: Image[]
-  diaries_image_relations: number[]
-}
+import { Diary, DiariesImageRelation } from "@/@types/common"
 
 @Component({
   async asyncData({ $axios }) {

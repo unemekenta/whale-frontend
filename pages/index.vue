@@ -75,51 +75,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
-
-interface User {
-  id: number
-  nickname: string
-  image: string
-}
-
-interface Comment {
-  id: number
-  user_id: number
-  diary_id: number
-  content: string
-  updated_at: string
-  user: User
-}
-
-interface ImageUrl {
-  url: string
-}
-
-interface Image {
-  id: number
-  image: ImageUrl
-  caption: string
-}
-
-interface Diary {
-  id: number
-  title: string
-  content: string
-  public: boolean
-  date: string
-  images: Image[]
-  user: User
-  diary_comments: Comment[]
-}
-
-interface InformationContents {
-  id: number
-  content: string
-  link: string
-  display_link: boolean
-  start_at: string
-  end_at: string
-}
+import { Diary, InformationContents } from "@/@types/common"
 
 @Component({
   async asyncData({ $axios }) {

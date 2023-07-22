@@ -26,16 +26,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
-
-interface ImageUrl {
-  url: string
-}
-
-interface Image {
-  id: number
-  image: ImageUrl
-  caption: string
-}
+import { Image } from "@/@types/common"
 
 @Component({
   async asyncData({ $axios }) {
