@@ -1,42 +1,46 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-0">
     <v-row justify="justify-space-between">
-      <v-col cols="12" md="6">
+      <v-col cols="6">
         <h1>タスク</h1>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="6" class="my-auto">
         <v-row justify="end">
-          <div v-if="displaySuccessModal" class="ma-3">
-            <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
-          </div>
-          <div v-if="displayErrorModal" class="ma-3">
-            <ErrorAlert :txt="errorModalTxt" />
-          </div>
           <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
         </v-row>
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
-    <v-row>
+    <div v-if="displaySuccessModal" class="ma-3">
+      <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+    </div>
+    <div v-if="displayErrorModal" class="ma-3">
+      <ErrorAlert :txt="errorModalTxt" />
+    </div>
+    <v-row class="mx-1">
       <v-col v-if="tasks.length === 0" cols="12">
         <p>現在、タスクはありません。</p>
       </v-col>
-      <v-col v-else cols="12">
+      <v-col v-else cols="12" class="px-0">
         <v-list>
           <v-list-item-group v-model="selectedTask">
-            <v-list-item v-for="task in tasks" :key="task.id">
+            <v-list-item v-for="task in tasks" :key="task.id" class="px-0">
               <v-list-item-content>
                 <nuxt-link :to="'/task/detail/' + task.id" class="text-decoration-none">
-                  <v-row justify="justify-space-between">
-                    <v-col cols="2">
-                      <v-chip class="ma-1" :color="getStatusColor(task.status)" dark>
+                  <div class="flex justify-space-between my-1">
+                    <v-col cols="12" class="py-1 px-0">
+                      <v-chip
+                        class="font-weight-bold ma-1 chip py-1 px-4"
+                        :color="getStatusColor(task.status)"
+                        dark
+                      >
                         {{ fmtStatus(task.status) }}
                       </v-chip>
                     </v-col>
-                    <v-col cols="10">
+                    <v-col cols="12" class="py-0">
                       <v-list-item-title class="task-title">{{ task.title }}</v-list-item-title>
                     </v-col>
-                  </v-row>
+                  </div>
                 </nuxt-link>
               </v-list-item-content>
               <v-list-item-action @click="editTask(task)">
@@ -447,5 +451,10 @@ export default class TaskList extends Vue {
   align-items: center;
   height: 100%;
   display: flex;
+  white-space: normal;
+}
+
+.chip {
+  font-size: 0.6rem;
 }
 </style>

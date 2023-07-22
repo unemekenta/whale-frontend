@@ -1,27 +1,29 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-0">
     <v-row justify="justify-space-between">
-      <v-col cols="12" md="6">
+      <v-col cols="12">
+        <v-chip
+          class="font-weight-bold ma-1 chip py-1 px-4"
+          :color="getStatusColor(task.status)"
+          dark
+        >
+          {{ fmtStatus(task.status) }}
+        </v-chip>
         <h1>{{ task.title }}</h1>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-row justify="end">
-          <div v-if="displaySuccessModal" class="ma-3">
-            <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
-          </div>
-          <div v-if="displayErrorModal" class="ma-3">
-            <ErrorAlert :txt="errorModalTxt" />
-          </div>
-          <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
-        </v-row>
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
+    <v-row justify="end">
+      <div v-if="displaySuccessModal" class="ma-3">
+        <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+      </div>
+      <div v-if="displayErrorModal" class="ma-3">
+        <ErrorAlert :txt="errorModalTxt" />
+      </div>
+      <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
+    </v-row>
     <v-row>
       <v-col cols="12">
-        <v-chip class="ma-1" :color="getStatusColor(task.status)" dark>
-          {{ fmtStatus(task.status) }}
-        </v-chip>
         <v-row no-gutters>
           <v-col v-for="tag in task.tags" :key="tag.id" cols="auto" dark>
             <Tag :txt="tag.name"></Tag>
@@ -30,12 +32,12 @@
         <h2 class="my-2">概要</h2>
         <p class="text-body-2">{{ task.description }}</p>
         <v-row class="my-2">
-          <v-col cols="12" md="6">
+          <v-col cols="6">
             <h3>
               <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ task.comments.length }})
             </h3>
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="6">
             <v-row justify="end">
               <v-btn class="ma-3" color="primary" @click="showCommentForm = true"
                 >コメント追加</v-btn
@@ -43,12 +45,12 @@
             </v-row>
           </v-col>
         </v-row>
-        <v-col v-if="task.comments.length === 0" cols="12">
+        <!-- <v-col v-if="task.comments.length === 0" cols="12">
           <p>コメントはありません。</p>
         </v-col>
         <v-list>
           <v-list-item-group>
-            <v-list-item v-for="comment in task.comments" :key="comment.id" class="comment py-0">
+            <v-list-item v-for="comment in task.comments" :key="comment.id" class="comment pa-0">
               <v-list-item-content>
                 <v-row no-gutters>
                   <v-col cols="1">
@@ -90,7 +92,12 @@
               </v-list-item-action>
             </v-list-item>
           </v-list-item-group>
-        </v-list>
+        </v-list> -->
+        <TaskCommentList
+          :comments="task.comments"
+          :edit-comment="editComment"
+          :delete-comment="deleteComment"
+        />
       </v-col>
     </v-row>
     <v-dialog v-model="showCommentForm" max-width="500px">
@@ -136,32 +143,6 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <!-- <v-card-text>
-          <v-form @submit.prevent="updateTask">
-            <v-text-field v-model="editTaskForm.title" label="タイトル"></v-text-field>
-            <v-textarea v-model="editTaskForm.description" label="詳細"></v-textarea>
-            <v-select
-              v-model="editTaskForm.priority"
-              label="優先度"
-              :items="priorities"
-              item-text="priorityName"
-              item-value="id"
-            ></v-select>
-            <v-select
-              v-model="editTaskForm.status"
-              label="ステータス"
-              :items="statuses"
-              item-text="statusName"
-              item-value="id"
-            ></v-select>
-            <v-text-field
-              v-model="editTaskForm.deadline"
-              label="完了予定日"
-              type="datetime-local"
-            />
-            <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
-          </v-form>
-        </v-card-text> -->
       </v-card>
     </v-dialog>
   </v-container>
@@ -355,61 +336,6 @@ export default class TaskDetail extends Vue {
       }, 4000)
     }
   }
-
-  // async editTask(task: Task) {
-  //   const EDIT_TASK_API = "/api/v1/tasks/" + task.id;
-  //   const res = await this.$axios.$get(EDIT_TASK_API);
-  //   this.editTaskForm.id = task.id;
-  //   this.editTaskForm.title = res.data.title;
-  //   this.editTaskForm.description = res.data.description;
-  //   this.editTaskForm.priority = res.data.priority;
-  //   this.editTaskForm.status = res.data.status;
-  //   this.editTaskForm.deadline = res.data.deadline;
-
-  //   this.showEditTaskForm = true;
-  // }
-
-  // async deleteTask(task: Task) {
-  //   const DELETE_TASK_API = "/api/v1/tasks/" + task.id;
-  //   const response = await this.$axios.$delete(DELETE_TASK_API);
-  //   try {
-  //     this.successModalTxt = response.data.title + 'を削除しました。';
-  //     this.displaySuccessModal = true;
-  //     setTimeout(() => {
-  //       this.displaySuccessModal = false
-  //     }, 4000);
-  //     this.fetchTasks()
-  //   }
-  //   catch(error) {
-  //     this.errorModalTxt = '削除に失敗しました。';
-  //     this.displayErrorModal = true;
-  //     setTimeout(() => {
-  //       this.displayErrorModal = false
-  //     }, 4000);
-  //   }
-  // }
-
-  // async updateTask() {
-  //   const UPDATE_TASK_API = "/api/v1/tasks/" + this.editTaskForm.id;
-  //   const response = await this.$axios.$put(UPDATE_TASK_API, this.editTaskForm);
-  //   try {
-  //     this.successModalTxt = response.data.title + 'を更新しました。';
-  //     this.displaySuccessModal = true;
-  //     this.showEditTaskForm = false;
-  //     setTimeout(() => {
-  //       this.displaySuccessModal = false
-  //     }, 4000);
-  //     this.fetchTasks()
-  //   }
-  //   catch(error) {
-  //     this.errorModalTxt = '更新に失敗しました。';
-  //     this.displayErrorModal = true;
-  //     this.showEditTaskForm = false;
-  //     setTimeout(() => {
-  //       this.displayErrorModal = false
-  //     }, 4000);
-  //   }
-  // }
 }
 </script>
 
@@ -454,5 +380,9 @@ export default class TaskDetail extends Vue {
   display: flex;
   justify-content: center;
   margin: auto;
+}
+
+.chip {
+  font-size: 0.6rem;
 }
 </style>

@@ -89,8 +89,8 @@ export default {
         },
         {
           icon: "mdi-cog",
-          title: "ログイン・設定",
-          to: "/login",
+          title: "マイページ・設定",
+          to: "/mypage",
         },
       ],
       miniVariant: false,

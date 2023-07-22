@@ -1,23 +1,25 @@
 <template>
-  <v-form ref="form" class="mx-9">
+  <v-form ref="form">
     <v-row justify="justify-space-between">
       <v-col cols="12" md="2">
-        <v-avatar size="100" class="mb-3 avatar">
-          <v-img
-            v-if="userInfoForm.image"
-            :src="userInfoForm.image"
-            :aspect-ratio="16 / 9"
-            alt="avatarImage"
-            class="avatar-image"
-          />
-          <v-img
-            v-else
-            :src="require('@/assets/images/common/icon-user.png')"
-            :aspect-ratio="16 / 9"
-            alt="avatarImage"
-            class="avatar-image"
-          />
-        </v-avatar>
+        <v-row class="justify-center">
+          <v-avatar size="100" class="mb-3 avatar">
+            <v-img
+              v-if="userInfoForm.image"
+              :src="userInfoForm.image"
+              :aspect-ratio="16 / 9"
+              alt="avatarImage"
+              class="avatar-image"
+            />
+            <v-img
+              v-else
+              :src="require('@/assets/images/common/icon-user.png')"
+              :aspect-ratio="16 / 9"
+              alt="avatarImage"
+              class="avatar-image"
+            />
+          </v-avatar>
+        </v-row>
       </v-col>
       <v-col cols="12" md="10">
         <v-text-field

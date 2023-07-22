@@ -1,13 +1,13 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-0">
     <v-row justify="justify-space-between">
       <v-col cols="12" md="6">
         <h1>{{ diary.title }}</h1>
       </v-col>
     </v-row>
     <v-divider justify="justify-space-between" class="my-3"></v-divider>
-    <v-row class="align-center my-1">
-      <v-col cols="6">
+    <v-row class="align-center my-1 mx-0">
+      <v-col cols="6" class="pa-0">
         <p class="ma-0">
           <small>{{ fmtDateWithoutTime(diary.date) }}</small>
         </p>
@@ -45,12 +45,12 @@
       </v-col>
     </v-row>
     <v-row class="mt-4 mb-2">
-      <v-col cols="12" md="6">
+      <v-col cols="6">
         <h3>
           <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ diary.diary_comments.length }})
         </h3>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="6">
         <v-row justify="end">
           <v-btn class="ma-3" color="primary" @click="showCommentForm = true">コメント追加</v-btn>
         </v-row>

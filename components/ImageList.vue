@@ -12,7 +12,7 @@
       </v-row>
     </v-col>
     <v-row>
-      <v-col v-for="image in images" :key="image.id" cols="2">
+      <v-col v-for="image in images" :key="image.id" cols="6" md="2">
         <v-card class="py-1 px-3">
           <v-card-actions>
             <v-icon class="row justify-end" @click="deleteImage(image)">mdi-delete-forever</v-icon>

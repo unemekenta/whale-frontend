@@ -1,30 +1,30 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="px-0">
     <v-row justify="justify-space-between">
-      <v-col cols="12" md="6">
+      <v-col cols="6">
         <h1>日記</h1>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="6" class="my-auto">
         <v-row justify="end">
-          <div v-if="displaySuccessModal" class="ma-3">
-            <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
-          </div>
-          <div v-if="displayErrorModal" class="ma-3">
-            <ErrorAlert :txt="errorModalTxt" />
-          </div>
           <v-btn class="ma-3" color="primary" @click="openAddDialog">日記をつける</v-btn>
         </v-row>
       </v-col>
     </v-row>
     <v-divider class="my-3"></v-divider>
-    <v-row>
+    <div v-if="displaySuccessModal" class="ma-3">
+      <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+    </div>
+    <div v-if="displayErrorModal" class="ma-3">
+      <ErrorAlert :txt="errorModalTxt" />
+    </div>
+    <v-row class="mx-1">
       <v-col v-if="diaries.length === 0" cols="12">
         <p>現在、日記はありません。</p>
       </v-col>
-      <v-col v-else cols="12">
+      <v-col v-else cols="12" class="px-0">
         <v-list>
           <v-list-item-group v-model="selectedDiary">
-            <v-list-item v-for="diary in diaries" :key="diary.id">
+            <v-list-item v-for="diary in diaries" :key="diary.id" class="px-0">
               <v-list-item-content>
                 <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
                   <v-list-item-title>{{ fmtDateWithoutTime(diary.date) }}</v-list-item-title>

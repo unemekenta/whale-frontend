@@ -87,8 +87,23 @@ interface Comment {
   user: User
 }
 
+interface Tag {
+  id: number
+  name: string
+  created_at: string
+}
+
+interface Task {
+  id: number
+  title: string
+  status: number
+  description: string
+  comments: Comment[]
+  tags: Tag[]
+}
+
 @Component
-export default class CommentList extends Vue {
+export default class TaskCommentList extends Vue {
   @Prop({ type: Array, required: true })
   comments: Comment[]
 
