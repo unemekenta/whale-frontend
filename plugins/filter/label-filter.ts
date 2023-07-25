@@ -9,13 +9,13 @@ export const statusColor = (statusNum: number): string => {
 function formatStatus(inputStatusNum: number) {
   switch (inputStatusNum) {
     case 1:
-      return "未実施"
+      return "これから"
     case 2:
-      return "進行中"
+      return "頑張り中"
     case 3:
-      return "確認待ち"
+      return "保留中"
     case 4:
-      return "完了"
+      return "達成"
     default:
       return "未分類"
   }

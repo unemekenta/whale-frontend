@@ -2,7 +2,7 @@
   <v-container fluid class="px-0">
     <v-row justify="justify-space-between">
       <v-col cols="6">
-        <h1>タスク</h1>
+        <h1>目標</h1>
       </v-col>
       <v-col cols="6" class="my-auto">
         <v-row justify="end">
@@ -19,7 +19,7 @@
     </div>
     <v-row class="mx-1">
       <v-col v-if="tasks.length === 0" cols="12">
-        <p>現在、タスクはありません。</p>
+        <p>現在、目標はありません。</p>
       </v-col>
       <v-col v-else cols="12" class="px-0">
         <v-list>
@@ -275,10 +275,10 @@ export default class TaskList extends Vue {
   ]
 
   statuses = [
-    { statusName: "未実施", id: 1 },
-    { statusName: "進行中", id: 2 },
-    { statusName: "確認待ち", id: 3 },
-    { statusName: "完了", id: 4 },
+    { statusName: "これから", id: 1 },
+    { statusName: "頑張り中", id: 2 },
+    { statusName: "保留中", id: 3 },
+    { statusName: "達成", id: 4 },
   ]
 
   showTaskForm = false

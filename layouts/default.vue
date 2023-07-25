@@ -12,7 +12,7 @@
       <v-list>
         <v-list-item>
           <v-img
-            :src="require('@/assets/images/common/dream-diary-logo-white.png')"
+            :src="require('@/assets/images/common/logo-white.png')"
             :aspect-ratio="3 / 1"
             alt="logo"
             class="logo-image"
@@ -31,7 +31,7 @@
     <v-app-bar :clipped-left="clipped" fixed app color="secondary" class="header-componment">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-img
-        :src="require('@/assets/images/common/dream-diary-logo-white.png')"
+        :src="require('@/assets/images/common/logo-white.png')"
         alt="logo"
         class="logo-image"
         height="auto"
@@ -76,7 +76,7 @@ export default {
         },
         {
           icon: "mdi-checkbox-marked",
-          title: "タスクを管理する",
+          title: "目標を管理する",
           to: "/tasks",
         },
         {

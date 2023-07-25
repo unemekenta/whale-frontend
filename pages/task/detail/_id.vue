@@ -144,10 +144,10 @@ export default class TaskDetail extends Vue {
   ]
 
   statuses = [
-    { statusName: "未実施", id: 1 },
-    { statusName: "進行中", id: 2 },
-    { statusName: "確認待ち", id: 3 },
-    { statusName: "完了", id: 4 },
+    { statusName: "これから", id: 1 },
+    { statusName: "頑張り中", id: 2 },
+    { statusName: "保留中", id: 3 },
+    { statusName: "達成", id: 4 },
   ]
 
   showCommentForm = false
