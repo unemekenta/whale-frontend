@@ -6,8 +6,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: "%s - Book Share",
-    title: "Book Share",
+    titleTemplate: "%s - Dream Diary",
+    title: "Dream Diary",
     htmlAttrs: {
       lang: "ja",
     },
@@ -17,8 +17,7 @@ export default {
       {
         hid: "description",
         name: "description",
-        content:
-          "「Book Share」は、本好きなあなたにぴったりのアプリです。書籍についてのレビューを投稿、閲覧することができます。さらに、自分が読んだ本を管理することができ、今後の読書計画に役立てることができます。",
+        content: "「Dream Diary」は、あなたの目標達成を応援します。",
       },
       { name: "format-detection", content: "telephone=no" },
     ],
