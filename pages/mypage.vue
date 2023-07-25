@@ -60,7 +60,7 @@ export default class Mypage extends Vue {
   errorModalTxt = ""
 
   async created() {
-    await this.sessionCheck(false)
+    await this.sessionCheck()
   }
 
   // フロント側でログイン状態に変更するにはsetLoginをtrueにする
