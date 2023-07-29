@@ -460,6 +460,6 @@ export default class TaskList extends Vue {
 
 <style lang="scss" scoped>
 .chip {
-  font-size: 0.6rem;
+  font-size: $font-micro;
 }
 </style>

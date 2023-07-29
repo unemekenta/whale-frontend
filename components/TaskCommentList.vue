@@ -119,13 +119,13 @@ export default class TaskCommentList extends Vue {
 
 <style lang="scss" scoped>
 .comment-text p {
-  font-size: 0.8rem;
+  font-size: $font-small;
   margin-bottom: 0.2rem;
   white-space: normal;
 }
 
 .comment-nickname {
-  font-size: 0.6rem;
+  font-size: $font-micro;
   margin: 0;
 }
 

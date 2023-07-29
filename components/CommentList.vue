@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-col v-if="comments.length === 0" cols="12">
-      <p>コメントはありません。</p>
+      <p class="text-body-2">コメントはありません。</p>
     </v-col>
     <v-list class="px-0">
       <v-list-item-group>
@@ -32,7 +32,7 @@
               </v-col>
               <v-col cols="10" md="11" class="px-2 py-2 comment-text">
                 <v-list-item-title>
-                  <p>
+                  <p class="text-body-2">
                     {{ comment.content }}
                   </p>
                 </v-list-item-title>
@@ -119,13 +119,13 @@ export default class CommentList extends Vue {
 
 <style lang="scss" scoped>
 .comment-text p {
-  font-size: 0.8rem;
+  font-size: $font-small;
   margin-bottom: 0.2rem;
   white-space: normal;
 }
 
 .comment-nickname {
-  font-size: 0.6rem;
+  font-size: $font-micro;
   margin: 0;
 }
 

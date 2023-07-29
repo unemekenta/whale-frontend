@@ -42,7 +42,7 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  font-size: 20px;
+  font-size: $font-super-large;
 }
 .notfound-img {
   max-width: 400px;

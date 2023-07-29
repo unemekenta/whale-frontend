@@ -30,7 +30,12 @@
           </v-col>
         </v-row>
         <h2 class="my-2">概要</h2>
-        <p class="text-body-2">{{ task.description }}</p>
+        <div v-if="task.description">
+          <p class="text-body-2">{{ task.description }}</p>
+        </div>
+        <div v-else>
+          <p class="text-body-2">コンテンツがありません</p>
+        </div>
         <v-row class="my-2">
           <v-col cols="6">
             <h3>
@@ -271,12 +276,12 @@ export default class TaskDetail extends Vue {
 }
 
 .comment .v-list-item-title {
-  font-size: 1.2rem;
+  font-size: $font-middle;
   margin-bottom: 0.5rem;
 }
 
 .comment .v-list-item-subtitle {
-  font-size: 0.9rem;
+  font-size: $font-small;
 }
 
 .text-body-2 {
@@ -288,7 +293,7 @@ export default class TaskDetail extends Vue {
   border-radius: 0 2px 2px 0;
   color: #55606a;
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: $font-small;
   line-height: 1.4rem;
   margin: 3px 4px 3px 8px;
   padding: 0 6px 0 8px;
@@ -303,6 +308,6 @@ export default class TaskDetail extends Vue {
 }
 
 .chip {
-  font-size: 0.6rem;
+  font-size: $font-micro;
 }
 </style>
