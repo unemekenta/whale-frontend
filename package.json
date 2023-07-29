@@ -16,6 +16,7 @@
     "@nuxt/typescript-runtime": "^3.0.0",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/dayjs": "^1.4.1",
+    "@nuxtjs/style-resources": "^1.2.1",
     "core-js": "^3.25.3",
     "eslint-visitor-keys": "^3.4.0",
     "nuxt": "^2.15.8",

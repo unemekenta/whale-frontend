@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="12" md="6">
         <h1>{{ diary.title }}</h1>
@@ -38,7 +38,7 @@
     </v-row>
     <p class="text-body-2">{{ diary.content }}</p>
     <v-row>
-      <v-col v-for="image in diary.images" :key="image.id" cols="4">
+      <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
         <v-card class="py-1 px-3">
           <v-img :src="image.image.url" :aspect-ratio="16 / 9"></v-img>
         </v-card>
@@ -236,7 +236,7 @@ export default class DiaryDetail extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .text-body-2 {
   white-space: pre-wrap;
 }

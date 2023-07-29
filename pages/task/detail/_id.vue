@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="12">
         <v-chip
@@ -122,6 +122,9 @@ export default class TaskDetail extends Vue {
     title: "",
     status: 0,
     description: "",
+    priority: 0,
+    deadline: "",
+    updated_at: "",
     comments: [],
     tags: [],
   }
@@ -256,7 +259,7 @@ export default class TaskDetail extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .comment {
   padding: 1rem;
   border-bottom: 1px solid #ccc;

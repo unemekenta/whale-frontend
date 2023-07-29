@@ -117,7 +117,7 @@ export default class TaskCommentList extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .comment-text p {
   font-size: 0.8rem;
   margin-bottom: 0.2rem;

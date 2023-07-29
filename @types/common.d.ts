@@ -46,6 +46,9 @@ export interface Task {
   title: string
   description: string
   status: number
+  priority: number
+  deadline: string
+  updated_at: string
   comments: TaskComment[]
   tags: Tag[]
 }

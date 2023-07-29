@@ -58,7 +58,7 @@ export default class SelectImage extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .card-content {
   max-height: 200px; /* 必要な高さに適宜調整してください */
   overflow-y: auto;

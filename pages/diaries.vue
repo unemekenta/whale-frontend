@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="6">
         <h1>日記</h1>

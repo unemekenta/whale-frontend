@@ -47,7 +47,11 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/dayjs"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/dayjs", "@nuxtjs/style-resources"],
+
+  styleResources: {
+    scss: ["~/assets/variable.scss"],
+  },
 
   axios: {
     baseURL: "http://localhost:3000",

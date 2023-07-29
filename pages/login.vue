@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="6">
         <h1>ログイン</h1>
@@ -128,7 +128,7 @@ export default class Login extends Vue {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form {
   width: 100%;
   max-width: 400px;

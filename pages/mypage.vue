@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <div v-if="$auth.loggedIn" justify="justify-space-between">
       <v-row justify="justify-space-between">
         <v-col cols="6">

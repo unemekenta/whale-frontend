@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <div v-for="(info, index) in informationContents" :key="index">
       <InformationBanner v-if="info.display_link" :txt="info.content" :link="info.link" />
       <InformationBanner v-else :txt="info.content" />
@@ -11,7 +11,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="4">
+      <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="3">
         <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
           <v-card>
             <v-img

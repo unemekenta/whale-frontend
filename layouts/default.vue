@@ -50,7 +50,7 @@
       <v-spacer />
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container fluid>
         <Nuxt class="main-container" />
       </v-container>
     </v-main>
@@ -104,10 +104,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .main-container {
-  max-width: 70rem;
-  margin: 0 auto;
+  padding: 5px 20px;
+  @media screen and (max-width: $breakpoint-md) {
+    padding: 0px;
+  }
 }
 
 .sidebar-componment div,

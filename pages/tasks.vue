@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="px-0">
+  <v-container fluid>
     <v-row justify="justify-space-between">
       <v-col cols="6">
         <h1>目標</h1>
@@ -22,36 +22,26 @@
         <p>現在、目標はありません。</p>
       </v-col>
       <v-col v-else cols="12" class="px-0">
-        <v-list>
-          <v-list-item-group v-model="selectedTask">
-            <v-list-item v-for="task in tasks" :key="task.id" class="px-0">
-              <v-list-item-content>
-                <nuxt-link :to="'/task/detail/' + task.id" class="text-decoration-none">
-                  <div class="flex justify-space-between my-1">
-                    <v-col cols="12" class="py-1 px-0">
-                      <v-chip
-                        class="font-weight-bold ma-1 chip py-1 px-4"
-                        :color="getStatusColor(task.status)"
-                        dark
-                      >
-                        {{ fmtStatus(task.status) }}
-                      </v-chip>
-                    </v-col>
-                    <v-col cols="12" class="py-0">
-                      <v-list-item-title class="task-title">{{ task.title }}</v-list-item-title>
-                    </v-col>
-                  </div>
-                </nuxt-link>
-              </v-list-item-content>
-              <v-list-item-action @click="editTask(task)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-list-item-action>
-              <v-list-item-action @click="deleteTask(task)">
-                <v-icon>mdi-delete</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+        <TableBasic :headers="headers" :items="tasksTableList">
+          <template #status="{ item }">
+            <v-chip
+              class="font-weight-bold chip py-1 px-4"
+              :color="getStatusColor(item.status)"
+              dark
+            >
+              {{ fmtStatus(item.status) }}
+            </v-chip>
+          </template>
+          <template #title="{ item }">
+            <nuxt-link :to="'/task/detail/' + item.id" class="text-decoration-none">
+              {{ item.title }}
+            </nuxt-link>
+          </template>
+          <template #actions="{ item }">
+            <v-btn icon @click.prevent="editTask(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn icon @click.prevent="deleteTask(item.id)"><v-icon>mdi-delete</v-icon></v-btn>
+          </template>
+        </TableBasic>
       </v-col>
     </v-row>
     <!-- 新規追加フォーム -->
@@ -222,20 +212,47 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { Task, Tag, Tagging } from "@/@types/common"
+import { TaskListTable } from "@/@types/task"
 import { stringToISOString } from "@/plugins/date-format"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
+import TableBasic from "@/components/common/TableBasic.vue"
+import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 
 @Component({
+  components: {
+    TableBasic,
+  },
+
   async asyncData({ $axios }) {
     const TASK_API = "/api/v1/tasks"
     const tasks = await $axios.$get(TASK_API)
+
     return {
       tasks: tasks.data,
+      tasksTableList: tasks.data.map(
+        ({ id, title, status, priority, deadline }: TaskListTable) => ({
+          id,
+          title,
+          status,
+          priority,
+          deadline: dateWithoutTimeFilter(deadline),
+          actions: "",
+        })
+      ),
     }
   },
 })
 export default class TaskList extends Vue {
   tasks: Task[] = []
+  tasksTableList: TaskListTable[] = []
+
+  headers = [
+    { text: "ステータス", value: "status" },
+    { text: "タイトル", value: "title" },
+    { text: "優先度", value: "priority" },
+    { text: "完了予定", value: "deadline" },
+    { text: "", value: "actions" },
+  ]
 
   selectedTask: Task | null = null
   inputName = ""
@@ -302,12 +319,22 @@ export default class TaskList extends Vue {
     const TASK_API = "/api/v1/tasks"
     const tasks = await this.$axios.$get(TASK_API)
     this.tasks = tasks.data
+    this.tasksTableList = tasks.data.map(
+      ({ id, title, status, priority, deadline }: TaskListTable) => ({
+        id,
+        title,
+        status,
+        priority,
+        deadline: dateWithoutTimeFilter(deadline),
+        actions: "",
+      })
+    )
   }
 
-  async editTask(task: Task) {
-    const EDIT_TASK_API = "/api/v1/tasks/" + task.id
+  async editTask(taskId: number) {
+    const EDIT_TASK_API = "/api/v1/tasks/" + taskId
     const res = await this.$axios.$get(EDIT_TASK_API)
-    this.editTaskForm.id = task.id
+    this.editTaskForm.id = taskId
     this.editTaskForm.title = res.data.title
     this.editTaskForm.description = res.data.description
     this.editTaskForm.priority = res.data.priority
@@ -322,8 +349,8 @@ export default class TaskList extends Vue {
     this.showEditTaskForm = true
   }
 
-  async deleteTask(task: Task) {
-    const DELETE_TASK_API = "/api/v1/tasks/" + task.id
+  async deleteTask(taskId: number) {
+    const DELETE_TASK_API = "/api/v1/tasks/" + taskId
     const response = await this.$axios.$delete(DELETE_TASK_API)
     try {
       this.successModalTxt = response.data.title + "を削除しました。"
@@ -431,14 +458,7 @@ export default class TaskList extends Vue {
 }
 </script>
 
-<style scoped>
-.task-title {
-  align-items: center;
-  height: 100%;
-  display: flex;
-  white-space: normal;
-}
-
+<style lang="scss" scoped>
 .chip {
   font-size: 0.6rem;
 }
