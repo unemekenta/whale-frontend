@@ -22,24 +22,17 @@
         <p>現在、日記はありません。</p>
       </v-col>
       <v-col v-else cols="12" class="px-0">
-        <v-list>
-          <v-list-item-group v-model="selectedDiary">
-            <v-list-item v-for="diary in diaries" :key="diary.id" class="px-0">
-              <v-list-item-content>
-                <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
-                  <v-list-item-title>{{ fmtDateWithoutTime(diary.date) }}</v-list-item-title>
-                  <v-list-item-title>{{ diary.title }}</v-list-item-title>
-                </nuxt-link>
-              </v-list-item-content>
-              <v-list-item-action @click="editDiary(diary)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-list-item-action>
-              <v-list-item-action @click="deleteDiary(diary)">
-                <v-icon>mdi-delete</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+        <TableBasic :headers="headers" :items="diariesTableList">
+          <template #title="{ item }">
+            <nuxt-link :to="'/diary/detail/' + item.id" class="text-decoration-none">
+              {{ item.title }}
+            </nuxt-link>
+          </template>
+          <template #actions="{ item }">
+            <v-btn icon @click.prevent="editDiary(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>
+            <v-btn icon @click.prevent="deleteDiary(item.id)"><v-icon>mdi-delete</v-icon></v-btn>
+          </template>
+        </TableBasic>
       </v-col>
     </v-row>
 
@@ -66,20 +59,41 @@ import { Component, Vue } from "nuxt-property-decorator"
 import { stringToISOString } from "@/plugins/date-format"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, DiariesImageRelation } from "@/@types/common"
+import TableBasic from "@/components/common/TableBasic.vue"
+import { DiaryListTable } from "@/@types/diary"
 
 @Component({
+  components: {
+    TableBasic,
+  },
+
   async asyncData({ $axios }) {
     const DIARY_API = "/api/v1/diaries"
     const diaries = await $axios.$get(DIARY_API)
     return {
       diaries: diaries.data,
+      diariesTableList: diaries.data.map(({ id, title, is_public, date }: DiaryListTable) => ({
+        id,
+        title,
+        is_public,
+        date: dateWithoutTimeFilter(date),
+        actions: "",
+      })),
     }
   },
 })
 export default class DiaryList extends Vue {
   diaries: Diary[] = []
+  diariesTableList: DiaryListTable[] = []
 
   selectedDiary: Diary | null = null
+
+  headers = [
+    { text: "タイトル", value: "title" },
+    { text: "一般公開", value: "is_public" },
+    { text: "日付", value: "date" },
+    { text: "", value: "actions" },
+  ]
 
   showDiaryForm = false
   showEditDiaryForm = false
@@ -92,7 +106,7 @@ export default class DiaryList extends Vue {
     id: 0,
     title: "",
     content: "",
-    public: false,
+    is_public: false,
     date: "",
     uid: "",
     diaries_image_relations: "",
@@ -102,7 +116,7 @@ export default class DiaryList extends Vue {
     id: 0,
     title: "",
     content: "",
-    public: false,
+    is_public: false,
     date: "",
     diaries_image_relations: "",
   }
@@ -132,15 +146,22 @@ export default class DiaryList extends Vue {
     const DIARY_API = "/api/v1/diaries"
     const diaries = await this.$axios.$get(DIARY_API)
     this.diaries = diaries.data
+    this.diariesTableList = diaries.data.map(({ id, title, is_public, date }: DiaryListTable) => ({
+      id,
+      title,
+      is_public,
+      date: dateWithoutTimeFilter(date),
+      actions: "",
+    }))
   }
 
-  async editDiary(diary: Diary) {
-    const EDIT_DIARY_API = "/api/v1/diaries/" + diary.id
+  async editDiary(diaryId: number) {
+    const EDIT_DIARY_API = "/api/v1/diaries/" + diaryId
     const res = await this.$axios.$get(EDIT_DIARY_API)
-    this.editDiaryForm.id = diary.id
+    this.editDiaryForm.id = diaryId
     this.editDiaryForm.title = res.data.title
     this.editDiaryForm.content = res.data.content
-    this.editDiaryForm.public = res.data.public
+    this.editDiaryForm.is_public = res.data.is_public
     this.editDiaryForm.date = stringToISOString(res.data.date)
     this.editDiaryForm.diaries_image_relations = JSON.stringify(
       res.data.diaries_image_relations.map((item: DiariesImageRelation) => {
@@ -151,9 +172,9 @@ export default class DiaryList extends Vue {
     this.openEditDialog()
   }
 
-  async deleteDiary(diary: Diary) {
+  async deleteDiary(diaryId: number) {
     try {
-      const DELETE_DIARY_API = "/api/v1/diaries/" + diary.id
+      const DELETE_DIARY_API = "/api/v1/diaries/" + diaryId
       const response = await this.$axios.$delete(DELETE_DIARY_API)
       this.successModalTxt = response.data.title + "を削除しました。"
       this.displaySuccessModal = true

@@ -117,7 +117,7 @@ export default class DiaryDetail extends Vue {
     id: 0,
     title: "",
     content: "",
-    public: false,
+    is_public: false,
     date: "",
     images: [],
     user: {

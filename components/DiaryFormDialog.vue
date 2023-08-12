@@ -14,9 +14,9 @@
           <v-textarea v-model="diaryForm.content" label="詳細"></v-textarea>
           <v-text-field v-model="diaryForm.date" label="日付" type="datetime-local" />
           <v-checkbox
-            v-model="diaryForm.public"
+            v-model="diaryForm.is_public"
             label="一般公開する"
-            :input-value="diaryForm.public"
+            :input-value="diaryForm.is_public"
           ></v-checkbox>
           <SelectImage
             :callback="addToDiariesImageRelation"
@@ -36,7 +36,7 @@ interface DiaryForm {
   id: number
   title: string
   content: string
-  public: boolean
+  is_public: boolean
   date: string
   uid: string
   diaries_image_relations: string

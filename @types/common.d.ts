@@ -25,7 +25,7 @@ export interface Diary {
   id: number
   title: string
   content: string
-  public: boolean
+  is_public: boolean
   date: string
   images: Image[]
   user: User
