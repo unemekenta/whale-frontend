@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  nuxt-frontend:
+    container_name: nuxt-frontend
+    build: .
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}"
+    volumes:
+      - .:/nuxt-frontend
+    command: yarn run dev
+    env_file: # アプリケーション内の環境変数もルート直下envファイルを参照
+      - .${NODE_ENV}.env
+
+volumes:
+  node_modules_volume:

@@ -4,6 +4,10 @@ export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
+  server: {
+    host: "0.0.0.0", // デフォルト: localhost,
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: "%s - Dream Diary",
@@ -49,12 +53,17 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/dayjs", "@nuxtjs/style-resources"],
 
+  env: {
+    // これを設定しないとNuxtでprocess.env.NODE_ENVを取得したときにデフォルトの値になってしまう
+    NODE_ENV: process.env.NODE_ENV,
+  },
+
   styleResources: {
     scss: ["~/assets/variable.scss"],
   },
 
   axios: {
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.API_DOMAIN,
   },
 
   auth: {
