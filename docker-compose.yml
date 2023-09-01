@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/nuxt-frontend
       - node_modules_volume:/var/www/nuxt/node_modules
-    command: yarn run dev
+    command: yarn run build && yarn run dev
     env_file: # アプリケーション内の環境変数もルート直下envファイルを参照
       - .${APP_ENV}.env
     networks:
