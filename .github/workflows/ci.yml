@@ -45,3 +45,18 @@ jobs:
 
       - name: Run lint
         run: npm run lint:js
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SSH Key for Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          port: ${{secrets.SSH_PORT}}
+          script: |
+            cd whale-frontend
+            git pull origin main   
