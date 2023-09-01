@@ -1,0 +1,4 @@
+services:
+  nuxt-frontend:
+    ports:
+      - "${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}"

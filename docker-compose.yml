@@ -4,13 +4,39 @@ services:
   nuxt-frontend:
     container_name: nuxt-frontend
     build: .
-    ports:
-      - "${FRONTEND_HOST_PORT}:${FRONTEND_CONTAINER_PORT}"
+    expose:
+      - "${FRONTEND_CONTAINER_PORT}"
     volumes:
       - .:/nuxt-frontend
     command: yarn run dev
     env_file: # アプリケーション内の環境変数もルート直下envファイルを参照
-      - .${NODE_ENV}.env
+      - .${APP_ENV}.env
+    networks:
+      whale-network:
+        ipv4_address: ${FRONTEND_CONTAINER_HOST}
+
+  reverse-proxy:
+    image: nginx:1.25.2-alpine
+    volumes:
+      - ./reverse-proxy:/etc/nginx
+    ports:
+      - ${REVERSE_PROXY_HOST_PORT}:${REVERSE_PROXY_CONTAINER_PORT}
+    env_file:
+      - .${APP_ENV}.env
+    extra_hosts:
+      - "${PROXY_HOST}:host-gateway"
+    networks:
+      - whale-network
+    depends_on:
+      - nuxt-frontend
 
 volumes:
   node_modules_volume:
+
+networks:
+  whale-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${CONTAINER_NETWORK_SUBNET}

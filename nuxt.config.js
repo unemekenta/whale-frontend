@@ -51,7 +51,13 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth", "@nuxtjs/dayjs", "@nuxtjs/style-resources"],
+  modules: [
+    "@nuxtjs/axios",
+    "@nuxtjs/auth",
+    "@nuxtjs/dayjs",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/proxy",
+  ],
 
   env: {
     // これを設定しないとNuxtでprocess.env.NODE_ENVを取得したときにデフォルトの値になってしまう
@@ -64,6 +70,14 @@ export default {
 
   axios: {
     baseURL: process.env.API_DOMAIN,
+  },
+
+  proxy: {
+    "/api/": {
+      target: process.env.API_DOMAIN,
+      changeOrigin: true,
+      secure: false,
+    },
   },
 
   auth: {

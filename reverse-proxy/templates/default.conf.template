@@ -1,0 +1,19 @@
+server {
+  listen ${REVERSE_PROXY_HOST_PORT} default_server;
+
+  server_name ${APP_ENV}-reverse-proxy;
+
+  set $ENV ${APP_ENV};
+  if ($ENV = 'docker-local') {
+    set $ALLOW_IPS true;
+  }
+
+  if ($ALLOW_IPS = 'false') {
+    return 403;
+  }
+
+  location / {
+    proxy_pass http://nuxt-frontend/;
+    proxy_redirect off;
+  }
+}

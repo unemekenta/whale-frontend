@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+*/conf.d/default.conf
+*/nginx.conf
