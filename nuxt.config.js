@@ -24,6 +24,7 @@ export default {
         content: "「Dream Diary」は、あなたの目標達成を応援します。",
       },
       { name: "format-detection", content: "telephone=no" },
+      { name: "robots", content: "noindex,nofollow" },
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
