@@ -2,7 +2,7 @@
 
 server {
   listen ${REVERSE_PROXY_HOST_PORT};
-  server_name ${APP_ENV}-reverse-proxy;
+  server_name ${NGINX_SERVER_NAME};
 
   set $ENV ${APP_ENV};
   if ($ENV = 'docker-local') {
@@ -22,7 +22,7 @@ server {
 server {
   listen ${REVERSE_PROXY_HTTPS_HOST_PORT} ssl;
 
-  server_name ${APP_ENV}-reverse-proxy;
+  server_name ${NGINX_SERVER_NAME};
 
   ssl_certificate /etc/nginx/ssl/server.crt;
   ssl_certificate_key /etc/nginx/ssl/server.key;
