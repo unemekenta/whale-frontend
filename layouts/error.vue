@@ -10,6 +10,11 @@
     </div>
     <h1 v-else>
       {{ otherError }}
+      <v-img
+        class="notfound-img"
+        :src="require('@/assets/images/common/500.png')"
+        :aspect-ratio="1"
+      ></v-img>
     </h1>
     <NuxtLink to="/"> Home page </NuxtLink>
   </v-app>

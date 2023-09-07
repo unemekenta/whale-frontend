@@ -21,7 +21,6 @@ services:
     volumes:
       - ./reverse-proxy:/etc/nginx
     ports:
-      - ${REVERSE_PROXY_HOST_PORT}:${REVERSE_PROXY_CONTAINER_PORT}
       - ${REVERSE_PROXY_HTTPS_HOST_PORT}:${REVERSE_PROXY_HTTPS_CONTAINER_PORT}
     env_file:
       - .${APP_ENV}.env
