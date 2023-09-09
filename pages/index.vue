@@ -73,15 +73,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator"
+import Vue from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, InformationContents } from "@/@types/common"
 
-@Component({
+export default Vue.extend({
   async asyncData({ $axios }) {
     const now = new Date().getTime()
     const TIMELINE_API = "/api/v1/diaries/timeline"
-    const INFO_API = "/api/v1/information_contents?start_at=" + now + "&end_at=" + now
+    const INFO_API = `/api/v1/information_contents?start_at=${now}&end_at=${now}`
     const diaries = await $axios.$get(TIMELINE_API)
     const informationContents = await $axios.$get(INFO_API)
     return {
@@ -89,15 +89,18 @@ import { Diary, InformationContents } from "@/@types/common"
       informationContents: informationContents.data,
     }
   },
+  data() {
+    return {
+      diaries: [] as Diary[],
+      informationContents: [] as InformationContents[],
+    }
+  },
+  methods: {
+    fmtDateWithoutTime(date: string) {
+      return dateWithoutTimeFilter(date)
+    },
+  },
 })
-export default class Index extends Vue {
-  diaries: Diary[] = []
-  informationContents: InformationContents[] = []
-
-  fmtDateWithoutTime(date: string) {
-    return dateWithoutTimeFilter(date)
-  }
-}
 </script>
 
 <style>
