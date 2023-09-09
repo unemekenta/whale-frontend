@@ -43,6 +43,7 @@
 import { Component, Vue } from "nuxt-property-decorator"
 import Modal from "@/components/Modal.vue"
 import { User } from "@/@types/common"
+import { logoutStorage } from "@/plugins/session"
 
 @Component
 export default class Login extends Vue {
@@ -118,10 +119,7 @@ export default class Login extends Vue {
         nickname: "",
         image: "",
       }
-      localStorage.removeItem("access-token")
-      localStorage.removeItem("client")
-      localStorage.removeItem("uid")
-      localStorage.removeItem("token-type")
+      logoutStorage()
     })
     await this.$auth.fetchUser()
   }
@@ -132,5 +130,8 @@ export default class Login extends Vue {
 .form {
   width: 100%;
   max-width: 400px;
+  @media screen and (max-width: $breakpoint-md) {
+    max-width: calc(100% - 16px);
+  }
 }
 </style>
