@@ -3,5 +3,5 @@ export const imageUrl = (path: string): string => {
 }
 
 function formatImageUrl(path: string) {
-  return process.env.CDN_DOMAIN + "/" + path
+  return path
 }
