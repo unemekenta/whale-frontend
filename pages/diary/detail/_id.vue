@@ -17,7 +17,7 @@
           <v-avatar size="40" class="avatar">
             <v-img
               v-if="diary.user.image"
-              :src="diary.user.image"
+              :src="fmtImageUrl(diary.user.image)"
               :aspect-ratio="1"
               alt="avatarImage"
               class="avatar-image"
@@ -40,7 +40,7 @@
     <v-row>
       <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
         <v-card class="py-1 px-3">
-          <v-img :src="image.image.url" :aspect-ratio="16 / 9"></v-img>
+          <v-img :src="fmtImageUrl(image.image.url)" :aspect-ratio="16 / 9"></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -102,6 +102,7 @@
 import { Component, Vue } from "nuxt-property-decorator"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { DiaryComment, Diary } from "@/@types/common"
+import { imageUrl } from "@/plugins/helpers/image"
 
 @Component({
   async asyncData({ $axios, params }) {
@@ -232,6 +233,10 @@ export default class DiaryDetail extends Vue {
         this.displayErrorModal = false
       }, 4000)
     }
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 }
 </script>

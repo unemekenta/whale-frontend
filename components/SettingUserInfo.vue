@@ -6,7 +6,7 @@
           <v-avatar size="100" class="mb-3 avatar">
             <v-img
               v-if="userInfoForm.image"
-              :src="userInfoForm.image"
+              :src="fmtImageUrl(userInfoForm.image)"
               :aspect-ratio="16 / 9"
               alt="avatarImage"
               class="avatar-image"
@@ -47,6 +47,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "nuxt-property-decorator"
+import { imageUrl } from "@/plugins/helpers/image"
 
 interface UserInfoForm {
   id: number
@@ -83,6 +84,10 @@ export default class SettingUserInfo extends Vue {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 }
 </script>

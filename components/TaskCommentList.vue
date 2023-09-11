@@ -12,7 +12,7 @@
                 <v-avatar size="40" class="avatar">
                   <v-img
                     v-if="comment.user.image"
-                    :src="comment.user.image"
+                    :src="fmtImageUrl(comment.user.image)"
                     :aspect-ratio="1"
                     alt="avatarImage"
                     class="avatar-image"
@@ -72,6 +72,7 @@
 import { Component, Prop, Vue } from "nuxt-property-decorator"
 import { dateFilter } from "@/plugins/filter/date-filter"
 import { DiaryComment } from "@/@types/common"
+import { imageUrl } from "@/plugins/helpers/image"
 
 @Component
 export default class TaskCommentList extends Vue {
@@ -113,6 +114,10 @@ export default class TaskCommentList extends Vue {
     } catch (error) {
       console.error(error)
     }
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 }
 </script>

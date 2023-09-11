@@ -36,8 +36,10 @@ export default {
   plugins: [
     "@/plugins/axios-accessor",
     "@/plugins/date-format",
+    "@/plugins/session",
     "@/plugins/filter/date-filter",
     "@/plugins/filter/label-filter",
+    "@/plugins/helpers/image",
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

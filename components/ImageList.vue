@@ -17,7 +17,7 @@
           <v-card-actions>
             <v-icon class="row justify-end" @click="deleteImage(image)">mdi-delete-forever</v-icon>
           </v-card-actions>
-          <v-img :src="image.image.url" :aspect-ratio="16 / 9"></v-img>
+          <v-img :src="fmtImageUrl(image.image.url)" :aspect-ratio="16 / 9"></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -27,6 +27,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { Image } from "@/@types/common"
+import { imageUrl } from "@/plugins/helpers/image"
 
 @Component({
   async asyncData({ $axios }) {
@@ -73,6 +74,10 @@ export default class ImageList extends Vue {
     const IMAGE_API = "/api/v1/images"
     const images = await this.$axios.$get(IMAGE_API)
     this.images = images.data
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 }
 </script>

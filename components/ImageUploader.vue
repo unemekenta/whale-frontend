@@ -10,7 +10,7 @@
     <v-row justify="justify-space-between" class="align-center">
       <v-col cols="4">
         <v-card v-if="previewImage" outlined>
-          <v-img :src="previewImage" :aspect-ratio="16 / 9"></v-img>
+          <v-img :src="fmtImageUrl(previewImage)" :aspect-ratio="16 / 9"></v-img>
         </v-card>
         <v-card v-else>
           <v-img :src="require('@/assets/images/common/noimage.png')" :aspect-ratio="1"></v-img>
@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
+import { imageUrl } from "@/plugins/helpers/image"
 
 @Component
 export default class ImageUploader extends Vue {
@@ -58,6 +59,10 @@ export default class ImageUploader extends Vue {
       // ファイルが選択されていない場合はプレビューをクリアする
       this.previewImage = null
     }
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 
   async uploadImage() {

@@ -16,7 +16,7 @@
           <v-card>
             <v-img
               v-if="diary.images.length > 0"
-              :src="diary.images[0].image.url"
+              :src="fmtImageUrl(diary.images[0].image.url)"
               :aspect-ratio="16 / 9"
             ></v-img>
             <v-img
@@ -35,7 +35,7 @@
                   <v-avatar size="30" class="avatar">
                     <v-img
                       v-if="diary.user.image"
-                      :src="diary.user.image"
+                      :src="fmtImageUrl(diary.user.image)"
                       :aspect-ratio="1"
                       alt="avatarImage"
                       class="avatar-image"
@@ -76,6 +76,7 @@
 import Vue from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, InformationContents } from "@/@types/common"
+import { imageUrl } from "@/plugins/helpers/image"
 
 export default Vue.extend({
   async asyncData({ $axios }) {
@@ -98,6 +99,10 @@ export default Vue.extend({
   methods: {
     fmtDateWithoutTime(date: string) {
       return dateWithoutTimeFilter(date)
+    },
+
+    fmtImageUrl(path: string) {
+      return imageUrl(path)
     },
   },
 })

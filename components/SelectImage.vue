@@ -8,7 +8,7 @@
             :value="image.id"
             class="image-checkbox"
           ></v-checkbox>
-          <v-img :src="image.image.url" :aspect-ratio="16 / 9"></v-img>
+          <v-img :src="fmtImageUrl(image.image.url)" :aspect-ratio="16 / 9"></v-img>
         </v-card>
       </v-col>
     </v-row>
@@ -23,6 +23,7 @@
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from "nuxt-property-decorator"
 import { Image } from "@/@types/common"
+import { imageUrl } from "@/plugins/helpers/image"
 
 @Component({})
 export default class SelectImage extends Vue {
@@ -54,6 +55,10 @@ export default class SelectImage extends Vue {
     const IMAGE_API = "/api/v1/images"
     const images = await this.$axios.$get(IMAGE_API)
     this.images = images.data
+  }
+
+  fmtImageUrl(path: string) {
+    return imageUrl(path)
   }
 }
 </script>
