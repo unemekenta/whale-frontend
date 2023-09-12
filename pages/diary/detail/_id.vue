@@ -99,12 +99,15 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue"
+import Vue from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { DiaryComment, Diary } from "@/@types/common"
-import { imageUrl } from "@/plugins/helpers/image"
+import ImageBasic from "@/components/common/ImageBasic.vue"
 
 export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
   async asyncData({ $axios, params }) {
     const DIARY_API = "/api/v1/diaries/" + `${params.id}`
     const diary = await $axios.$get(DIARY_API)
