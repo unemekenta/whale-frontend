@@ -10,14 +10,14 @@
             <v-row no-gutters>
               <v-col cols="2" md="1">
                 <v-avatar size="40" class="avatar">
-                  <v-img
+                  <ImageBasic
                     v-if="comment.user.image"
-                    :src="fmtImageUrl(comment.user.image)"
+                    :src="comment.user.image"
                     :aspect-ratio="1"
                     alt="avatarImage"
                     class="avatar-image"
                   />
-                  <v-img
+                  <ImageBasic
                     v-else
                     :src="require('@/assets/images/common/icon-user.png')"
                     :aspect-ratio="1"
@@ -69,57 +69,62 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "nuxt-property-decorator"
+import Vue, { PropType } from "vue"
 import { dateFilter } from "@/plugins/filter/date-filter"
-import { imageUrl } from "@/plugins/helpers/image"
 import { DiaryComment } from "@/@types/common"
+import ImageBasic from "@/components/common/ImageBasic.vue"
 
-@Component
-export default class CommentList extends Vue {
-  @Prop({ type: Array, required: true })
-  comments: DiaryComment[]
+export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
+  props: {
+    comments: {
+      type: Array as PropType<DiaryComment[]>,
+      required: true,
+    },
+    editComment: {
+      type: Function,
+      required: true,
+    },
+    deleteComment: {
+      type: Function,
+      required: true,
+    },
+  },
+  methods: {
+    callEditComment(comment: DiaryComment) {
+      const uid = window.localStorage.getItem("uid")
+      if (uid === null) {
+        return
+      }
 
-  @Prop({ type: Function, required: true })
-  editComment: Function
+      try {
+        this.editComment(comment)
+      } catch (error) {
+        console.error(error)
+      }
+    },
 
-  @Prop({ type: Function, required: true })
-  deleteComment: Function
+    fmtDate(date: string) {
+      return dateFilter(date)
+    },
 
-  callEditComment(comment: DiaryComment) {
-    const uid = window.localStorage.getItem("uid")
-    if (uid === null) {
-      return
-    }
+    callDeleteComment(comment: DiaryComment) {
+      // フォームの入力内容を親コンポーネントに送信する
+      const uid = window.localStorage.getItem("uid")
+      if (uid === null) {
+        return
+      }
 
-    try {
-      this.editComment(comment)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  fmtDate(date: string) {
-    return dateFilter(date)
-  }
-
-  fmtImageUrl(path: string) {
-    return imageUrl(path)
-  }
-
-  callDeleteComment(comment: DiaryComment) {
-    // フォームの入力内容を親コンポーネントに送信する
-    const uid = window.localStorage.getItem("uid")
-    if (uid === null) {
-      return
-    }
-
-    try {
-      this.deleteComment(comment)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-}
+      try {
+        this.deleteComment(comment)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  },
+})
 </script>
 
 <style lang="scss" scoped>

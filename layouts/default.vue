@@ -11,7 +11,7 @@
     >
       <v-list>
         <v-list-item>
-          <v-img
+          <ImageBasic
             :src="require('@/assets/images/common/logo-white.png')"
             :aspect-ratio="3 / 1"
             alt="logo"
@@ -36,6 +36,7 @@
         class="logo-image"
         height="auto"
         max-width="150px"
+        decoding="async"
       />
       <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? "right" : "left"}` }}</v-icon>
@@ -60,9 +61,14 @@
   </v-app>
 </template>
 
-<script>
-export default {
-  name: "DefaultLayout",
+<script lang="ts">
+import Vue from "vue"
+import ImageBasic from "@/components/common/ImageBasic.vue"
+
+export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
   data() {
     return {
       clipped: false,
@@ -101,7 +107,7 @@ export default {
       title: "Dream Diary",
     }
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>

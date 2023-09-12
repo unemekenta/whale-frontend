@@ -19,7 +19,7 @@
             :input-value="diaryForm.is_public"
           ></v-checkbox>
           <SelectImage
-            :callback="addToDiariesImageRelation"
+            :callback-func="addToDiariesImageRelation"
             :selected-images="selectedImagesArray(diaryForm.diaries_image_relations)"
           />
           <v-btn type="submit" color="primary" class="mt-2">保存</v-btn>

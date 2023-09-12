@@ -24,7 +24,7 @@
         </v-row>
       </v-col>
       <v-col cols="12">
-        <SettingUserInfo :user-info-form="user" :callback="submitUserInfoForm" />
+        <SettingUserInfo :user-info-form="user" :callback-func="submitUserInfoForm" />
       </v-col>
     </div>
     <div v-else justify="justify-space-between">

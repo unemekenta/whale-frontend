@@ -15,14 +15,14 @@
       <v-col cols="6">
         <v-row mx-0 justify="end">
           <v-avatar size="40" class="avatar">
-            <v-img
+            <ImageBasic
               v-if="diary.user.image"
-              :src="fmtImageUrl(diary.user.image)"
+              :src="diary.user.image"
               :aspect-ratio="1"
               alt="avatarImage"
               class="avatar-image"
             />
-            <v-img
+            <ImageBasic
               v-else
               :src="require('@/assets/images/common/icon-user.png')"
               :aspect-ratio="1"
@@ -40,7 +40,7 @@
     <v-row>
       <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
         <v-card class="py-1 px-3">
-          <v-img :src="fmtImageUrl(image.image.url)" :aspect-ratio="16 / 9"></v-img>
+          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
         </v-card>
       </v-col>
     </v-row>
@@ -99,12 +99,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator"
+import Vue, { PropType } from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { DiaryComment, Diary } from "@/@types/common"
 import { imageUrl } from "@/plugins/helpers/image"
 
-@Component({
+export default Vue.extend({
   async asyncData({ $axios, params }) {
     const DIARY_API = "/api/v1/diaries/" + `${params.id}`
     const diary = await $axios.$get(DIARY_API)
@@ -112,133 +112,130 @@ import { imageUrl } from "@/plugins/helpers/image"
       diary: diary.data,
     }
   },
-})
-export default class DiaryDetail extends Vue {
-  diary: Diary = {
-    id: 0,
-    title: "",
-    content: "",
-    is_public: false,
-    date: "",
-    images: [],
-    user: {
-      id: 0,
-      name: "",
-      nickname: "",
-      image: "",
+  data() {
+    return {
+      diary: {
+        id: 0,
+        title: "",
+        content: "",
+        is_public: false,
+        date: "",
+        images: [],
+        user: {
+          id: 0,
+          name: "",
+          nickname: "",
+          image: "",
+        },
+        diary_comments: [],
+      } as Diary,
+      commentForm: {
+        content: "",
+        uid: "",
+      },
+      editCommentForm: {
+        id: 0,
+        content: "",
+      },
+      showCommentForm: false,
+      showEditCommentForm: false,
+      showEditDiaryForm: false,
+
+      displaySuccessModal: false,
+      successModalTxt: "",
+      displayErrorModal: false,
+      errorModalTxt: "",
+    }
+  },
+  methods: {
+    fmtDateWithoutTime(date: string) {
+      return dateWithoutTimeFilter(date)
     },
-    diary_comments: [],
-  }
 
-  commentForm = {
-    content: "",
-    uid: "",
-  }
+    async fetchDiary() {
+      const DIARY_API = "/api/v1/diaries/" + this.$route.params.id
+      const diary = await this.$axios.$get(DIARY_API)
+      this.diary = diary.data
+    },
 
-  editCommentForm = {
-    id: 0,
-    content: "",
-  }
+    async editComment(comment: DiaryComment) {
+      const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
+      const res = await this.$axios.$get(EDIT_COMMENT_API)
+      this.editCommentForm.id = comment.id
+      this.editCommentForm.content = res.data.content
 
-  showCommentForm = false
-  showEditCommentForm = false
-  showEditDiaryForm = false
+      this.showEditCommentForm = true
+    },
 
-  displaySuccessModal = false
-  successModalTxt = ""
-  displayErrorModal = false
-  errorModalTxt = ""
-
-  fmtDateWithoutTime(date: string) {
-    return dateWithoutTimeFilter(date)
-  }
-
-  async fetchDiary() {
-    const DIARY_API = "/api/v1/diaries/" + this.$route.params.id
-    const diary = await this.$axios.$get(DIARY_API)
-    this.diary = diary.data
-  }
-
-  async editComment(comment: DiaryComment) {
-    const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
-    const res = await this.$axios.$get(EDIT_COMMENT_API)
-    this.editCommentForm.id = comment.id
-    this.editCommentForm.content = res.data.content
-
-    this.showEditCommentForm = true
-  }
-
-  async submitComment() {
-    try {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
+    async submitComment() {
+      try {
+        const uid = window.localStorage.getItem("uid")
+        if (uid === null) {
+          return
+        }
+        this.commentForm.uid = uid
+        const POST_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments"
+        await this.$axios.$post(POST_COMMENT_API, this.commentForm)
+        this.successModalTxt = "コメントを登録しました。"
+        this.displaySuccessModal = true
+        this.showCommentForm = false
+        setTimeout(() => {
+          this.displaySuccessModal = false
+        }, 4000)
+        this.fetchDiary()
+      } catch (error) {
+        this.errorModalTxt = "登録に失敗しました。"
+        this.displayErrorModal = true
+        this.showCommentForm = false
+        setTimeout(() => {
+          this.displayErrorModal = false
+        }, 4000)
       }
-      this.commentForm.uid = uid
-      const POST_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments"
-      await this.$axios.$post(POST_COMMENT_API, this.commentForm)
-      this.successModalTxt = "コメントを登録しました。"
-      this.displaySuccessModal = true
-      this.showCommentForm = false
-      setTimeout(() => {
-        this.displaySuccessModal = false
-      }, 4000)
-      this.fetchDiary()
-    } catch (error) {
-      this.errorModalTxt = "登録に失敗しました。"
-      this.displayErrorModal = true
-      this.showCommentForm = false
-      setTimeout(() => {
-        this.displayErrorModal = false
-      }, 4000)
-    }
-  }
+    },
 
-  async deleteComment(comment: DiaryComment) {
-    const DELETE_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
-    await this.$axios.$delete(DELETE_COMMENT_API)
-    try {
-      this.successModalTxt = "コメントを削除しました。"
-      this.displaySuccessModal = true
-      setTimeout(() => {
-        this.displaySuccessModal = false
-      }, 4000)
-      this.fetchDiary()
-    } catch (error) {
-      this.errorModalTxt = "削除に失敗しました。"
-      this.displayErrorModal = true
-      setTimeout(() => {
-        this.displayErrorModal = false
-      }, 4000)
-    }
-  }
+    async deleteComment(comment: DiaryComment) {
+      const DELETE_COMMENT_API =
+        "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
+      await this.$axios.$delete(DELETE_COMMENT_API)
+      try {
+        this.successModalTxt = "コメントを削除しました。"
+        this.displaySuccessModal = true
+        setTimeout(() => {
+          this.displaySuccessModal = false
+        }, 4000)
+        this.fetchDiary()
+      } catch (error) {
+        this.errorModalTxt = "削除に失敗しました。"
+        this.displayErrorModal = true
+        setTimeout(() => {
+          this.displayErrorModal = false
+        }, 4000)
+      }
+    },
 
-  async updateComment() {
-    const UPDATE_COMMENT_API =
-      "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + this.editCommentForm.id
-    await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
-    try {
-      this.successModalTxt = "コメントを更新しました。"
-      this.displaySuccessModal = true
-      this.showEditCommentForm = false
-      setTimeout(() => {
-        this.displaySuccessModal = false
-      }, 4000)
-      this.fetchDiary()
-    } catch (error) {
-      this.errorModalTxt = "更新に失敗しました。"
-      this.displayErrorModal = true
-      this.showEditCommentForm = false
-      setTimeout(() => {
-        this.displayErrorModal = false
-      }, 4000)
-    }
-  }
-
-  fmtImageUrl(path: string) {
-    return imageUrl(path)
-  }
-}
+    async updateComment() {
+      const UPDATE_COMMENT_API =
+        "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + this.editCommentForm.id
+      await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
+      try {
+        this.successModalTxt = "コメントを更新しました。"
+        this.displaySuccessModal = true
+        this.showEditCommentForm = false
+        setTimeout(() => {
+          this.displaySuccessModal = false
+        }, 4000)
+        this.fetchDiary()
+      } catch (error) {
+        this.errorModalTxt = "更新に失敗しました。"
+        this.displayErrorModal = true
+        this.showEditCommentForm = false
+        setTimeout(() => {
+          this.displayErrorModal = false
+        }, 4000)
+      }
+    },
+  },
+})
 </script>
 
 <style lang="scss" scoped>

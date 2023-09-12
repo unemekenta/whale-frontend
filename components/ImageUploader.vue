@@ -10,10 +10,10 @@
     <v-row justify="justify-space-between" class="align-center">
       <v-col cols="4">
         <v-card v-if="previewImage" outlined>
-          <v-img :src="fmtImageUrl(previewImage)" :aspect-ratio="16 / 9"></v-img>
+          <ImageBasic :src="previewImage" :aspect-ratio="16 / 9" />
         </v-card>
         <v-card v-else>
-          <v-img :src="require('@/assets/images/common/noimage.png')" :aspect-ratio="1"></v-img>
+          <ImageBasic :src="require('@/assets/images/common/noimage.png')" :aspect-ratio="1" />
         </v-card>
       </v-col>
       <v-col cols="8">
@@ -32,79 +32,86 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "nuxt-property-decorator"
+import Vue from "vue"
 import { imageUrl } from "@/plugins/helpers/image"
+import ImageBasic from "@/components/common/ImageBasic.vue"
 
-@Component
-export default class ImageUploader extends Vue {
-  selectedFile: "" // 画像ファイルを保持するデータ
-  caption: ""
-  imageContentType: ""
-  imageFileSize: 0
-  displaySuccessModal = false
-  successModalTxt = ""
-  displayErrorModal = false
-  errorModalTxt = ""
-
-  previewImage: string | null = null
-
-  changeFile(event: any): void {
-    // ファイルが選択されたときに実行されるメソッド
-    const file = event
-    if (file) {
-      this.imageContentType = file.type
-      this.imageFileSize = file.size
-      this.previewImage = URL.createObjectURL(file)
-    } else {
-      // ファイルが選択されていない場合はプレビューをクリアする
-      this.previewImage = null
+export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
+  data() {
+    return {
+      selectedFile: "", // 画像ファイルを保持するデータ
+      caption: "",
+      imageContentType: "",
+      imageFileSize: 0,
+      displaySuccessModal: false,
+      successModalTxt: "",
+      displayErrorModal: false,
+      errorModalTxt: "",
+      previewImage: null as string | null,
     }
-  }
-
-  fmtImageUrl(path: string) {
-    return imageUrl(path)
-  }
-
-  async uploadImage() {
-    const POST_IMAGE_API = "/api/v1/images"
-    // 画像のアップロードを行うメソッド
-    if (!this.selectedFile) {
-      // ファイルが選択されていない場合は処理を中断
-      throw new Error("ファイルが選択されていません")
-    }
-    try {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
+  },
+  methods: {
+    changeFile(event: any): void {
+      // ファイルが選択されたときに実行されるメソッド
+      const file = event
+      if (file) {
+        this.imageContentType = file.type
+        this.imageFileSize = file.size
+        this.previewImage = URL.createObjectURL(file)
+      } else {
+        // ファイルが選択されていない場合はプレビューをクリアする
+        this.previewImage = null
       }
-      // 画像はFormDataで送る
-      let formData = new FormData()
-      formData.append("image", this.selectedFile)
-      const params = new URLSearchParams()
-      params.append("image_content_type", this.imageContentType)
-      params.append("image_file_size", String(this.imageFileSize))
-      params.append("image_type", "1")
-      params.append("caption", this.caption)
-      params.append("uid", uid)
+    },
 
-      const response = await this.$axios.$post(POST_IMAGE_API, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        params,
-      })
-      this.successModalTxt = response.data.caption + "をアップロードしました。"
-      this.displaySuccessModal = true
-      setTimeout(() => {
-        this.displaySuccessModal = false
-      }, 4000)
-    } catch (error) {
-      this.errorModalTxt = "アップロードに失敗しました。"
-      this.displayErrorModal = true
-      setTimeout(() => {
-        this.displayErrorModal = false
-      }, 4000)
-    }
-  }
-}
+    fmtImageUrl(path: string) {
+      return imageUrl(path)
+    },
+
+    async uploadImage() {
+      const POST_IMAGE_API = "/api/v1/images"
+      // 画像のアップロードを行うメソッド
+      if (!this.selectedFile) {
+        // ファイルが選択されていない場合は処理を中断
+        throw new Error("ファイルが選択されていません")
+      }
+      try {
+        const uid = window.localStorage.getItem("uid")
+        if (uid === null) {
+          return
+        }
+        // 画像はFormDataで送る
+        let formData = new FormData()
+        formData.append("image", this.selectedFile)
+        const params = new URLSearchParams()
+        params.append("image_content_type", this.imageContentType)
+        params.append("image_file_size", String(this.imageFileSize))
+        params.append("image_type", "1")
+        params.append("caption", this.caption)
+        params.append("uid", uid)
+
+        const response = await this.$axios.$post(POST_IMAGE_API, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          params,
+        })
+        this.successModalTxt = response.data.caption + "をアップロードしました。"
+        this.displaySuccessModal = true
+        setTimeout(() => {
+          this.displaySuccessModal = false
+        }, 4000)
+      } catch (error) {
+        this.errorModalTxt = "アップロードに失敗しました。"
+        this.displayErrorModal = true
+        setTimeout(() => {
+          this.displayErrorModal = false
+        }, 4000)
+      }
+    },
+  },
+})
 </script>

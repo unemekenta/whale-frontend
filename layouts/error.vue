@@ -2,28 +2,32 @@
   <v-app dark>
     <div v-if="error.statusCode === 404">
       {{ pageNotFound }}
-      <v-img
+      <ImageBasic
         class="notfound-img"
         :src="require('@/assets/images/common/404.png')"
         :aspect-ratio="1"
-      ></v-img>
+      />
     </div>
     <h1 v-else>
       {{ otherError }}
-      <v-img
+      <ImageBasic
         class="notfound-img"
         :src="require('@/assets/images/common/500.png')"
         :aspect-ratio="1"
-      ></v-img>
+      />
     </h1>
     <NuxtLink to="/"> Home page </NuxtLink>
   </v-app>
 </template>
 
 <script>
-export default {
-  name: "EmptyLayout",
-  layout: "empty",
+import Vue from "vue"
+import ImageBasic from "@/components/common/ImageBasic.vue"
+
+export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
   props: {
     error: {
       type: Object,
@@ -42,7 +46,7 @@ export default {
       title,
     }
   },
-}
+})
 </script>
 
 <style lang="scss" scoped>

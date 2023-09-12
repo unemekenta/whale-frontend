@@ -1,5 +1,5 @@
 <template>
-  <v-img :src="fmtImageUrl" :aspect-ratio="aspect" />
+  <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
 </template>
 
 <script lang="ts">
@@ -13,9 +13,14 @@ export default Vue.extend({
       default: null,
       required: true,
     },
-    aspect: {
-      type: String,
+    aspectRatio: {
+      type: Number,
       default: 16 / 9,
+      required: false,
+    },
+    alt: {
+      type: String,
+      default: "",
       required: false,
     },
   },

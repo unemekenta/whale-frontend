@@ -8,7 +8,7 @@
             :value="image.id"
             class="image-checkbox"
           ></v-checkbox>
-          <v-img :src="fmtImageUrl(image.image.url)" :aspect-ratio="16 / 9"></v-img>
+          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
         </v-card>
       </v-col>
     </v-row>
@@ -21,46 +21,60 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Watch, Vue } from "nuxt-property-decorator"
+import Vue, { PropType } from "vue"
 import { Image } from "@/@types/common"
-import { imageUrl } from "@/plugins/helpers/image"
+import ImageBasic from "@/components/common/ImageBasic.vue"
 
-@Component({})
-export default class SelectImage extends Vue {
-  images: Image[] = []
-  localSelectedImages: number[] = []
-
-  @Prop({ type: Function, required: true })
-  callback: Function
-
-  @Prop({ type: Array, required: true })
-  selectedImages: number[]
-
-  @Watch("selectedImages", { immediate: true, deep: true })
-  onSelectedImagesChanged() {
-    this.localSelectedImages = this.selectedImages
-    this.callback(this.localSelectedImages)
-  }
-
+export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
+  props: {
+    callbackFunc: {
+      type: Function,
+      required: true,
+    },
+    selectedImages: {
+      type: Array as PropType<number[]>,
+      required: true,
+    },
+    deleteComment: {
+      type: Function,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      images: [] as Image[],
+      localSelectedImages: [] as number[],
+    }
+  },
+  watch: {
+    selectedImages: {
+      immediate: true, // 初期値の取得時にも呼び出す
+      deep: true, // ネストされたプロパティも監視
+      handler(newVal) {
+        this.localSelectedImages = newVal
+        this.callbackFunc(this.localSelectedImages)
+      },
+    },
+  },
   created() {
     this.fetchImages()
-  }
+  },
+  methods: {
+    executeParentFunction() {
+      this.callbackFunc(this.localSelectedImages) // 親の関数を呼び出します
+    },
 
-  executeParentFunction() {
-    this.callback(this.localSelectedImages) // 親の関数を呼び出します
-  }
-
-  async fetchImages() {
-    // // 画像一覧をAPIから取得する
-    const IMAGE_API = "/api/v1/images"
-    const images = await this.$axios.$get(IMAGE_API)
-    this.images = images.data
-  }
-
-  fmtImageUrl(path: string) {
-    return imageUrl(path)
-  }
-}
+    async fetchImages() {
+      // // 画像一覧をAPIから取得する
+      const IMAGE_API = "/api/v1/images"
+      const images = await this.$axios.$get(IMAGE_API)
+      this.images = images.data
+    },
+  },
+})
 </script>
 
 <style lang="scss" scoped>

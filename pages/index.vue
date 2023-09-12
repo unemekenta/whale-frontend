@@ -14,16 +14,16 @@
       <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="3">
         <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
           <v-card>
-            <v-img
+            <ImageBasic
               v-if="diary.images.length > 0"
-              :src="fmtImageUrl(diary.images[0].image.url)"
+              ::src="fmtImageUrl(diary.images[0].image.url)"
               :aspect-ratio="16 / 9"
-            ></v-img>
-            <v-img
+            />
+            <ImageBasic
               v-else
               :src="require('@/assets/images/common/reading-glasses.png')"
               :aspect-ratio="16 / 9"
-            ></v-img>
+            />
             <v-card-title class="my-1 py-1">
               <p class="line-clamp-1 my-0">
                 {{ diary.title }}
@@ -33,14 +33,14 @@
               <v-col cols="7" class="my-0 py-0">
                 <v-row>
                   <v-avatar size="30" class="avatar">
-                    <v-img
+                    <ImageBasic
                       v-if="diary.user.image"
-                      :src="fmtImageUrl(diary.user.image)"
+                      :src="diary.user.image"
                       :aspect-ratio="1"
                       alt="avatarImage"
                       class="avatar-image"
                     />
-                    <v-img
+                    <ImageBasic
                       v-else
                       :src="require('@/assets/images/common/icon-user.png')"
                       :aspect-ratio="1"
@@ -77,8 +77,12 @@ import Vue from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, InformationContents } from "@/@types/common"
 import { imageUrl } from "@/plugins/helpers/image"
+import ImageBasic from "@/components/common/ImageBasic.vue"
 
 export default Vue.extend({
+  components: {
+    ImageBasic,
+  },
   async asyncData({ $axios }) {
     const now = new Date().getTime()
     const TIMELINE_API = "/api/v1/diaries/timeline"
