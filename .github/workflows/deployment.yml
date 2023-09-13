@@ -26,6 +26,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: compose-up build
         shell: bash
+        env:
+          env_dev : ${{ APP_ENV_DEV }}
         run: |
           cd whale-frontend
-          sudo docker-compose --env-file .${{ APP_ENV_DEV }}.env up --build
+          sudo docker-compose --env-file .${{env_dev}}.env up --build
