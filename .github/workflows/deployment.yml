@@ -33,5 +33,5 @@ jobs:
           port: ${{secrets.SSH_PORT}}
           script: |
             cd whale-frontend
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env build
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env restart -d
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env down
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up --build -d
