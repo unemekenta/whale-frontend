@@ -33,5 +33,5 @@ jobs:
           port: ${{secrets.SSH_PORT}}
           script: |
             cd whale-frontend
-            docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env build
-            docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up
+            sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env build
+            sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up
