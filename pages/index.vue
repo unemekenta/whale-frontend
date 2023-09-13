@@ -16,7 +16,7 @@
           <v-card>
             <ImageBasic
               v-if="diary.images.length > 0"
-              ::src="fmtImageUrl(diary.images[0].image.url)"
+              :src="fmtImageUrl(diary.images[0].image.url)"
               :aspect-ratio="16 / 9"
             />
             <ImageBasic
