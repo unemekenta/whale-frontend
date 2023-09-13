@@ -4,48 +4,8 @@ on:
   push:
     branches:
       - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [lts/*]
-
-    steps:
-      - name: Checkout 🛎
-        uses: actions/checkout@master
-
-      - name: Setup node env 🏗
-        uses: actions/setup-node@v3.0.0
-        with:
-          node-version: ${{ matrix.node }}
-          check-latest: true
-
-      - name: Cache node_modules 📦
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies 👨🏻‍💻
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Run tests 🧪
-        run: npm run test
-
-      - name: Run lint
-        run: npm run lint:js
-
   deploy:
     runs-on: ubuntu-latest
     steps:
@@ -60,3 +20,14 @@ jobs:
           script: |
             cd whale-frontend
             git pull origin main   
+
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: compose-up build
+        shell: bash
+        run: |
+          cd whale-frontend
+          sudo docker-compose --env-file .${{ APP_ENV_DEV }}.env up --build
+    
