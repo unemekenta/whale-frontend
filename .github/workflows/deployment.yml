@@ -21,6 +21,7 @@ jobs:
             git pull origin main
 
   push:
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -43,6 +44,7 @@ jobs:
           args: push ${{ secrets.DOCKER_USERNAME }}/whale-frontend:latest
 
   start:
+    needs: push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
