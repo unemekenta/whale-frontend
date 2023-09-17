@@ -2,8 +2,7 @@ name: deployment
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
@@ -25,8 +24,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: compose-up build
-        shell: bash
-        run: |
-          cd whale-frontend
-          sudo docker-compose --env-file .${{ APP_ENV_DEV }}.env up --build
+      - name: Install SSH Key for Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          port: ${{secrets.SSH_PORT}}
+          script: |
+            cd whale-frontend
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env down
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up --build -d
