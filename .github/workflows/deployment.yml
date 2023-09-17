@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install SSH Key for Deploy
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@main
         with:
           key: ${{ secrets.SSH_KEY }}
           host: ${{secrets.SSH_HOST}}
@@ -20,12 +20,34 @@ jobs:
             cd whale-frontend
             git pull origin main
 
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: actions-hub/docker/login@main
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_REGISTRY_URL: docker.io
+
+      - name: Build :latest
+        if: success()
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/whale-frontend:latest .
+
+      - name: Deploy :latest
+        if: success()
+        uses: actions-hub/docker@main
+        with:
+          args: push ${{ secrets.DOCKER_USERNAME }}/whale-frontend:latest
+
   start:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install SSH Key for Deploy
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@main
         with:
           key: ${{ secrets.SSH_KEY }}
           host: ${{secrets.SSH_HOST}}
