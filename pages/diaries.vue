@@ -1,56 +1,52 @@
 <template>
   <v-container fluid>
-    <v-row justify="justify-space-between">
-      <v-col cols="6">
-        <h1>日記</h1>
-      </v-col>
-      <v-col cols="6" class="my-auto">
-        <v-row justify="end">
-          <v-btn class="ma-3" color="primary" @click="openAddDialog">日記をつける</v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-divider class="my-3"></v-divider>
-    <div v-if="displaySuccessModal" class="ma-3">
-      <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
-    </div>
-    <div v-if="displayErrorModal" class="ma-3">
-      <ErrorAlert :txt="errorModalTxt" />
-    </div>
-    <v-row class="mx-1">
-      <v-col v-if="diaries.length === 0" cols="12">
-        <p>現在、日記はありません。</p>
-      </v-col>
-      <v-col v-else cols="12" class="px-0">
-        <TableBasic :headers="headers" :items="diariesTableList">
-          <template #title="{ item }">
-            <nuxt-link :to="'/diary/detail/' + item.id" class="text-decoration-none">
-              {{ item.title }}
-            </nuxt-link>
-          </template>
-          <template #actions="{ item }">
-            <v-btn icon @click.prevent="editDiary(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>
-            <v-btn icon @click.prevent="deleteDiary(item.id)"><v-icon>mdi-delete</v-icon></v-btn>
-          </template>
-        </TableBasic>
-      </v-col>
-    </v-row>
+    <div class="contents-main">
+      <v-row justify="justify-space-between">
+        <v-col cols="6">
+          <h1>日記</h1>
+        </v-col>
+        <v-col cols="6" class="my-auto">
+          <v-row justify="end">
+            <v-btn class="ma-3" color="primary" @click="openAddDialog">日記をつける</v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+      <v-divider class="my-3"></v-divider>
+      <div v-if="displaySuccessModal" class="ma-3">
+        <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+      </div>
+      <div v-if="displayErrorModal" class="ma-3">
+        <ErrorAlert :txt="errorModalTxt" />
+      </div>
+      <v-row class="mx-1">
+        <v-col v-if="diaries.length === 0" cols="12">
+          <p>現在、日記はありません。</p>
+        </v-col>
+        <v-col v-else cols="12" class="px-0">
+          <DiaryListHeader />
+          <div v-for="(diary, index) in diaries" :key="index">
+            <DiaryListItem :diary="diary" @editDiary="editDiary" @deleteDiary="deleteDiary" />
+          </div>
+        </v-col>
+      </v-row>
 
-    <!-- 新規追加フォーム -->
-    <DiaryFormDialog
-      :show-diary-form="showDiaryForm"
-      :diary-form="diaryForm"
-      @submitDiaryForm="submitDiary"
-      @closeDialog="closeAddDialog"
-    />
+      <!-- 新規追加フォーム -->
+      <DiaryFormDialog
+        :show-diary-form="showDiaryForm"
+        :diary-form="diaryForm"
+        @submitDiaryForm="submitDiary"
+        @closeDialog="closeAddDialog"
+      />
 
-    <!-- 編集フォーム -->
-    <DiaryFormDialog
-      :show-diary-form="showEditDiaryForm"
-      :diary-form="editDiaryForm"
-      @submitDiaryForm="updateDiary"
-      @closeDialog="closeEditDialog"
-    />
+      <!-- 編集フォーム -->
+      <DiaryFormDialog
+        :show-diary-form="showEditDiaryForm"
+        :diary-form="editDiaryForm"
+        @submitDiaryForm="updateDiary"
+        @closeDialog="closeEditDialog"
+      />
+    </div>
+    <div class="side-contents"></div>
   </v-container>
 </template>
 
@@ -60,11 +56,15 @@ import { stringToISOString } from "@/plugins/date-format"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, DiariesImageRelation } from "@/@types/common"
 import TableBasic from "@/components/common/TableBasic.vue"
+import DiaryListItem from "@/components/DiaryListItem.vue"
+import DiaryListHeader from "@/components/DiaryListHeader.vue"
 import { DiaryListTable } from "@/@types/diary"
 
 export default Vue.extend({
   components: {
     TableBasic,
+    DiaryListItem,
+    DiaryListHeader,
   },
   middleware: "authenticated",
   async asyncData({ $axios }) {
@@ -239,3 +239,9 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style scoped>
+.contents-main {
+  max-width: 800px;
+}
+</style>

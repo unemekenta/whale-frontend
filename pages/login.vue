@@ -108,7 +108,9 @@ export default class Login extends Vue {
       } else {
         this.userLogout()
       }
-    } catch (error) {}
+    } catch (error) {
+      this.userLogout()
+    }
   }
 
   async userLogout() {
