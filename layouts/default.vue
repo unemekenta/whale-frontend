@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app dark class="components">
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
@@ -111,6 +111,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.components {
+  font-family: $font-family-base, sans-serif;
+}
+
 .main-container {
   padding: 5px 20px;
   @media screen and (max-width: $breakpoint-md) {

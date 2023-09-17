@@ -53,6 +53,12 @@ export default {
     "@nuxtjs/vuetify",
   ],
 
+  webfontloader: {
+    google: {
+      families: ["Lato:400,700", "Noto+Sans+JP:400,700"],
+    },
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     "@nuxtjs/axios",
@@ -60,6 +66,7 @@ export default {
     "@nuxtjs/dayjs",
     "@nuxtjs/style-resources",
     "@nuxtjs/proxy",
+    "nuxt-webfontloader",
   ],
 
   env: {
