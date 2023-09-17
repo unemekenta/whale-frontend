@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install SSH Key for Deploy
-        uses: appleboy/ssh-action@main
+        uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.SSH_KEY }}
           host: ${{secrets.SSH_HOST}}
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Login to Docker Hub
-        uses: actions-hub/docker/login@main
+        uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -38,7 +38,7 @@ jobs:
 
       - name: Deploy :latest
         if: success()
-        uses: actions-hub/docker@main
+        uses: actions-hub/docker@master
         with:
           args: push ${{ secrets.DOCKER_USERNAME }}/whale-frontend:latest
 
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install SSH Key for Deploy
-        uses: appleboy/ssh-action@main
+        uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.SSH_KEY }}
           host: ${{secrets.SSH_HOST}}
