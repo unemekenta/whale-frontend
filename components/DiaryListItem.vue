@@ -1,7 +1,7 @@
 <template>
   <nuxt-link :to="'/diary/detail/' + diary.id" class="diary-item text-decoration-none">
     <ImageBasic
-      v-if="diary.images.length > 0"
+      v-if="diary.images?.length > 0"
       :src="fmtImageUrl(diary.images[0].image.url)"
       :aspect-ratio="16 / 9"
       :alt="diary.images[0].caption"
