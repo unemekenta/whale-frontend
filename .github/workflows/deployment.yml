@@ -64,4 +64,4 @@ jobs:
           script: |
             cd whale-frontend
             echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env down
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up ${{ secrets.DOCKER_USERNAME }}/whale-frontend -d
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up -d
