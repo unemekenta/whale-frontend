@@ -75,7 +75,7 @@ export default Vue.extend({
   display: grid;
   grid-template-columns: 1fr 3fr 2fr 1fr 1fr; /* 5つの要素を横並びに配置 */
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: 2fr 1fr 2fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
   }
   gap: 10px; /* グリッドアイテム間の隙間を設定（必要に応じて調整） */
   border-bottom: 1px solid #ccc;
