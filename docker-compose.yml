@@ -2,7 +2,7 @@ version: "3"
 
 services:
   nuxt-frontend:
-    image: ${DOCKER_USERNAME}/whale-frontend:latest
+    image: ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest
     container_name: nuxt-frontend
     build: .
     expose:
