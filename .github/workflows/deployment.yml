@@ -70,8 +70,8 @@ jobs:
             cd whale-frontend
             echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose -f docker-compose.yml -f docker-compose.${{ secrets.APP_ENV_DEV }}.yml --env-file .${{ secrets.APP_ENV_DEV }}.env down
             cd ..
-            docker container prune
-            docker image prune
+            echo y | docker container prune
+            echo y | docker image prune
 
       - name: Start Docker
         uses: appleboy/ssh-action@master
