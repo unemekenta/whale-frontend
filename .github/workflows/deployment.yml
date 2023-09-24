@@ -77,5 +77,4 @@ jobs:
           script: |
             docker pull ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
             cd whale-frontend
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose -f docker-compose.yml -f docker-compose.${{ secrets.APP_ENV_DEV }}.yml --env-file .${{ secrets.APP_ENV_DEV }}.env down
             echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose -f docker-compose.yml -f docker-compose.${{ secrets.APP_ENV_DEV }}.yml --env-file .${{ secrets.APP_ENV_DEV }}.env up -d
