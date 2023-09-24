@@ -41,8 +41,8 @@ jobs:
 
       - name: Push to GitHub Container Registry
         uses: docker/build-push-action@v2
-        env:
-          GITHUB_USERNAME: ${{ github.repository_owner }}
+        build-args: |
+          GITHUB_USERNAME=${{ github.repository_owner }}
         with:
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
