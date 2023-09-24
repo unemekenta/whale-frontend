@@ -57,12 +57,17 @@ jobs:
           host: ${{secrets.SSH_HOST}}
           username: ${{secrets.SSH_USERNAME}}
           port: ${{secrets.SSH_PORT}}
+
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GHCR_TOKEN }}
           args:
             echo "${{ github.token }}" | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
             docker pull ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
 
-      - uses: actions/checkout@v2
-      - name: Install SSH Key for Deploy
+      - name: Start Docker
         uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.SSH_KEY }}
