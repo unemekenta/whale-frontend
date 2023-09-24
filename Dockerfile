@@ -1,11 +1,11 @@
-FROM node:18-alpine3.18
+ARG GITHUB_USERNAME
+
+FROM ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest
 
 ENV LANG=C.UTF-8 TZ=Asia/Tokyo
 
 RUN apk update && \
     apk upgrade
-
-RUN mkdir /nuxt-frontend
 
 WORKDIR /nuxt-frontend
 

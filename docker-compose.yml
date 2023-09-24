@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: .
+      args:
+        - GITHUB_USERNAME=${GITHUB_USERNAME}
     container_name: nuxt-frontend
     expose:
       - "${FRONTEND_CONTAINER_PORT}"
