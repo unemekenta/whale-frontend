@@ -13,7 +13,7 @@ services:
     volumes:
       - .:/nuxt-frontend
       - node_modules_volume:/nuxt-frontend/node_modules
-    command: yarn run dev
+    command: /bin/sh -c "rm -f tmp/pids/server.pid && yarn run dev"
     env_file: # アプリケーション内の環境変数もルート直下envファイルを参照
       - .${APP_ENV}.env
     networks:
