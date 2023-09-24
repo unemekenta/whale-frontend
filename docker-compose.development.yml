@@ -1,0 +1,3 @@
+services:
+  nuxt-frontend:
+    image: ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest

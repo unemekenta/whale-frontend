@@ -2,9 +2,10 @@ version: "3"
 
 services:
   nuxt-frontend:
-    image: ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest
+    build:
+      context: .
+      dockerfile: .
     container_name: nuxt-frontend
-    build: .
     expose:
       - "${FRONTEND_CONTAINER_PORT}"
     volumes:

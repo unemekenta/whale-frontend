@@ -45,17 +45,22 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
 
-      - name: Pull from GitHub Container Registry
-        uses: actions/checkout@v1
-        with:
-          args:
-            echo "${{ github.token }}" | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-            docker pull ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
-
   start:
     needs: image-push
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Pull from GitHub Container Registry
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          port: ${{secrets.SSH_PORT}}
+          args:
+            echo "${{ github.token }}" | docker login https://docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+            docker pull ghcr.io/${{ github.repository_owner }}/whale-frontend:latest
+
       - uses: actions/checkout@v2
       - name: Install SSH Key for Deploy
         uses: appleboy/ssh-action@master
@@ -66,5 +71,5 @@ jobs:
           port: ${{secrets.SSH_PORT}}
           script: |
             cd whale-frontend
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env down
-            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose --env-file .${{ secrets.APP_ENV_DEV }}.env up -d
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose -f docker-compose.yml -f docker-compose.${{ secrets.APP_ENV_DEV }}.yml --env-file .${{ secrets.APP_ENV_DEV }}.env down
+            echo ${{secrets.SSH_SUDO_PASSWORD}} | sudo -S sudo docker-compose -f docker-compose.yml -f docker-compose.${{ secrets.APP_ENV_DEV }}.yml --env-file .${{ secrets.APP_ENV_DEV }}.env up -d
