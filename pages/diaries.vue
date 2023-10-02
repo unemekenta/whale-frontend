@@ -71,14 +71,16 @@ export default Vue.extend({
     const DIARY_API = "/api/v1/diaries"
     const diaries = await $axios.$get(DIARY_API)
     return {
-      diaries: diaries.data,
-      diariesTableList: diaries.data.map(({ id, title, is_public, date }: DiaryListTable) => ({
-        id,
-        title,
-        is_public,
-        date: dateWithoutTimeFilter(date),
-        actions: "",
-      })),
+      diaries: diaries.data.diaries,
+      diariesTableList: diaries.data.diaries.map(
+        ({ id, title, is_public, date }: DiaryListTable) => ({
+          id,
+          title,
+          is_public,
+          date: dateWithoutTimeFilter(date),
+          actions: "",
+        })
+      ),
     }
   },
   data() {
@@ -146,9 +148,9 @@ export default Vue.extend({
     async fetchDiaries() {
       // // 日記一覧をAPIから取得する
       const DIARY_API = "/api/v1/diaries"
-      const diaries = await this.$axios.$get(DIARY_API)
-      this.diaries = diaries.data
-      this.diariesTableList = diaries.data.map(
+      const diariesRes = await this.$axios.$get(DIARY_API)
+      this.diaries = diariesRes.data.diaries
+      this.diariesTableList = diariesRes.data.diaries.map(
         ({ id, title, is_public, date }: DiaryListTable) => ({
           id,
           title,
@@ -162,13 +164,14 @@ export default Vue.extend({
     async editDiary(diaryId: number) {
       const EDIT_DIARY_API = "/api/v1/diaries/" + diaryId
       const res = await this.$axios.$get(EDIT_DIARY_API)
+      console.log(res.data.diary)
       this.editDiaryForm.id = diaryId
-      this.editDiaryForm.title = res.data.title
-      this.editDiaryForm.content = res.data.content
-      this.editDiaryForm.is_public = res.data.is_public
-      this.editDiaryForm.date = stringToISOString(res.data.date)
+      this.editDiaryForm.title = res.data.diary.title
+      this.editDiaryForm.content = res.data.diary.content
+      this.editDiaryForm.is_public = res.data.diary.is_public
+      this.editDiaryForm.date = stringToISOString(res.data.diary.date)
       this.editDiaryForm.diaries_image_relations = JSON.stringify(
-        res.data.diaries_image_relations.map((item: DiariesImageRelation) => {
+        res.data.diary.diaries_image_relations.map((item: DiariesImageRelation) => {
           return item.image_id
         })
       )

@@ -2,7 +2,7 @@ export interface User {
   id: number
   name: string
   nickname: string
-  image: string
+  image: string | null
 }
 
 export interface ImageUrl {
@@ -76,4 +76,13 @@ export interface TaskComment {
   content: string
   updated_at: string
   user: User
+}
+
+export interface PageNation {
+  current_page: number
+  next_page: number | null
+  prev_page: number | null
+  total_pages: number
+  total_count: number
+  limit_value: number
 }

@@ -70,8 +70,8 @@ export default Vue.extend({
     async fetchImages() {
       // // 画像一覧をAPIから取得する
       const IMAGE_API = "/api/v1/images"
-      const images = await this.$axios.$get(IMAGE_API)
-      this.images = images.data
+      const imagesRes = await this.$axios.$get(IMAGE_API)
+      this.images = imagesRes.data.images
     },
   },
 })

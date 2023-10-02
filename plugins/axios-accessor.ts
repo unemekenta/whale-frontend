@@ -28,13 +28,11 @@ export const accessor: Plugin = ({ $axios }): void => {
   $axios.interceptors.response.use(
     (response) => {
       // 成功したレスポンスの処理
-      const responseData = response.data || {} // レスポンスデータが存在しない場合のデフォルト値を指定
 
       // 必要なプロパティを抽出して新しいオブジェクトを作成
       const transformedResponse = {
-        message: responseData.message || "", // message プロパティ
-        status: responseData.status || "", // status プロパティ
-        data: responseData.data || {} || [], // data プロパティ
+        status: response.status || "", // status プロパティ
+        data: response.data || {} || [], // data プロパティ
       }
 
       return { ...response, data: transformedResponse }

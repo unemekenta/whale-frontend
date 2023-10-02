@@ -115,9 +115,9 @@ import { Task, TaskComment } from "@/@types/common"
 @Component({
   async asyncData({ $axios, params }) {
     const TASK_API = "/api/v1/tasks/" + `${params.id}`
-    const task = await $axios.$get(TASK_API)
+    const taskRes = await $axios.$get(TASK_API)
     return {
-      task: task.data,
+      task: taskRes.data.task,
     }
   },
 })
@@ -182,8 +182,8 @@ export default class TaskDetail extends Vue {
   async fetchTask() {
     // // タスクをAPIから取得する
     const TASK_API = "/api/v1/tasks/" + this.$route.params.id
-    const task = await this.$axios.$get(TASK_API)
-    this.task = task.data
+    const taskRes = await this.$axios.$get(TASK_API)
+    this.task = taskRes.data.task
   }
 
   async editComment(comment: TaskComment) {

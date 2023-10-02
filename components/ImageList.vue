@@ -75,7 +75,7 @@ export default Vue.extend({
       // // 画像一覧をAPIから取得する
       const IMAGE_API = "/api/v1/images"
       const images = await this.$axios.$get(IMAGE_API)
-      this.images = images.data
+      this.images = images.data.images
     },
   },
 })

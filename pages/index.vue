@@ -87,11 +87,12 @@ export default Vue.extend({
     const now = new Date().getTime()
     const TIMELINE_API = "/api/v1/diaries/timeline"
     const INFO_API = `/api/v1/information_contents?start_at=${now}&end_at=${now}`
-    const diaries = await $axios.$get(TIMELINE_API)
+    const diariesRes = await $axios.$get(TIMELINE_API)
     const informationContents = await $axios.$get(INFO_API)
+
     return {
-      diaries: diaries.data,
-      informationContents: informationContents.data,
+      diaries: diariesRes.data.diaries,
+      informationContents: informationContents.data.information_contents,
     }
   },
   data() {

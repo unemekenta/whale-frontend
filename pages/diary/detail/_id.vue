@@ -37,7 +37,7 @@
       </v-col>
     </v-row>
     <p class="text-body-2">{{ diary.content }}</p>
-    <v-row>
+    <v-row v-if="diary.images.length > 0">
       <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
         <v-card class="py-1 px-3">
           <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
@@ -110,9 +110,9 @@ export default Vue.extend({
   },
   async asyncData({ $axios, params }) {
     const DIARY_API = "/api/v1/diaries/" + `${params.id}`
-    const diary = await $axios.$get(DIARY_API)
+    const diaryRes = await $axios.$get(DIARY_API)
     return {
-      diary: diary.data,
+      diary: diaryRes.data.diary,
     }
   },
   data() {
@@ -157,8 +157,8 @@ export default Vue.extend({
 
     async fetchDiary() {
       const DIARY_API = "/api/v1/diaries/" + this.$route.params.id
-      const diary = await this.$axios.$get(DIARY_API)
-      this.diary = diary.data
+      const diaryRes = await this.$axios.$get(DIARY_API)
+      this.diary = diaryRes.data.diary
     },
 
     async editComment(comment: DiaryComment) {

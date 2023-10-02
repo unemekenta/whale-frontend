@@ -225,11 +225,11 @@ export default Vue.extend({
   middleware: "authenticated",
   async asyncData({ $axios }) {
     const TASK_API = "/api/v1/tasks"
-    const tasks = await $axios.$get(TASK_API)
+    const tasksRes = await $axios.$get(TASK_API)
 
     return {
-      tasks: tasks.data,
-      tasksTableList: tasks.data.map(
+      tasks: tasksRes.data.tasks,
+      tasksTableList: tasksRes.data.tasks.map(
         ({ id, title, status, priority, deadline }: TaskListTable) => ({
           id,
           title,
@@ -311,9 +311,9 @@ export default Vue.extend({
     async fetchTasks() {
       // // タスク一覧をAPIから取得する
       const TASK_API = "/api/v1/tasks"
-      const tasks = await this.$axios.$get(TASK_API)
-      this.tasks = tasks.data
-      this.tasksTableList = tasks.data.map(
+      const tasksRes = await this.$axios.$get(TASK_API)
+      this.tasks = tasksRes.data.tasks
+      this.tasksTableList = tasksRes.data.tasks.map(
         ({ id, title, status, priority, deadline }: TaskListTable) => ({
           id,
           title,
