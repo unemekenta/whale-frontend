@@ -329,14 +329,14 @@ export default Vue.extend({
       const EDIT_TASK_API = "/api/v1/tasks/" + taskId
       const res = await this.$axios.$get(EDIT_TASK_API)
       this.editTaskForm.id = taskId
-      this.editTaskForm.title = res.data.title
-      this.editTaskForm.description = res.data.description
-      this.editTaskForm.priority = res.data.priority
-      this.editTaskForm.status = res.data.status
-      this.editTaskForm.deadline = stringToISOString(res.data.deadline)
+      this.editTaskForm.title = res.data.task.title
+      this.editTaskForm.description = res.data.task.description
+      this.editTaskForm.priority = res.data.task.priority
+      this.editTaskForm.status = res.data.task.status
+      this.editTaskForm.deadline = stringToISOString(res.data.task.deadline)
       this.editTaskForm.taggings = []
       this.editSelectedTags = []
-      this.editSelectedTags = res.data.tags.map((t: Tag) => {
+      this.editSelectedTags = res.data.task.tags.map((t: Tag) => {
         return { id: t.id, name: t.name }
       })
 
