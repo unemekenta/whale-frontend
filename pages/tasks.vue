@@ -267,7 +267,7 @@ export default Vue.extend({
         uid: "",
         priority: "",
         status: "",
-        deadline: "",
+        deadline: new Date().toLocaleDateString(),
         taggings: [] as Tagging[],
       },
       editTaskForm: {
@@ -276,7 +276,7 @@ export default Vue.extend({
         description: "",
         priority: "",
         status: "",
-        deadline: "",
+        deadline: new Date().toLocaleDateString(),
         taggings: [] as Tagging[],
       },
       priorities: [

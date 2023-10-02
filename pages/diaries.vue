@@ -109,7 +109,7 @@ export default Vue.extend({
         title: "",
         content: "",
         is_public: false,
-        date: "",
+        date: new Date().toLocaleDateString(),
         uid: "",
         diaries_image_relations: "",
       },
@@ -119,7 +119,7 @@ export default Vue.extend({
         title: "",
         content: "",
         is_public: false,
-        date: "",
+        date: new Date().toLocaleDateString(),
         diaries_image_relations: "",
       },
     }
