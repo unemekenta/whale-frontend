@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="justify-space-between" class="pager-wrapped">
+  <v-row justify="center" class="pager-wrapped">
     <nav>
       <ul>
         <li v-for="page in pages" :key="page">
@@ -37,39 +37,38 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .pager-wrapped {
-  margin-top: 20px;
-  text-align: center;
-}
+  margin: 20px 0;
 
-nav ul {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-}
+  nav ul {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+  }
 
-nav li {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-}
+  nav li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+  }
 
-nav a {
-  display: inline-block;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: 3px;
-  color: $color-primary;
-  background-color: $color-gray;
-  text-decoration: none;
-  transition: all 0.3s ease-in-out;
-}
+  nav a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 3px;
+    color: $color-primary;
+    background-color: $color-gray;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+  }
 
-nav a:hover {
-  background-color: $color-surface;
-}
+  nav a:hover {
+    background-color: $color-surface;
+  }
 
-nav a.active {
-  background-color: $color-accent;
-  color: $color-font;
+  nav a.active {
+    background-color: $color-accent;
+    color: $color-font;
+  }
 }
 </style>
