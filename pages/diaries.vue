@@ -29,6 +29,7 @@
           </div>
         </v-col>
       </v-row>
+      <PagiNationComponent :pages="pages" :current-page="currentPage" @changePage="changePage" />
 
       <!-- 新規追加フォーム -->
       <DiaryFormDialog
@@ -54,8 +55,9 @@
 import Vue from "vue"
 import { stringToISOString } from "@/plugins/date-format"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
-import { Diary, DiariesImageRelation } from "@/@types/common"
+import { Diary, DiariesImageRelation, PagiNation } from "@/@types/common"
 import TableBasic from "@/components/common/TableBasic.vue"
+import PagiNationComponent from "@/components/common/PagiNation.vue"
 import DiaryListItem from "@/components/DiaryListItem.vue"
 import DiaryListHeader from "@/components/DiaryListHeader.vue"
 import { DiaryListTable } from "@/@types/diary"
@@ -65,10 +67,12 @@ export default Vue.extend({
     TableBasic,
     DiaryListItem,
     DiaryListHeader,
+    PagiNationComponent,
   },
   middleware: "authenticated",
-  async asyncData({ $axios }) {
-    const DIARY_API = "/api/v1/diaries"
+  async asyncData({ $axios, route }) {
+    const page = route.query.page || 1
+    const DIARY_API = `/api/v1/diaries?page=${page}`
     const diaries = await $axios.$get(DIARY_API)
     return {
       diaries: diaries.data.diaries,
@@ -81,12 +85,14 @@ export default Vue.extend({
           actions: "",
         })
       ),
+      pagination: diaries.data.pagination,
     }
   },
   data() {
     return {
       diaries: [] as Diary[],
       diariesTableList: [] as DiaryListTable[],
+      pagination: {} as PagiNation,
 
       selectedDiary: null as Diary | null,
 
@@ -124,6 +130,19 @@ export default Vue.extend({
       },
     }
   },
+  computed: {
+    pages(): number[] {
+      const pages: number[] = []
+      for (let i = 1; i <= this.pagination.total_pages; i++) {
+        pages.push(i)
+      }
+      return pages
+    },
+    currentPage(): number {
+      const currentPage = this.pagination.current_page
+      return currentPage
+    },
+  },
   methods: {
     fmtDateWithoutTime(date: string) {
       return dateWithoutTimeFilter(date)
@@ -145,9 +164,17 @@ export default Vue.extend({
       this.showEditDiaryForm = false
     },
 
+    async changePage(pageInt: number) {
+      this.pagination.current_page = pageInt
+      // URLのクエリパラメータも変更
+      const query = Object.assign({}, this.$route.query)
+      query.page = pageInt.toString()
+      await this.$router.push({ query })
+      this.fetchDiaries()
+    },
+
     async fetchDiaries() {
-      // // 日記一覧をAPIから取得する
-      const DIARY_API = "/api/v1/diaries"
+      const DIARY_API = `/api/v1/diaries?page=${this.currentPage}`
       const diariesRes = await this.$axios.$get(DIARY_API)
       this.diaries = diariesRes.data.diaries
       this.diariesTableList = diariesRes.data.diaries.map(
@@ -159,12 +186,12 @@ export default Vue.extend({
           actions: "",
         })
       )
+      this.pagination = Object.assign({}, diariesRes.data.pagination)
     },
 
     async editDiary(diaryId: number) {
       const EDIT_DIARY_API = "/api/v1/diaries/" + diaryId
       const res = await this.$axios.$get(EDIT_DIARY_API)
-      console.log(res.data.diary)
       this.editDiaryForm.id = diaryId
       this.editDiaryForm.title = res.data.diary.title
       this.editDiaryForm.content = res.data.diary.content

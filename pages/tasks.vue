@@ -44,6 +44,7 @@
         </TableBasic>
       </v-col>
     </v-row>
+    <PagiNationComponent :pages="pages" :current-page="currentPage" @changePage="changePage" />
     <!-- 新規追加フォーム -->
     <v-dialog v-model="showTaskForm" max-width="500px">
       <v-card>
@@ -211,20 +212,23 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { Task, Tag, Tagging } from "@/@types/common"
+import { Task, Tag, Tagging, PagiNation } from "@/@types/common"
 import { TaskListTable } from "@/@types/task"
 import { stringToISOString } from "@/plugins/date-format"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
 import TableBasic from "@/components/common/TableBasic.vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
+import PagiNationComponent from "@/components/common/PagiNation.vue"
 
 export default Vue.extend({
   components: {
     TableBasic,
+    PagiNationComponent,
   },
   middleware: "authenticated",
-  async asyncData({ $axios }) {
-    const TASK_API = "/api/v1/tasks"
+  async asyncData({ $axios, route }) {
+    const page = route.query.page || 1
+    const TASK_API = `/api/v1/tasks?page=${page}`
     const tasksRes = await $axios.$get(TASK_API)
 
     return {
@@ -239,12 +243,14 @@ export default Vue.extend({
           actions: "",
         })
       ),
+      pagination: tasksRes.data.pagination,
     }
   },
   data() {
     return {
       tasks: [] as Task[],
       tasksTableList: [] as TaskListTable[],
+      pagination: {} as PagiNation,
       headers: [
         { text: "ステータス", value: "status" },
         { text: "タイトル", value: "title" },
@@ -299,6 +305,19 @@ export default Vue.extend({
       errorModalTxt: "",
     }
   },
+  computed: {
+    pages(): number[] {
+      const pages: number[] = []
+      for (let i = 1; i <= this.pagination.total_pages; i++) {
+        pages.push(i)
+      }
+      return pages
+    },
+    currentPage(): number {
+      const currentPage = this.pagination.current_page
+      return currentPage
+    },
+  },
   methods: {
     fmtStatus(statusNum: number) {
       return statusFilter(statusNum)
@@ -308,9 +327,18 @@ export default Vue.extend({
       return statusColor(status)
     },
 
+    async changePage(pageInt: number) {
+      this.pagination.current_page = pageInt
+      // URLのクエリパラメータも変更
+      const query = Object.assign({}, this.$route.query)
+      query.page = pageInt.toString()
+      await this.$router.push({ query })
+      this.fetchTasks()
+    },
+
     async fetchTasks() {
       // // タスク一覧をAPIから取得する
-      const TASK_API = "/api/v1/tasks"
+      const TASK_API = `/api/v1/tasks?page=${this.currentPage}`
       const tasksRes = await this.$axios.$get(TASK_API)
       this.tasks = tasksRes.data.tasks
       this.tasksTableList = tasksRes.data.tasks.map(
@@ -323,6 +351,7 @@ export default Vue.extend({
           actions: "",
         })
       )
+      this.pagination = Object.assign({}, tasksRes.data.pagination)
     },
 
     async editTask(taskId: number) {

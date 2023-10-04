@@ -78,7 +78,7 @@ export interface TaskComment {
   user: User
 }
 
-export interface PageNation {
+export interface PagiNation {
   current_page: number
   next_page: number | null
   prev_page: number | null
