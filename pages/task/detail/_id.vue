@@ -124,7 +124,7 @@ export default class TaskDetail extends Vue {
   task: Task = {
     id: 0,
     title: "",
-    status: 0,
+    status: "",
     description: "",
     priority: 0,
     deadline: "",
@@ -166,12 +166,12 @@ export default class TaskDetail extends Vue {
   displayErrorModal = false
   errorModalTxt = ""
 
-  getStatusColor(status: number): string {
+  getStatusColor(status: string): string {
     return statusColor(status)
   }
 
-  fmtStatus(statusNum: number) {
-    return statusFilter(statusNum)
+  fmtStatus(status: string) {
+    return statusFilter(status)
   }
 
   fmtDate(date: string) {

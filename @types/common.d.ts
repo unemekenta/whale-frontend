@@ -45,7 +45,7 @@ export interface Task {
   id: number
   title: string
   description: string
-  status: number
+  status: string
   priority: number
   deadline: string
   updated_at: string

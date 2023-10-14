@@ -41,10 +41,10 @@ export default Vue.extend({
     deleteTask(diaryId: number) {
       this.$emit("deleteTask", diaryId)
     },
-    fmtStatus(statusNum: number) {
-      return statusFilter(statusNum)
+    fmtStatus(status: string) {
+      return statusFilter(status)
     },
-    getStatusColor(status: number): string {
+    getStatusColor(status: string): string {
       return statusColor(status)
     },
   },

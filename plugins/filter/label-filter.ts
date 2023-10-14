@@ -1,35 +1,37 @@
-export const statusFilter = (statusNum: number): string => {
-  return formatStatus(statusNum)
+export const statusFilter = (status: string): string => {
+  return formatStatus(status)
 }
 
-export const statusColor = (statusNum: number): string => {
-  return getStatusColor(statusNum)
+export const statusColor = (status: string): string => {
+  return getStatusColor(status)
 }
 
-function formatStatus(inputStatusNum: number) {
-  switch (inputStatusNum) {
-    case 1:
+function formatStatus(inputStatus: string) {
+  switch (inputStatus) {
+    case "all":
+      return "全て"
+    case "not_started":
       return "これから"
-    case 2:
+    case "in_progress":
       return "頑張り中"
-    case 3:
+    case "on_hold":
       return "保留中"
-    case 4:
+    case "completed":
       return "達成"
     default:
       return "未分類"
   }
 }
 
-function getStatusColor(status: number): string {
+function getStatusColor(status: string): string {
   switch (status) {
-    case 1:
+    case "not_started":
       return "grey"
-    case 2:
+    case "in_progress":
       return "orange"
-    case 3:
+    case "on_hold":
       return "blue"
-    case 4:
+    case "completed":
       return "green"
     default:
       return "grey"

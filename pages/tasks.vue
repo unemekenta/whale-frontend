@@ -18,6 +18,12 @@
       <div v-if="displayErrorModal" class="ma-3">
         <ErrorAlert :txt="errorModalTxt" />
       </div>
+      <v-select
+        v-model="statusFilterVal"
+        :items="statusOptions"
+        label="Status"
+        @change="changeStatusFilter"
+      ></v-select>
       <v-row class="mx-1">
         <v-col v-if="tasks.length === 0" cols="12">
           <p>現在、目標はありません。</p>
@@ -224,7 +230,8 @@ export default Vue.extend({
   middleware: "authenticated",
   async asyncData({ $axios, route }) {
     const page = route.query.page || 1
-    const TASK_API = `/api/v1/tasks?page=${page}`
+    const status = route.query.status || "all"
+    const TASK_API = `/api/v1/tasks?page=${page}&status=${status}`
     const tasksRes = await $axios.$get(TASK_API)
 
     return {
@@ -299,6 +306,14 @@ export default Vue.extend({
       successModalTxt: "",
       displayErrorModal: false,
       errorModalTxt: "",
+      statusFilterVal: "all",
+      statusOptions: [
+        { text: "全て", value: "all" },
+        { text: "これから", value: "not_started" },
+        { text: "頑張り中", value: "in_progress" },
+        { text: "保留中", value: "on_hold" },
+        { text: "達成", value: "completed" },
+      ],
     }
   },
   computed: {
@@ -315,12 +330,21 @@ export default Vue.extend({
     },
   },
   methods: {
-    fmtStatus(statusNum: number) {
-      return statusFilter(statusNum)
+    fmtStatus(status: string) {
+      return statusFilter(status)
     },
 
-    getStatusColor(status: number): string {
+    getStatusColor(status: string): string {
       return statusColor(status)
+    },
+
+    async changeStatusFilter() {
+      // // URLのクエリパラメータも変更
+      const query = Object.assign({}, this.$route.query)
+      query.status = this.statusFilterVal
+      console.log(query)
+      await this.$router.push({ query })
+      this.fetchTasks()
     },
 
     async changePage(pageInt: number) {
@@ -334,7 +358,7 @@ export default Vue.extend({
 
     async fetchTasks() {
       // // タスク一覧をAPIから取得する
-      const TASK_API = `/api/v1/tasks?page=${this.currentPage}`
+      const TASK_API = `/api/v1/tasks?page=${this.currentPage}&status=${this.statusFilterVal}`
       const tasksRes = await this.$axios.$get(TASK_API)
       this.tasks = tasksRes.data.tasks
       this.tasksTableList = tasksRes.data.tasks.map(
