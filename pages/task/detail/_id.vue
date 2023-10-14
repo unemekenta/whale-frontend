@@ -3,9 +3,20 @@
     <div class="contents-main">
       <v-row justify="justify-space-between">
         <v-col cols="12">
-          <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
-            {{ fmtStatus(task.status) }}
-          </v-chip>
+          <div class="chip-list">
+            <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
+              {{ fmtStatus(task.status) }}
+            </v-chip>
+            <v-chip
+              label
+              outlined
+              class="font-weight-bold chip"
+              :color="getPriorityColor(task.priority)"
+              dark
+            >
+              {{ fmtPriority(task.priority) }}
+            </v-chip>
+          </div>
           <h1>{{ task.title }}</h1>
         </v-col>
       </v-row>
@@ -107,7 +118,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
-import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
+import {
+  statusFilter,
+  statusColor,
+  priorityFilter,
+  priorityColor,
+} from "@/plugins/filter/label-filter"
 import { dateFilter } from "@/plugins/filter/date-filter"
 import { Task, TaskComment } from "@/@types/common"
 
@@ -126,7 +142,7 @@ export default class TaskDetail extends Vue {
     title: "",
     status: "",
     description: "",
-    priority: 0,
+    priority: "",
     deadline: "",
     updated_at: "",
     comments: [],
@@ -143,20 +159,6 @@ export default class TaskDetail extends Vue {
     content: "",
   }
 
-  priorities = [
-    { priorityName: "緊急", id: 1 },
-    { priorityName: "高い", id: 2 },
-    { priorityName: "通常", id: 3 },
-    { priorityName: "低い", id: 4 },
-  ]
-
-  statuses = [
-    { statusName: "これから", id: 1 },
-    { statusName: "頑張り中", id: 2 },
-    { statusName: "保留中", id: 3 },
-    { statusName: "達成", id: 4 },
-  ]
-
   showCommentForm = false
   showEditCommentForm = false
   showEditTaskForm = false
@@ -172,6 +174,14 @@ export default class TaskDetail extends Vue {
 
   fmtStatus(status: string) {
     return statusFilter(status)
+  }
+
+  fmtPriority(priority: string) {
+    return priorityFilter(priority)
+  }
+
+  getPriorityColor(priority: string): string {
+    return priorityColor(priority)
   }
 
   fmtDate(date: string) {
@@ -268,11 +278,17 @@ export default class TaskDetail extends Vue {
   max-width: 800px;
 }
 
-.chip {
-  font-size: $font-middle;
+.chip-list {
   display: flex;
-  justify-content: center;
-  max-width: 70px;
+  justify-content: flex-start;
+  margin-bottom: 4px;
+  .chip {
+    font-size: $font-middle;
+    display: flex;
+    justify-content: center;
+    width: 70px;
+    margin: 0 4px 0 0;
+  }
 }
 
 .text-body-2 {

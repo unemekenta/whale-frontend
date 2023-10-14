@@ -46,7 +46,7 @@ export interface Task {
   title: string
   description: string
   status: string
-  priority: number
+  priority: string
   deadline: string
   updated_at: string
   comments: TaskComment[]

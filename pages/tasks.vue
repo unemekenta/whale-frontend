@@ -18,12 +18,22 @@
       <div v-if="displayErrorModal" class="ma-3">
         <ErrorAlert :txt="errorModalTxt" />
       </div>
-      <v-select
-        v-model="statusFilterVal"
-        :items="statusOptions"
-        label="Status"
-        @change="changeStatusFilter"
-      ></v-select>
+      <div class="filter-list">
+        <v-select
+          v-model="statusFilterVal"
+          :items="statusOptions"
+          label="ステータス"
+          class="px-1"
+          @change="changeStatusFilter"
+        ></v-select>
+        <v-select
+          v-model="priorityFilterVal"
+          :items="priorityOptions"
+          label="優先度"
+          class="px-1"
+          @change="changePriorityFilter"
+        ></v-select>
+      </div>
       <v-row class="mx-1">
         <v-col v-if="tasks.length === 0" cols="12">
           <p>現在、目標はありません。</p>
@@ -53,9 +63,7 @@
               <v-select
                 v-model="taskForm.priority"
                 label="優先度"
-                :items="priorities"
-                item-text="priorityName"
-                item-value="id"
+                :items="priorityOptions"
               ></v-select>
 
               <v-select
@@ -133,14 +141,12 @@
               <v-select
                 v-model="editTaskForm.priority"
                 label="優先度"
-                :items="priorities"
-                item-text="priorityName"
-                item-value="id"
+                :items="prioritySubmitOptions"
               ></v-select>
               <v-select
                 v-model="editTaskForm.status"
                 label="ステータス"
-                :items="statusOptions"
+                :items="statusSubmitOptions"
               ></v-select>
               <v-text-field
                 v-model="editTaskForm.deadline"
@@ -211,6 +217,12 @@ import Vue from "vue"
 import { Task, Tag, Tagging, PagiNation } from "@/@types/common"
 import { TaskListTable } from "@/@types/task"
 import { stringToISOString } from "@/plugins/date-format"
+import {
+  statusOptions,
+  priorityOptions,
+  statusSubmitOptions,
+  prioritySubmitOptions,
+} from "@/plugins/options"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import PagiNationComponent from "@/components/common/PagiNation.vue"
@@ -227,7 +239,8 @@ export default Vue.extend({
   async asyncData({ $axios, route }) {
     const page = route.query.page || 1
     const status = route.query.status || "all"
-    const TASK_API = `/api/v1/tasks?page=${page}&status=${status}`
+    const priority = route.query.priority || "all"
+    const TASK_API = `/api/v1/tasks?page=${page}&status=${status}&priority=${priority}`
     const tasksRes = await $axios.$get(TASK_API)
 
     return {
@@ -243,6 +256,8 @@ export default Vue.extend({
         })
       ),
       pagination: tasksRes.data.pagination,
+      statusFilterVal: status,
+      priorityFilterVal: priority,
     }
   },
   data() {
@@ -284,12 +299,6 @@ export default Vue.extend({
         deadline: new Date().toLocaleDateString(),
         taggings: [] as Tagging[],
       },
-      priorities: [
-        { priorityName: "緊急", id: 1 },
-        { priorityName: "高い", id: 2 },
-        { priorityName: "通常", id: 3 },
-        { priorityName: "低い", id: 4 },
-      ],
       showTaskForm: false,
       showEditTaskForm: false,
       displaySuccessModal: false,
@@ -297,13 +306,10 @@ export default Vue.extend({
       displayErrorModal: false,
       errorModalTxt: "",
       statusFilterVal: "all",
-      statusOptions: [
-        { text: "全て", value: "all" },
-        { text: "これから", value: "not_started" },
-        { text: "頑張り中", value: "in_progress" },
-        { text: "保留中", value: "on_hold" },
-        { text: "達成", value: "completed" },
-      ],
+      statusOptions,
+      priorityOptions,
+      statusSubmitOptions,
+      prioritySubmitOptions,
     }
   },
   computed: {
@@ -336,6 +342,14 @@ export default Vue.extend({
       this.fetchTasks()
     },
 
+    async changePriorityFilter() {
+      // // URLのクエリパラメータも変更
+      const query = Object.assign({}, this.$route.query)
+      query.priority = this.priorityFilterVal
+      await this.$router.push({ query })
+      this.fetchTasks()
+    },
+
     async changePage(pageInt: number) {
       this.pagination.current_page = pageInt
       // URLのクエリパラメータも変更
@@ -347,7 +361,7 @@ export default Vue.extend({
 
     async fetchTasks() {
       // // タスク一覧をAPIから取得する
-      const TASK_API = `/api/v1/tasks?page=${this.currentPage}&status=${this.statusFilterVal}`
+      const TASK_API = `/api/v1/tasks?page=${this.currentPage}&status=${this.statusFilterVal}&priority=${this.priorityFilterVal}`
       const tasksRes = await this.$axios.$get(TASK_API)
       this.tasks = tasksRes.data.tasks
       this.tasksTableList = tasksRes.data.tasks.map(
@@ -494,5 +508,11 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .contents-main {
   max-width: 800px;
+}
+
+.filter-list {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 10px 0;
 }
 </style>

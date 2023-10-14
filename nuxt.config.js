@@ -37,6 +37,7 @@ export default {
     "@/plugins/axios-accessor",
     "@/plugins/date-format",
     "@/plugins/session",
+    "@/plugins/options",
     "@/plugins/filter/date-filter",
     "@/plugins/filter/label-filter",
     "@/plugins/helpers/image",
