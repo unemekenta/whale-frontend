@@ -25,10 +25,10 @@
                     class="avatar-image"
                   />
                 </v-avatar>
-                <p class="text-center comment-nickname">
-                  <small v-if="comment.user.nickname">{{ comment.user.nickname }}</small>
-                  <small v-else> 匿名ユーザー </small>
+                <p v-if="comment.user.nickname" class="text-center comment-nickname">
+                  {{ comment.user.nickname }}
                 </p>
+                <p v-else class="text-center comment-nickname">匿名ユーザー</p>
               </v-col>
               <v-col cols="10" md="11" class="px-2 py-2 comment-text">
                 <v-list-item-title>
@@ -36,10 +36,10 @@
                     {{ comment.content }}
                   </p>
                 </v-list-item-title>
-                <v-list-item-subtitle class="mr-3 text-right">
+                <v-list-item-subtitle class="text-right">
                   <div>
-                    <p>
-                      <small>{{ fmtDate(comment.updated_at) }}</small>
+                    <p class="comment-date">
+                      {{ fmtDate(comment.updated_at) }}
                     </p>
                   </div>
                 </v-list-item-subtitle>
@@ -47,7 +47,7 @@
             </v-row>
           </v-list-item-content>
           <v-list-item-action
-            v-if="$auth.user.data.id == comment.user_id"
+            v-if="$auth.user.data.id == comment.user.id"
             class="ml-3"
             @click="callEditComment(comment)"
           >
@@ -55,7 +55,7 @@
           </v-list-item-action>
           <v-list-item-action v-else></v-list-item-action>
           <v-list-item-action
-            v-if="$auth.user.data.id == comment.user_id"
+            v-if="$auth.user.data.id == comment.user.id"
             class="ml-3"
             @click="callDeleteComment(comment)"
           >
@@ -129,14 +129,26 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .comment-text p {
-  font-size: $font-small;
+  font-size: $font-middle;
+  @media screen and (max-width: $breakpoint-md) {
+    font-size: $font-small;
+  }
   margin-bottom: 0.2rem;
   white-space: normal;
 }
 
 .comment-nickname {
-  font-size: $font-micro;
+  font-size: $font-small;
+  @media screen and (max-width: $breakpoint-md) {
+    font-size: $font-micro;
+  }
   margin: 0;
+}
+
+.comment-date {
+  font-size: $font-small;
+  margin-bottom: 0.2rem;
+  white-space: normal;
 }
 
 .avatar {

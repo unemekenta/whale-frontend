@@ -20,7 +20,7 @@ export default class Tag extends Vue {
   border-radius: 0 2px 2px 0;
   color: #55606a;
   display: inline-block;
-  font-size: 0.8rem;
+  font-size: $font-middle;
   line-height: 1.4rem;
   margin: 3px 4px 3px 8px;
   padding: 0 6px 0 8px;

@@ -1,108 +1,107 @@
 <template>
   <v-container fluid>
-    <v-row justify="justify-space-between">
-      <v-col cols="12">
-        <v-chip
-          class="font-weight-bold ma-1 chip py-1 px-4"
-          :color="getStatusColor(task.status)"
-          dark
-        >
-          {{ fmtStatus(task.status) }}
-        </v-chip>
-        <h1>{{ task.title }}</h1>
-      </v-col>
-    </v-row>
-    <v-divider class="my-3"></v-divider>
-    <v-row justify="end">
-      <div v-if="displaySuccessModal" class="ma-3">
-        <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
-      </div>
-      <div v-if="displayErrorModal" class="ma-3">
-        <ErrorAlert :txt="errorModalTxt" />
-      </div>
-      <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-row no-gutters>
-          <v-col v-for="tag in task.tags" :key="tag.id" cols="auto" dark>
-            <Tag :txt="tag.name"></Tag>
-          </v-col>
-        </v-row>
-        <h2 class="my-2">概要</h2>
-        <div v-if="task.description">
-          <p class="text-body-2">{{ task.description }}</p>
+    <div class="contents-main">
+      <v-row justify="justify-space-between">
+        <v-col cols="12">
+          <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
+            {{ fmtStatus(task.status) }}
+          </v-chip>
+          <h1>{{ task.title }}</h1>
+        </v-col>
+      </v-row>
+      <v-divider class="my-3"></v-divider>
+      <v-row justify="end">
+        <div v-if="displaySuccessModal" class="ma-3">
+          <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
         </div>
-        <div v-else>
-          <p class="text-body-2">コンテンツがありません</p>
+        <div v-if="displayErrorModal" class="ma-3">
+          <ErrorAlert :txt="errorModalTxt" />
         </div>
-        <v-row class="my-2">
-          <v-col cols="6">
-            <h3>
-              <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ task.comments.length }})
-            </h3>
-          </v-col>
-          <v-col cols="6">
-            <v-row justify="end">
-              <v-btn class="ma-3" color="primary" @click="showCommentForm = true"
-                >コメント追加</v-btn
-              >
-            </v-row>
-          </v-col>
-        </v-row>
+        <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <v-row no-gutters>
+            <v-col v-for="tag in task.tags" :key="tag.id" cols="auto" dark>
+              <Tag :txt="tag.name"></Tag>
+            </v-col>
+          </v-row>
+          <h2 class="my-2">概要</h2>
+          <div v-if="task.description">
+            <p class="text-body-2">{{ task.description }}</p>
+          </div>
+          <div v-else>
+            <p class="text-body-2">コンテンツがありません</p>
+          </div>
+          <v-row class="my-2">
+            <v-col cols="6">
+              <h3>
+                <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ task.comments.length }})
+              </h3>
+            </v-col>
+            <v-col cols="6">
+              <v-row justify="end">
+                <v-btn class="ma-3" color="primary" @click="showCommentForm = true"
+                  >コメント追加</v-btn
+                >
+              </v-row>
+            </v-col>
+          </v-row>
 
-        <TaskCommentList
-          :comments="task.comments"
-          :edit-comment="editComment"
-          :delete-comment="deleteComment"
-        />
-      </v-col>
-    </v-row>
-    <v-dialog v-model="showCommentForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>コメント追加</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showCommentForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="submitComment">
-            <v-textarea v-model="commentForm.content" label="コメント"></v-textarea>
-            <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showEditCommentForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>コメント編集</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showEditCommentForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="updateComment">
-            <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
-            <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showEditTaskForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>タスク編集</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showEditTaskForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-      </v-card>
-    </v-dialog>
+          <TaskCommentList
+            :comments="task.comments"
+            :edit-comment="editComment"
+            :delete-comment="deleteComment"
+          />
+        </v-col>
+      </v-row>
+      <v-dialog v-model="showCommentForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>コメント追加</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showCommentForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="submitComment">
+              <v-textarea v-model="commentForm.content" label="コメント"></v-textarea>
+              <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="showEditCommentForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>コメント編集</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showEditCommentForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="updateComment">
+              <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
+              <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+      <v-dialog v-model="showEditTaskForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>タスク編集</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showEditTaskForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div class="side-contents"></div>
   </v-container>
 </template>
 
@@ -190,7 +189,7 @@ export default class TaskDetail extends Vue {
     const EDIT_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments/" + comment.id
     const res = await this.$axios.$get(EDIT_COMMENT_API)
     this.editCommentForm.id = comment.id
-    this.editCommentForm.content = res.data.content
+    this.editCommentForm.content = res.data.comment.content
 
     this.showEditCommentForm = true
   }
@@ -265,23 +264,15 @@ export default class TaskDetail extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.comment {
-  padding: 1rem;
-  border-bottom: 1px solid #ccc;
+.contents-main {
+  max-width: 800px;
 }
 
-.comment .v-list-item-content {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-.comment .v-list-item-title {
+.chip {
   font-size: $font-middle;
-  margin-bottom: 0.5rem;
-}
-
-.comment .v-list-item-subtitle {
-  font-size: $font-small;
+  display: flex;
+  justify-content: center;
+  max-width: 70px;
 }
 
 .text-body-2 {
@@ -305,9 +296,5 @@ export default class TaskDetail extends Vue {
   display: flex;
   justify-content: center;
   margin: auto;
-}
-
-.chip {
-  font-size: $font-micro;
 }
 </style>

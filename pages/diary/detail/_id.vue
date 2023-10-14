@@ -1,100 +1,105 @@
 <template>
   <v-container fluid>
-    <v-row justify="justify-space-between">
-      <v-col cols="12" md="6">
-        <h1>{{ diary.title }}</h1>
-      </v-col>
-    </v-row>
-    <v-divider justify="justify-space-between" class="my-3"></v-divider>
-    <v-row class="align-center my-1 mx-0">
-      <v-col cols="6" class="pa-0">
-        <p class="ma-0">
-          <small>{{ fmtDateWithoutTime(diary.date) }}</small>
-        </p>
-      </v-col>
-      <v-col cols="6">
-        <v-row mx-0 justify="end">
-          <v-avatar size="40" class="avatar">
-            <ImageBasic
-              v-if="diary.user.image"
-              :src="diary.user.image"
-              :aspect-ratio="1"
-              alt="avatarImage"
-              class="avatar-image"
-            />
-            <ImageBasic
-              v-else
-              :src="require('@/assets/images/common/icon-user.png')"
-              :aspect-ratio="1"
-              alt="avatarImage"
-              class="avatar-image"
-            />
-          </v-avatar>
-          <p class="text-center my-auto nickname">
-            <small>{{ diary.user.nickname }}</small>
+    <div class="contents-main">
+      <v-row justify="justify-space-between">
+        <v-col cols="12" md="6">
+          <h1>{{ diary.title }}</h1>
+        </v-col>
+      </v-row>
+      <v-divider justify="justify-space-between" class="my-3"></v-divider>
+      <v-row class="align-center my-1 mx-0">
+        <v-col cols="6" class="pa-0">
+          <p class="ma-0">
+            <small>{{ fmtDateWithoutTime(diary.date) }}</small>
           </p>
-        </v-row>
-      </v-col>
-    </v-row>
-    <p class="text-body-2">{{ diary.content }}</p>
-    <v-row v-if="diary.images.length > 0">
-      <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
-        <v-card class="py-1 px-3">
-          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
+        </v-col>
+        <v-col cols="6">
+          <v-row mx-0 justify="end">
+            <v-avatar size="40" class="avatar">
+              <ImageBasic
+                v-if="diary.user.image"
+                :src="diary.user.image"
+                :aspect-ratio="1"
+                alt="avatarImage"
+                class="avatar-image"
+              />
+              <ImageBasic
+                v-else
+                :src="require('@/assets/images/common/icon-user.png')"
+                :aspect-ratio="1"
+                alt="avatarImage"
+                class="avatar-image"
+              />
+            </v-avatar>
+            <p class="text-center my-auto nickname">
+              <small>{{ diary.user.nickname }}</small>
+            </p>
+          </v-row>
+        </v-col>
+      </v-row>
+      <p class="text-body-2">{{ diary.content }}</p>
+      <v-row v-if="diary.images.length > 0">
+        <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
+          <v-card class="py-1 px-3">
+            <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row class="mt-4 mb-2">
+        <v-col cols="6">
+          <h3>
+            <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{
+              diary.diary_comments.length
+            }})
+          </h3>
+        </v-col>
+        <v-col cols="6">
+          <v-row justify="end">
+            <v-btn class="ma-3" color="primary" @click="showCommentForm = true">コメント追加</v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+      <DiaryCommentList
+        :comments="diary.diary_comments"
+        :edit-comment="editComment"
+        :delete-comment="deleteComment"
+      />
+      <v-dialog v-model="showCommentForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>コメント追加</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showCommentForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="submitComment">
+              <v-textarea v-model="commentForm.content" label="コメント"></v-textarea>
+              <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+            </v-form>
+          </v-card-text>
         </v-card>
-      </v-col>
-    </v-row>
-    <v-row class="mt-4 mb-2">
-      <v-col cols="6">
-        <h3>
-          <v-icon>mdi-comment-multiple-outline</v-icon>コメント ({{ diary.diary_comments.length }})
-        </h3>
-      </v-col>
-      <v-col cols="6">
-        <v-row justify="end">
-          <v-btn class="ma-3" color="primary" @click="showCommentForm = true">コメント追加</v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-    <CommentList
-      :comments="diary.diary_comments"
-      :edit-comment="editComment"
-      :delete-comment="deleteComment"
-    />
-    <v-dialog v-model="showCommentForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>コメント追加</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showCommentForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="submitComment">
-            <v-textarea v-model="commentForm.content" label="コメント"></v-textarea>
-            <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showEditCommentForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>コメント編集</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showEditCommentForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="updateComment">
-            <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
-            <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+      </v-dialog>
+      <v-dialog v-model="showEditCommentForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>コメント編集</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showEditCommentForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="updateComment">
+              <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
+              <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+    <div class="side-contents"></div>
   </v-container>
 </template>
 
@@ -165,7 +170,7 @@ export default Vue.extend({
       const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
       const res = await this.$axios.$get(EDIT_COMMENT_API)
       this.editCommentForm.id = comment.id
-      this.editCommentForm.content = res.data.content
+      this.editCommentForm.content = res.data.diary_comment.content
 
       this.showEditCommentForm = true
     },
@@ -242,6 +247,9 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.contents-main {
+  max-width: 800px;
+}
 .text-body-2 {
   white-space: pre-wrap;
 }

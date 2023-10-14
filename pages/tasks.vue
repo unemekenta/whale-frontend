@@ -450,7 +450,7 @@ export default Vue.extend({
     async editSearchTag() {
       const SEARCH_TAG_API = "/api/v1/tags/search?keyword=" + this.editInputName
       const response = await this.$axios.$get(SEARCH_TAG_API)
-      this.editSuggestTags = response.data
+      this.editSuggestTags = response.data.tags
     },
 
     removeTag(tag: Tag) {
