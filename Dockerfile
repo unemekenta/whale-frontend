@@ -1,6 +1,4 @@
-ARG GITHUB_USERNAME
-
-FROM ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest
+FROM node:19.3.0-alpine
 
 ENV LANG=C.UTF-8 TZ=Asia/Tokyo
 
@@ -9,10 +7,9 @@ RUN apk update && \
 
 WORKDIR /nuxt-frontend
 
-COPY package.json /nuxt-frontend/package.json
-COPY package-lock.json /nuxt-frontend/package-lock.json
-COPY yarn.lock /nuxt-frontend/yarn.lock
+COPY package.json /nuxt-frontend/
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --production && \
+    yarn cache clean
 
 COPY . /nuxt-frontend

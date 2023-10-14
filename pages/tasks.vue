@@ -1,212 +1,206 @@
 <template>
   <v-container fluid>
-    <v-row justify="justify-space-between">
-      <v-col cols="6">
-        <h1>目標</h1>
-      </v-col>
-      <v-col cols="6" class="my-auto">
-        <v-row justify="end">
-          <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-divider class="my-3"></v-divider>
-    <div v-if="displaySuccessModal" class="ma-3">
-      <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+    <div class="contents-main">
+      <v-row justify="justify-space-between">
+        <v-col cols="6">
+          <h1>目標</h1>
+        </v-col>
+        <v-col cols="6" class="my-auto">
+          <v-row justify="end">
+            <v-btn class="ma-3" color="primary" @click="showTaskForm = true">タスク追加</v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+      <v-divider class="my-3"></v-divider>
+      <div v-if="displaySuccessModal" class="ma-3">
+        <SuccessAlert :txt="successModalTxt" transition="fade-transition" />
+      </div>
+      <div v-if="displayErrorModal" class="ma-3">
+        <ErrorAlert :txt="errorModalTxt" />
+      </div>
+      <v-row class="mx-1">
+        <v-col v-if="tasks.length === 0" cols="12">
+          <p>現在、目標はありません。</p>
+        </v-col>
+        <v-col v-else cols="12" class="px-0">
+          <TaskListHeader />
+          <div v-for="(task, index) in tasks" :key="index">
+            <TaskListItem :task="task" @editTask="editTask" @deleteTask="deleteTask" />
+          </div>
+        </v-col>
+      </v-row>
+      <PagiNationComponent :pages="pages" :current-page="currentPage" @changePage="changePage" />
+      <!-- 新規追加フォーム -->
+      <v-dialog v-model="showTaskForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>タスク追加</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showTaskForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="submitTask">
+              <v-text-field v-model="taskForm.title" label="タイトル"></v-text-field>
+              <v-textarea v-model="taskForm.description" label="詳細"></v-textarea>
+              <v-select
+                v-model="taskForm.priority"
+                label="優先度"
+                :items="priorities"
+                item-text="priorityName"
+                item-value="id"
+              ></v-select>
+
+              <v-select
+                v-model="taskForm.status"
+                label="ステータス"
+                :items="statuses"
+                item-text="statusName"
+                item-value="id"
+              ></v-select>
+              <v-text-field v-model="taskForm.deadline" label="完了予定日" type="datetime-local" />
+
+              <v-chip
+                v-for="(tag, index) in selectedTags"
+                :key="index"
+                class="ma-1"
+                color="primary"
+                @click="removeTag(tag)"
+              >
+                {{ tag.name }}
+                <v-icon small class="ml-2">mdi-close</v-icon>
+              </v-chip>
+
+              <v-text-field
+                v-model="inputName"
+                label="タグ追加"
+                class="mx-7 my-1"
+                @input="searchTag"
+              />
+              <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
+                <!-- <v-subheader>タグ候補</v-subheader> -->
+                <v-list-item-group>
+                  <v-list-item
+                    v-for="(tag, index) in suggestTags"
+                    :key="index"
+                    @click="addTag(tag)"
+                  >
+                    <v-list-item-content class="pa-1">
+                      <v-list-item-title class="subtitle-2">
+                        {{ tag.name }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-icon small>mdi-plus</v-icon>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+
+              <v-alert
+                v-if="suggestTags.length === 0 && inputName.length > 0"
+                :value="true"
+                color="error"
+                class="mt-1 mx-7 subtitle-2"
+              >
+                検索結果がありません
+              </v-alert>
+              <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <!-- 編集フォーム -->
+      <v-dialog v-model="showEditTaskForm" max-width="500px">
+        <v-card>
+          <v-toolbar color="primary" dark>
+            <v-toolbar-title>タスク編集</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="showEditTaskForm = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="updateTask">
+              <v-text-field v-model="editTaskForm.title" label="タイトル"></v-text-field>
+              <v-textarea v-model="editTaskForm.description" label="詳細"></v-textarea>
+              <v-select
+                v-model="editTaskForm.priority"
+                label="優先度"
+                :items="priorities"
+                item-text="priorityName"
+                item-value="id"
+              ></v-select>
+              <v-select
+                v-model="editTaskForm.status"
+                label="ステータス"
+                :items="statuses"
+                item-text="statusName"
+                item-value="id"
+              ></v-select>
+              <v-text-field
+                v-model="editTaskForm.deadline"
+                label="完了予定日"
+                type="datetime-local"
+              />
+
+              <v-chip
+                v-for="(tag, index) in editSelectedTags"
+                :key="index"
+                class="ma-1"
+                color="primary"
+                @click="removeEditTag(tag)"
+              >
+                {{ tag.name }}
+                <v-icon small class="ml-2">mdi-close</v-icon>
+              </v-chip>
+
+              <v-text-field
+                v-model="editInputName"
+                label="タグ追加"
+                class="mx-7 my-1"
+                @input="editSearchTag"
+              />
+              <v-list
+                v-if="editInputName.length > 0 && editSuggestTags.length > 0"
+                class="mx-7 my-0"
+              >
+                <!-- <v-subheader>タグ候補</v-subheader> -->
+                <v-list-item-group>
+                  <v-list-item
+                    v-for="(tag, index) in editSuggestTags"
+                    :key="index"
+                    @click="addEditTag(tag)"
+                  >
+                    <v-list-item-content class="pa-1">
+                      <v-list-item-title class="subtitle-2">
+                        {{ tag.name }}
+                      </v-list-item-title>
+                    </v-list-item-content>
+                    <v-list-item-action>
+                      <v-icon small>mdi-plus</v-icon>
+                    </v-list-item-action>
+                  </v-list-item>
+                </v-list-item-group>
+              </v-list>
+
+              <v-alert
+                v-if="editSuggestTags.length === 0 && inputName.length > 0"
+                :value="true"
+                color="error"
+                class="mt-1 mx-7 subtitle-2"
+              >
+                検索結果がありません
+              </v-alert>
+              <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
     </div>
-    <div v-if="displayErrorModal" class="ma-3">
-      <ErrorAlert :txt="errorModalTxt" />
-    </div>
-    <v-row class="mx-1">
-      <v-col v-if="tasks.length === 0" cols="12">
-        <p>現在、目標はありません。</p>
-      </v-col>
-      <v-col v-else cols="12" class="px-0">
-        <TableBasic :headers="headers" :items="tasksTableList">
-          <template #status="{ item }">
-            <v-chip
-              class="font-weight-bold chip py-1 px-4"
-              :color="getStatusColor(item.status)"
-              dark
-            >
-              {{ fmtStatus(item.status) }}
-            </v-chip>
-          </template>
-          <template #title="{ item }">
-            <nuxt-link :to="'/task/detail/' + item.id" class="text-decoration-none">
-              {{ item.title }}
-            </nuxt-link>
-          </template>
-          <template #actions="{ item }">
-            <v-btn icon @click.prevent="editTask(item.id)"><v-icon>mdi-pencil</v-icon></v-btn>
-            <v-btn icon @click.prevent="deleteTask(item.id)"><v-icon>mdi-delete</v-icon></v-btn>
-          </template>
-        </TableBasic>
-      </v-col>
-    </v-row>
-    <PagiNationComponent :pages="pages" :current-page="currentPage" @changePage="changePage" />
-    <!-- 新規追加フォーム -->
-    <v-dialog v-model="showTaskForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>タスク追加</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showTaskForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="submitTask">
-            <v-text-field v-model="taskForm.title" label="タイトル"></v-text-field>
-            <v-textarea v-model="taskForm.description" label="詳細"></v-textarea>
-            <v-select
-              v-model="taskForm.priority"
-              label="優先度"
-              :items="priorities"
-              item-text="priorityName"
-              item-value="id"
-            ></v-select>
-
-            <v-select
-              v-model="taskForm.status"
-              label="ステータス"
-              :items="statuses"
-              item-text="statusName"
-              item-value="id"
-            ></v-select>
-            <v-text-field v-model="taskForm.deadline" label="完了予定日" type="datetime-local" />
-
-            <v-chip
-              v-for="(tag, index) in selectedTags"
-              :key="index"
-              class="ma-1"
-              color="primary"
-              @click="removeTag(tag)"
-            >
-              {{ tag.name }}
-              <v-icon small class="ml-2">mdi-close</v-icon>
-            </v-chip>
-
-            <v-text-field
-              v-model="inputName"
-              label="タグ追加"
-              class="mx-7 my-1"
-              @input="searchTag"
-            />
-            <v-list v-if="inputName.length > 0 && suggestTags.length > 0" class="mx-7 my-0">
-              <!-- <v-subheader>タグ候補</v-subheader> -->
-              <v-list-item-group>
-                <v-list-item v-for="(tag, index) in suggestTags" :key="index" @click="addTag(tag)">
-                  <v-list-item-content class="pa-1">
-                    <v-list-item-title class="subtitle-2">
-                      {{ tag.name }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-icon small>mdi-plus</v-icon>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-
-            <v-alert
-              v-if="suggestTags.length === 0 && inputName.length > 0"
-              :value="true"
-              color="error"
-              class="mt-1 mx-7 subtitle-2"
-            >
-              検索結果がありません
-            </v-alert>
-            <v-btn type="submit" color="primary" class="mt-2">追加する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-
-    <!-- 編集フォーム -->
-    <v-dialog v-model="showEditTaskForm" max-width="500px">
-      <v-card>
-        <v-toolbar color="primary" dark>
-          <v-toolbar-title>タスク編集</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="showEditTaskForm = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-card-text>
-          <v-form @submit.prevent="updateTask">
-            <v-text-field v-model="editTaskForm.title" label="タイトル"></v-text-field>
-            <v-textarea v-model="editTaskForm.description" label="詳細"></v-textarea>
-            <v-select
-              v-model="editTaskForm.priority"
-              label="優先度"
-              :items="priorities"
-              item-text="priorityName"
-              item-value="id"
-            ></v-select>
-            <v-select
-              v-model="editTaskForm.status"
-              label="ステータス"
-              :items="statuses"
-              item-text="statusName"
-              item-value="id"
-            ></v-select>
-            <v-text-field
-              v-model="editTaskForm.deadline"
-              label="完了予定日"
-              type="datetime-local"
-            />
-
-            <v-chip
-              v-for="(tag, index) in editSelectedTags"
-              :key="index"
-              class="ma-1"
-              color="primary"
-              @click="removeEditTag(tag)"
-            >
-              {{ tag.name }}
-              <v-icon small class="ml-2">mdi-close</v-icon>
-            </v-chip>
-
-            <v-text-field
-              v-model="editInputName"
-              label="タグ追加"
-              class="mx-7 my-1"
-              @input="editSearchTag"
-            />
-            <v-list v-if="editInputName.length > 0 && editSuggestTags.length > 0" class="mx-7 my-0">
-              <!-- <v-subheader>タグ候補</v-subheader> -->
-              <v-list-item-group>
-                <v-list-item
-                  v-for="(tag, index) in editSuggestTags"
-                  :key="index"
-                  @click="addEditTag(tag)"
-                >
-                  <v-list-item-content class="pa-1">
-                    <v-list-item-title class="subtitle-2">
-                      {{ tag.name }}
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-icon small>mdi-plus</v-icon>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-
-            <v-alert
-              v-if="editSuggestTags.length === 0 && inputName.length > 0"
-              :value="true"
-              color="error"
-              class="mt-1 mx-7 subtitle-2"
-            >
-              検索結果がありません
-            </v-alert>
-            <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
-          </v-form>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <div class="side-contents"></div>
   </v-container>
 </template>
 
@@ -216,13 +210,15 @@ import { Task, Tag, Tagging, PagiNation } from "@/@types/common"
 import { TaskListTable } from "@/@types/task"
 import { stringToISOString } from "@/plugins/date-format"
 import { statusFilter, statusColor } from "@/plugins/filter/label-filter"
-import TableBasic from "@/components/common/TableBasic.vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import PagiNationComponent from "@/components/common/PagiNation.vue"
+import TaskListItem from "@/components/TaskListItem.vue"
+import TaskListHeader from "@/components/TaskListHeader.vue"
 
 export default Vue.extend({
   components: {
-    TableBasic,
+    TaskListItem,
+    TaskListHeader,
     PagiNationComponent,
   },
   middleware: "authenticated",
@@ -483,7 +479,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.chip {
-  font-size: $font-micro;
+.contents-main {
+  max-width: 800px;
 }
 </style>

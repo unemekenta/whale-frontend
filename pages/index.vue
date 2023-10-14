@@ -12,61 +12,7 @@
     </v-row>
     <v-row>
       <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="3">
-        <nuxt-link :to="'/diary/detail/' + diary.id" class="text-decoration-none">
-          <v-card>
-            <ImageBasic
-              v-if="diary.images.length > 0"
-              :src="fmtImageUrl(diary.images[0].image.url)"
-              :aspect-ratio="16 / 9"
-            />
-            <ImageBasic
-              v-else
-              :src="require('@/assets/images/common/reading-glasses.png')"
-              :aspect-ratio="16 / 9"
-            />
-            <v-card-title class="my-1 py-1">
-              <p class="line-clamp-1 my-0">
-                {{ diary.title }}
-              </p>
-            </v-card-title>
-            <v-row justify="justify-space-between" class="my-0 mx-2 align-center">
-              <v-col cols="7" class="my-0 py-0">
-                <v-row>
-                  <v-avatar size="30" class="avatar">
-                    <ImageBasic
-                      v-if="diary.user.image"
-                      :src="diary.user.image"
-                      :aspect-ratio="1"
-                      alt="avatarImage"
-                      class="avatar-image"
-                    />
-                    <ImageBasic
-                      v-else
-                      :src="require('@/assets/images/common/icon-user.png')"
-                      :aspect-ratio="1"
-                      alt="avatarImage"
-                      class="avatar-image"
-                    />
-                  </v-avatar>
-                  <p class="text-center my-auto nickname">
-                    <small>{{ diary.user.nickname }}</small>
-                  </p>
-                </v-row>
-              </v-col>
-              <v-col cols="5" class="my-0 py-0">
-                <v-card-subtitle class="ma-0 pa-0">
-                  <p class="text-right ma-0 py-0">
-                    {{ fmtDateWithoutTime(diary.date) }}
-                  </p>
-                </v-card-subtitle>
-              </v-col>
-            </v-row>
-
-            <v-card-text
-              ><p class="line-clamp-2">{{ diary.content }}</p></v-card-text
-            >
-          </v-card>
-        </nuxt-link>
+        <DiaryCard :diary="diary" />
       </v-col>
     </v-row>
   </v-container>
@@ -74,14 +20,12 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
 import { Diary, InformationContents } from "@/@types/common"
-import { imageUrl } from "@/plugins/helpers/image"
-import ImageBasic from "@/components/common/ImageBasic.vue"
+import DiaryCard from "@/components/common/DiaryCard.vue"
 
 export default Vue.extend({
   components: {
-    ImageBasic,
+    DiaryCard,
   },
   async asyncData({ $axios }) {
     const now = new Date().getTime()
@@ -101,30 +45,5 @@ export default Vue.extend({
       informationContents: [] as InformationContents[],
     }
   },
-  methods: {
-    fmtDateWithoutTime(date: string) {
-      return dateWithoutTimeFilter(date)
-    },
-
-    fmtImageUrl(path: string) {
-      return imageUrl(path)
-    },
-  },
 })
 </script>
-
-<style>
-.line-clamp-1 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-}
-
-.line-clamp-2 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-</style>

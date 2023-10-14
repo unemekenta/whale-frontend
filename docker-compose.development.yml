@@ -1,3 +1,4 @@
 services:
   nuxt-frontend:
+    # dockerfileのnodeイメージは無視される
     image: ghcr.io/${GITHUB_USERNAME}/whale-frontend:latest
