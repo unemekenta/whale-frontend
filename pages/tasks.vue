@@ -61,9 +61,7 @@
               <v-select
                 v-model="taskForm.status"
                 label="ステータス"
-                :items="statuses"
-                item-text="statusName"
-                item-value="id"
+                :items="statusOptions"
               ></v-select>
               <v-text-field v-model="taskForm.deadline" label="完了予定日" type="datetime-local" />
 
@@ -142,9 +140,7 @@
               <v-select
                 v-model="editTaskForm.status"
                 label="ステータス"
-                :items="statuses"
-                item-text="statusName"
-                item-value="id"
+                :items="statusOptions"
               ></v-select>
               <v-text-field
                 v-model="editTaskForm.deadline"
@@ -294,12 +290,6 @@ export default Vue.extend({
         { priorityName: "通常", id: 3 },
         { priorityName: "低い", id: 4 },
       ],
-      statuses: [
-        { statusName: "これから", id: 1 },
-        { statusName: "頑張り中", id: 2 },
-        { statusName: "保留中", id: 3 },
-        { statusName: "達成", id: 4 },
-      ],
       showTaskForm: false,
       showEditTaskForm: false,
       displaySuccessModal: false,
@@ -342,7 +332,6 @@ export default Vue.extend({
       // // URLのクエリパラメータも変更
       const query = Object.assign({}, this.$route.query)
       query.status = this.statusFilterVal
-      console.log(query)
       await this.$router.push({ query })
       this.fetchTasks()
     },
