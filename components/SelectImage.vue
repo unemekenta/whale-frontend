@@ -1,16 +1,15 @@
 <template>
   <div>
     <v-row class="card-content">
-      <v-col v-for="image in images" :key="image.id" cols="4">
-        <v-card class="py-1 px-3">
-          <v-checkbox
-            v-model="localSelectedImages"
-            :value="image.id"
-            class="image-checkbox"
-          ></v-checkbox>
+      <div v-for="image in images" :key="image.id" class="image-list">
+        <div
+          class="image-container"
+          :class="{ selected: localSelectedImages.includes(image.id) }"
+          @click="toggleSelected(image.id)"
+        >
           <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
-        </v-card>
-      </v-col>
+        </div>
+      </div>
     </v-row>
     <v-row>
       <v-btn color="accent" class="ml-auto" @click.prevent="executeParentFunction"
@@ -63,6 +62,13 @@ export default Vue.extend({
     this.fetchImages()
   },
   methods: {
+    toggleSelected(imageId: number) {
+      if (this.localSelectedImages.includes(imageId)) {
+        this.localSelectedImages = this.localSelectedImages.filter((id) => id !== imageId)
+      } else {
+        this.localSelectedImages.push(imageId)
+      }
+    },
     executeParentFunction() {
       this.callbackFunc(this.localSelectedImages) // 親の関数を呼び出します
     },
@@ -79,12 +85,37 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .card-content {
-  max-height: 200px; /* 必要な高さに適宜調整してください */
+  height: 200px; /* 必要な高さに適宜調整してください */
   overflow-y: auto;
-  background-color: #eeeeee;
+  background-color: $color-gray;
+  display: grid;
+  gap: 2px;
+  grid-template-columns: 1fr 1fr;
+}
+.image-list {
+  width: 100%;
+  height: 100%;
 }
 
-.image-checkbox {
-  margin: 0;
+.image-container {
+  position: relative;
+  display: block;
+  border: 2px solid $color-gray;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.image-container.selected {
+  border-color: $color-secondary;
+}
+
+.image-container .v-image {
+  width: 100%;
+  height: 100%;
+}
+
+.image-container .v-image img {
+  object-fit: cover;
 }
 </style>

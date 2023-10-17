@@ -1,18 +1,21 @@
 <template>
   <nuxt-link :to="'/task/detail/' + task.id" class="task-item text-decoration-none">
-    <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
-      {{ fmtStatus(task.status) }}
-    </v-chip>
-    <v-chip
-      label
-      outlined
-      class="font-weight-bold chip"
-      :color="getPriorityColor(task.priority)"
-      dark
-    >
-      {{ fmtPriority(task.priority) }}
-    </v-chip>
-    <p class="contents">{{ task.title }}</p>
+    <div class="contents">
+      <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
+        {{ fmtStatus(task.status) }}
+      </v-chip>
+    </div>
+    <p class="contents">
+      <v-chip
+        label
+        outlined
+        class="font-weight-bold chip mr-2"
+        :color="getPriorityColor(task.priority)"
+        dark
+      >
+        {{ fmtPriority(task.priority) }} </v-chip
+      >{{ task.title }}
+    </p>
     <p class="contents">{{ fmtDateWithoutTime }}</p>
     <div class="contents">
       <v-btn icon @click.prevent="editTask(task.id)">
@@ -75,11 +78,11 @@ export default Vue.extend({
 .task-item {
   font-size: $font-middle;
   display: grid;
-  grid-template-columns: 1fr 1fr 7fr 1fr 1fr; /* 5つの要素を横並びに配置 */
+  gap: 2px;
+  grid-template-columns: 1fr 10fr 1fr 1fr; /* 5つの要素を横並びに配置 */
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 8fr 1fr 1fr;
   }
-  gap: 10px; /* グリッドアイテム間の隙間を設定（必要に応じて調整） */
   border-bottom: 1px solid #ccc;
   padding: 8px;
   .chip {
