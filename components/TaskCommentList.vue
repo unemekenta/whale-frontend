@@ -11,8 +11,8 @@
               <v-col cols="2" md="1">
                 <v-avatar size="40" class="avatar">
                   <ImageBasic
-                    v-if="comment.user.image"
-                    :src="comment.user.image"
+                    v-if="comment.user.image.url"
+                    :src="comment.user.image.url"
                     :aspect-ratio="1"
                     alt="avatarImage"
                     class="avatar-image"

@@ -97,10 +97,18 @@ export default class Mypage extends Vue {
     await this.$auth.fetchUser()
   }
 
-  async submitUserInfoForm(userInfoForm: UserInfoForm) {
+  async submitUserInfoForm(params: URLSearchParams, formData: FormData) {
     const EDIT_USER_API = "/api/v1/auth/"
     try {
-      await this.$axios.$put(EDIT_USER_API, userInfoForm)
+      if (formData.get("image") === null) {
+        formData.delete("image")
+      }
+      await this.$axios.$put(EDIT_USER_API, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        params,
+      })
       this.successModalTxt = "ユーザー情報を更新しました。"
       this.displaySuccessModal = true
       setTimeout(() => {

@@ -15,8 +15,8 @@
       <div class="card-info">
         <v-avatar size="30" class="avatar">
           <ImageBasic
-            v-if="diary.user.image"
-            :src="diary.user.image"
+            v-if="diary.user.image.url"
+            :src="diary.user.image.url"
             :aspect-ratio="1"
             alt="avatarImage"
             class="avatar-image"

@@ -17,8 +17,8 @@
           <v-row mx-0 justify="end">
             <v-avatar size="40" class="avatar">
               <ImageBasic
-                v-if="diary.user.image"
-                :src="diary.user.image"
+                v-if="diary.user.image.url"
+                :src="diary.user.image.url"
                 :aspect-ratio="1"
                 alt="avatarImage"
                 class="avatar-image"
@@ -122,21 +122,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      diary: {
-        id: 0,
-        title: "",
-        content: "",
-        is_public: false,
-        date: "",
-        images: [],
-        user: {
-          id: 0,
-          name: "",
-          nickname: "",
-          image: "",
-        },
-        diary_comments: [],
-      } as Diary,
       commentForm: {
         content: "",
         uid: "",

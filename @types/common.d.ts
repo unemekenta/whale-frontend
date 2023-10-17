@@ -2,7 +2,9 @@ export interface User {
   id: number
   name: string
   nickname: string
-  image: string | null
+  image: {
+    url: string
+  }
 }
 
 export interface ImageUrl {
