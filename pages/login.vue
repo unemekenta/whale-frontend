@@ -51,7 +51,9 @@ export default class Login extends Vue {
     id: 0,
     name: "",
     nickname: "",
-    image: "",
+    image: {
+      url: "",
+    },
   }
 
   form = {
@@ -119,7 +121,9 @@ export default class Login extends Vue {
         id: 0,
         name: "",
         nickname: "",
-        image: "",
+        image: {
+          url: "",
+        },
       }
       logoutStorage()
     })

@@ -38,20 +38,15 @@
 import { Component, Vue } from "nuxt-property-decorator"
 import { User } from "@/@types/common"
 
-interface UserInfoForm {
-  id: number
-  name: string
-  nickname: string
-  image: string
-}
-
 @Component
 export default class Mypage extends Vue {
   user: User = {
     id: 0,
     name: "",
     nickname: "",
-    image: "",
+    image: {
+      url: "",
+    },
   }
 
   displaySuccessModal = false
@@ -87,7 +82,9 @@ export default class Mypage extends Vue {
         id: 0,
         name: "",
         nickname: "",
-        image: "",
+        image: {
+          url: "",
+        },
       }
       localStorage.removeItem("access-token")
       localStorage.removeItem("client")

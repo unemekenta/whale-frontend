@@ -1,23 +1,20 @@
 <template>
   <nuxt-link :to="'/task/detail/' + task.id" class="task-item text-decoration-none">
-    <div class="contents">
+    <div class="chip-list">
       <v-chip class="font-weight-bold chip" :color="getStatusColor(task.status)" dark>
         {{ fmtStatus(task.status) }}
       </v-chip>
+      <div :class="'text-color-' + getPriorityColor(task.priority)">
+        {{ fmtPriority(task.priority) }}
+      </div>
     </div>
-    <p class="contents">
-      <v-chip
-        label
-        outlined
-        class="font-weight-bold chip mr-2"
-        :color="getPriorityColor(task.priority)"
-        dark
-      >
-        {{ fmtPriority(task.priority) }} </v-chip
-      >{{ task.title }}
-    </p>
-    <p class="contents">{{ fmtDateWithoutTime }}</p>
-    <div class="contents">
+    <div class="info-list">
+      <p class="info-title">
+        {{ task.title }}
+      </p>
+      <p class="info-date">{{ fmtDateWithoutTime }}</p>
+    </div>
+    <div class="button-list">
       <v-btn icon @click.prevent="editTask(task.id)">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
@@ -77,23 +74,77 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .task-item {
   font-size: $font-middle;
+  align-items: center;
   display: grid;
   gap: 2px;
-  grid-template-columns: 1fr 10fr 1fr 1fr; /* 5つの要素を横並びに配置 */
+  grid-template-columns: 2fr 10fr 1fr; /* 5つの要素を横並びに配置 */
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: 1fr 8fr 1fr 1fr;
+    grid-template-columns: 3fr 9fr 1fr;
+    gap: 8px;
   }
   border-bottom: 1px solid #ccc;
-  padding: 8px;
-  .chip {
-    font-size: $font-small;
-    display: flex;
-    justify-content: center;
-  }
-  .contents {
-    display: flex;
+  padding: 8px 0;
+  .chip-list {
     align-items: center;
-    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    @media screen and (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+      text-align: center;
+      gap: 0;
+    }
+    .chip {
+      font-size: $font-small;
+      display: flex;
+      justify-content: center;
+    }
+    .text-color {
+      &-red {
+        color: $color-red;
+      }
+      &-yellow {
+        color: $color-yellow;
+      }
+      &-blue {
+        color: $color-blue;
+      }
+      &-green {
+        color: $color-green;
+      }
+    }
+  }
+  .info-list {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 4px;
+    @media screen and (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+      text-align: left;
+      row-gap: 10px;
+    }
+    .info-title,
+    .info-date {
+      display: inline-block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .info-title {
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: $font-middle;
+      }
+    }
+    .info-date {
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: $font-small;
+      }
+    }
+  }
+  .button-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
   }
 }
 </style>
