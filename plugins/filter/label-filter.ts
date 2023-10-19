@@ -66,7 +66,7 @@ function getPriorityColor(priority: string) {
     case "emergency":
       return "red"
     case "high":
-      return "yellow"
+      return "orange"
     case "normal":
       return "blue"
     case "low":

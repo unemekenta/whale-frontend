@@ -13,8 +13,12 @@
       :aspect-ratio="16 / 9"
       class="hide-below-pc"
     />
-    <p class="contents">{{ diary.title }}</p>
-    <p class="contents">{{ fmtDateWithoutTime }}</p>
+    <div class="info-list">
+      <p class="info-title">
+        {{ diary.title }}
+      </p>
+      <p class="info-date">{{ fmtDateWithoutTime }}</p>
+    </div>
     <p class="contents">{{ fmtIsPublic }}</p>
     <div class="contents">
       <v-btn icon @click.prevent="editDiary(diary.id)">
@@ -71,19 +75,48 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .diary-item {
+  align-items: center;
   font-size: $font-middle;
   display: grid;
-  grid-template-columns: 1fr 3fr 2fr 1fr 1fr; /* 5つの要素を横並びに配置 */
+  grid-template-columns: 1fr 6fr 1fr 1fr; /* 5つの要素を横並びに配置 */
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 6fr 2fr 1fr;
   }
   gap: 10px; /* グリッドアイテム間の隙間を設定（必要に応じて調整） */
   border-bottom: 1px solid #ccc;
-  padding: 8px;
+  padding: 8px 0;
   .contents {
     display: flex;
     align-items: center;
     margin: 0;
+  }
+
+  .info-list {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 4px;
+    @media screen and (max-width: $breakpoint-md) {
+      grid-template-columns: 1fr;
+      text-align: left;
+      row-gap: 10px;
+    }
+    .info-title,
+    .info-date {
+      display: inline-block;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .info-title {
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: $font-middle;
+      }
+    }
+    .info-date {
+      @media screen and (max-width: $breakpoint-md) {
+        font-size: $font-small;
+      }
+    }
   }
 }
 </style>

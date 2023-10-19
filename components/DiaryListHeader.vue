@@ -2,8 +2,7 @@
   <div class="diary-list-header">
     <p class="contents hide-below-pc"></p>
     <p class="contents">タイトル</p>
-    <p class="contents">日付</p>
-    <p class="contents"></p>
+    <p class="contents">ステータス</p>
     <p class="contents"></p>
   </div>
 </template>
@@ -18,13 +17,13 @@ export default Vue.extend({})
 .diary-list-header {
   font-size: $font-middle;
   display: grid;
-  grid-template-columns: 1fr 3fr 2fr 1fr 1fr;
+  grid-template-columns: 1fr 6fr 1fr 1fr;
   @media screen and (max-width: $breakpoint-md) {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 5fr 3fr 1fr;
   }
   gap: 10px; /* グリッドアイテム間の隙間を設定（必要に応じて調整） */
   border-bottom: 1px solid #ccc;
-  padding: 8px;
+  padding: 8px 0;
   .contents {
     display: flex;
     align-items: center;

@@ -40,9 +40,7 @@
       <p class="text-body-2">{{ diary.content }}</p>
       <v-row v-if="diary.images.length > 0">
         <v-col v-for="image in diary.images" :key="image.id" cols="12" md="4">
-          <v-card class="py-1 px-3">
-            <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
-          </v-card>
+          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
         </v-col>
       </v-row>
       <v-row class="mt-4 mb-2">

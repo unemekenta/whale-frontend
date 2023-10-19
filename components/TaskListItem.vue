@@ -103,8 +103,8 @@ export default Vue.extend({
       &-red {
         color: $color-red;
       }
-      &-yellow {
-        color: $color-yellow;
+      &-orange {
+        color: $color-orange;
       }
       &-blue {
         color: $color-blue;
