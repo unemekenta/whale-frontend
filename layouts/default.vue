@@ -100,6 +100,11 @@ export default Vue.extend({
           title: "マイページ・設定",
           to: "/mypage",
         },
+        {
+          icon: "mdi-information",
+          title: "Dream Diaryとは",
+          to: "/about",
+        },
       ],
       miniVariant: false,
       right: true,
