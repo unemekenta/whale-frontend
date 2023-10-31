@@ -4,21 +4,22 @@
       <div>
         <h1>{{ serviceName }}について</h1>
         <section class="section-01">
-          <div class="container-left">
+          <div class="container container-left">
             <p>{{ serviceDescription }}</p>
             <p>
               あなたの夢や目標を実現するために、<br />日々の出来事や感情、<br />やりたいことややったことを記録しましょう。
             </p>
           </div>
+          <div class="container container-right">
+            <imageBasic :src="require('@/static/images/about/about01.png')" />
+          </div>
         </section>
-        <!-- <ImageBasic
-      :src="require('@/assets/images/about/about01.png')"
-      :aspect-ratio="1"
-      alt="about01"
-      class="about01"
-    /> -->
+
         <section class="section-02">
-          <div class="container-right">
+          <div class="container container-left">
+            <imageBasic :src="require('@/static/images/about/about02.png')" />
+          </div>
+          <div class="container container-right">
             <p>{{ serviceName }}は、以下のようなメリットを提供します。</p>
             <ul>
               <li>
@@ -35,12 +36,15 @@
         </section>
 
         <section class="section-03">
-          <div class="container-left">
+          <div class="container container-left">
             <p>
               その他にも{{
                 serviceName
               }}は、<br />シンプルで使いやすいデザインと機能を備えており、<br />あなたの夢や目標を応援します。
             </p>
+          </div>
+          <div class="container container-right">
+            <imageBasic :src="require('@/static/images/about/about03.png')" />
           </div>
         </section>
       </div>
@@ -66,7 +70,7 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .contents-main {
   max-width: 800px;
 }
@@ -74,37 +78,20 @@ export default Vue.extend({
 .section-01,
 .section-02,
 .section-03 {
+  margin: 40px 0;
   height: 100%;
   width: 100%;
-  background-repeat: no-repeat;
-  background-color: rgba(255, 255, 255, 0.4);
-  background-blend-mode: lighten;
-}
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  @media screen and (max-width: $breakpoint-md) {
+    grid-template-columns: 1fr;
+  }
 
-.section-01 {
-  background-image: url("~static/images/about/about01.png");
-  background-size: 400px;
-  background-position: right;
-}
-
-.section-02 {
-  background-image: url("~static/images/about/about02.png");
-  background-size: 400px;
-  background-position: left;
-}
-
-.section-03 {
-  background-image: url("~static/images/about/about03.png");
-  background-size: 400px;
-  background-position: right;
-}
-
-.container-left {
-  padding: 100px 50% 100px 0;
-}
-
-.container-right {
-  padding: 100px 0 100px 50%;
+  .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-content: center;
+  }
 }
 
 h1 {
