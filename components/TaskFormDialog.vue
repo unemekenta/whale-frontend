@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showTaskForm" max-width="500px">
+  <v-dialog v-model="showTaskForm" max-width="500px" @click:outside="closeDialog">
     <v-card>
       <v-toolbar color="primary" dark>
         <v-toolbar-title>{{ dialogTitle }}</v-toolbar-title>

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDiaryForm" max-width="500px">
+  <v-dialog v-model="showDiaryForm" max-width="500px" @click:outside="closeFormDialog">
     <v-card>
       <v-toolbar color="primary" dark>
         <v-toolbar-title>日記を書く</v-toolbar-title>
