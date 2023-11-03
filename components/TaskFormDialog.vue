@@ -10,19 +10,23 @@
       </v-toolbar>
       <v-card-text>
         <v-form @submit.prevent="submitTask">
-          <v-text-field v-model="taskForm.title" label="タイトル" required />
-          <v-textarea v-model="taskForm.description" label="詳細" />
+          <v-text-field v-model="taskFormForSubmit.title" label="タイトル" required />
+          <v-textarea v-model="taskFormForSubmit.description" label="詳細" />
           <v-select
-            v-model="taskForm.priority"
+            v-model="taskFormForSubmit.priority"
             label="優先度"
             :items="prioritySubmitOptions"
           ></v-select>
           <v-select
-            v-model="taskForm.status"
+            v-model="taskFormForSubmit.status"
             label="ステータス"
             :items="statusSubmitOptions"
           ></v-select>
-          <v-text-field v-model="taskForm.deadline" label="完了予定日" type="datetime-local" />
+          <v-text-field
+            v-model="taskFormForSubmit.deadline"
+            label="完了予定日"
+            type="datetime-local"
+          />
           <v-chip
             v-for="(tag, index) in selectedTags"
             :key="index"
@@ -69,7 +73,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue"
-import { Tag } from "@/@types/common"
+import { Tag, Tagging } from "@/@types/common"
 import { TaskForm } from "@/@types/task"
 import {
   statusOptions,
@@ -108,7 +112,25 @@ export default Vue.extend({
       prioritySubmitOptions,
       inputName: "",
       suggestTags: [] as Tag[],
+      taskFormForSubmit: {} as TaskForm,
+      selectedTagsForSubmit: [] as Tag[],
     }
+  },
+  watch: {
+    // taskFormプロパティが変更されたときに呼ばれる
+    taskForm: {
+      handler() {
+        this.copyTaskForm()
+      },
+      deep: true,
+    },
+    // selectedTagsプロパティが変更されたときに呼ばれる
+    selectedTags: {
+      handler() {
+        this.copySelectedTags()
+      },
+      deep: true,
+    },
   },
   methods: {
     async searchTag() {
@@ -118,27 +140,55 @@ export default Vue.extend({
     },
 
     removeTag(tag: Tag) {
-      const index = this.selectedTags.indexOf(tag)
+      const index = this.selectedTagsForSubmit.indexOf(tag)
       if (index !== -1) {
-        this.selectedTags.splice(index, 1)
+        this.selectedTagsForSubmit.splice(index, 1)
       }
     },
 
     addTag(tag: Tag) {
-      this.selectedTags.push(tag)
+      this.selectedTagsForSubmit.push(tag)
     },
+
+    copyTaskForm() {
+      this.taskFormForSubmit = Object.assign({}, this.taskForm)
+    },
+
+    copySelectedTags() {
+      this.selectedTagsForSubmit = this.selectedTags
+    },
+
+    initTaskFormForSubmit() {
+      this.taskFormForSubmit = {
+        id: 0,
+        title: "",
+        description: "",
+        uid: "",
+        priority: "",
+        status: "",
+        deadline: new Date().toLocaleDateString(),
+        taggings: [] as Tagging[],
+      }
+    },
+
+    initSelectedTagsForSubmit() {
+      this.selectedTagsForSubmit = []
+    },
+
     submitTask() {
       const uid = window.localStorage.getItem("uid")
       if (uid === null) {
         return
       }
-      this.taskForm.uid = uid
-      this.selectedTags.forEach((tag: Tag) => {
-        this.taskForm.taggings.push({ tag_id: tag.id })
+      this.taskFormForSubmit.uid = uid
+      this.selectedTagsForSubmit.forEach((tag: Tag) => {
+        this.taskFormForSubmit.taggings.push({ tag_id: tag.id })
       })
 
       try {
-        this.$emit("submitDiaryForm", this.taskForm)
+        this.$emit("submitDiaryForm", this.taskFormForSubmit)
+        this.initTaskFormForSubmit()
+        this.initSelectedTagsForSubmit()
       } catch (error) {
         console.error(error)
       }

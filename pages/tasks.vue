@@ -261,10 +261,10 @@ export default Vue.extend({
       }
     },
 
-    async submitTask(editFormData: TaskForm) {
+    async submitTask(submitFormData: TaskForm) {
       try {
         const POST_TASK_API = "/api/v1/tasks"
-        const response = await this.$axios.$post(POST_TASK_API, editFormData)
+        const response = await this.$axios.$post(POST_TASK_API, submitFormData)
         this.successModalTxt = response.data.title + "を登録しました。"
         this.displaySuccessModal = true
         this.showTaskForm = false
@@ -282,13 +282,9 @@ export default Vue.extend({
       }
     },
 
-    async updateTask() {
-      const UPDATE_TASK_API = "/api/v1/tasks/" + this.editTaskForm.id
-      this.editTaskForm.taggings = []
-      this.editSelectedTags.forEach((tag) => {
-        this.editTaskForm.taggings.push({ tag_id: tag.id })
-      })
-      const response = await this.$axios.$put(UPDATE_TASK_API, this.editTaskForm)
+    async updateTask(editFormData: TaskForm) {
+      const UPDATE_TASK_API = "/api/v1/tasks/" + editFormData.id
+      const response = await this.$axios.$put(UPDATE_TASK_API, editFormData)
       try {
         this.successModalTxt = response.data.title + "を更新しました。"
         this.displaySuccessModal = true
