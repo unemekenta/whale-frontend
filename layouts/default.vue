@@ -10,14 +10,6 @@
       color="primary"
     >
       <v-list>
-        <v-list-item>
-          <ImageBasic
-            :src="require('@/assets/images/common/logo-white.png')"
-            :aspect-ratio="3 / 1"
-            alt="logo"
-            class="logo-image"
-          />
-        </v-list-item>
         <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
           <v-list-item-action>
             <v-icon>{{ item.icon }}</v-icon>

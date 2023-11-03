@@ -1,5 +1,5 @@
 <template>
-  <a :href="fmtImageUrl" target="_blank">
+  <a :href="fmtImageUrl" target="_blank" class="image">
     <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
   </a>
 </template>
@@ -35,6 +35,12 @@ export default Vue.extend({
 </script>
 
 <style>
+.image {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
 .line-clamp-1 {
   overflow: hidden;
   display: -webkit-box;
