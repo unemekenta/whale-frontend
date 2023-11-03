@@ -1,5 +1,7 @@
 <template>
-  <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
+  <a :href="fmtImageUrl" target="_blank">
+    <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
+  </a>
 </template>
 
 <script lang="ts">
