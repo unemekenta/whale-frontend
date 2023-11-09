@@ -130,6 +130,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .comment-text p {
   font-size: $font-middle;
+  line-height: 1.8em;
   @media screen and (max-width: $breakpoint-md) {
     font-size: $font-small;
   }

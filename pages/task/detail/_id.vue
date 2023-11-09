@@ -293,6 +293,7 @@ export default class TaskDetail extends Vue {
 
 .text-body-2 {
   white-space: pre-wrap;
+  line-height: 1.8em;
 }
 
 .tag-nomal {
