@@ -12,7 +12,7 @@ services:
       - "${FRONTEND_CONTAINER_PORT}"
     volumes:
       - .:/nuxt-frontend
-      - node_modules_volume:/nuxt-frontend/node_modules
+      - node_modules_volume:/var/www/nuxt/node_modules #Orbstackの場合
     command: /bin/sh -c "rm -f tmp/pids/server.pid && yarn run dev"
     env_file: # アプリケーション内の環境変数もルート直下envファイルを参照
       - .${APP_ENV}.env
