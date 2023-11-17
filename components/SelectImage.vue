@@ -7,7 +7,7 @@
           :class="{ selected: localSelectedImages.includes(image.id) }"
           @click="toggleSelected(image.id)"
         >
-          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" />
+          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" :show-expansion="false" />
         </div>
       </div>
     </v-row>

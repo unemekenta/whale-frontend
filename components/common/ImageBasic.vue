@@ -1,7 +1,8 @@
 <template>
-  <a :href="fmtImageUrl" target="_blank" class="image">
+  <a v-if="showExpansion" :href="fmtImageUrl" target="_blank" class="image">
     <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
   </a>
+  <v-img v-else :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
 </template>
 
 <script lang="ts">
@@ -23,6 +24,11 @@ export default Vue.extend({
     alt: {
       type: String,
       default: "",
+      required: false,
+    },
+    showExpansion: {
+      type: Boolean,
+      default: true,
       required: false,
     },
   },
