@@ -2,7 +2,7 @@
   <v-container fluid>
     <div class="contents-main">
       <v-row justify="justify-space-between">
-        <v-col cols="12" md="6">
+        <v-col cols="12">
           <h1>{{ diary.title }}</h1>
         </v-col>
       </v-row>
