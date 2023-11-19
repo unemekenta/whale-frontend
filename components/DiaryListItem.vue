@@ -21,6 +21,9 @@
     </div>
     <p class="contents">{{ fmtIsPublic }}</p>
     <div class="contents">
+      <v-btn icon @click.prevent="navigateToPreviewPage(diary.id)">
+        <v-icon>mdi-eye</v-icon>
+      </v-btn>
       <v-btn icon @click.prevent="editDiary(diary.id)">
         <v-icon>mdi-pencil</v-icon>
       </v-btn>
@@ -68,6 +71,9 @@ export default Vue.extend({
     },
     fmtImageUrl(path: string) {
       return imageUrl(path)
+    },
+    navigateToPreviewPage(diaryId: number) {
+      this.$router.push("diary/preview/" + diaryId)
     },
   },
 })

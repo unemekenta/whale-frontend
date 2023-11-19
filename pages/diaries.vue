@@ -190,7 +190,7 @@ export default Vue.extend({
     },
 
     async editDiary(diaryId: number) {
-      const EDIT_DIARY_API = "/api/v1/diaries/" + diaryId
+      const EDIT_DIARY_API = "/api/v1/diaries/" + diaryId + "/edit"
       const res = await this.$axios.$get(EDIT_DIARY_API)
       this.editDiaryForm.id = diaryId
       this.editDiaryForm.title = res.data.diary.title
