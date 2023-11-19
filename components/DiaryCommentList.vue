@@ -47,7 +47,7 @@
             </v-row>
           </v-list-item-content>
           <v-list-item-action
-            v-if="$auth.user.data.id == comment.user.id"
+            v-if="$auth.user?.data?.id === comment.user.id"
             class="ml-3"
             @click="callEditComment(comment)"
           >
@@ -55,7 +55,7 @@
           </v-list-item-action>
           <v-list-item-action v-else></v-list-item-action>
           <v-list-item-action
-            v-if="$auth.user.data.id == comment.user.id"
+            v-if="$auth.user?.data?.id === comment.user.id"
             class="ml-3"
             @click="callDeleteComment(comment)"
           >
