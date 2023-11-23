@@ -31,7 +31,7 @@
       <!-- <p class="pointer" @click="forgetPw">パスワードを忘れた方</p> -->
       <nuxt-link :to="'/signup'"></nuxt-link>
       <div class="text-center">
-        <v-btn class="primary" @click="userLogin">ログイン</v-btn>
+        <v-btn class="primary" @click.prevent="userLogin">ログイン</v-btn>
       </div>
     </v-form>
     <div class="text-center">
@@ -42,11 +42,10 @@
 
 <script lang="ts">
 import Vue from "vue"
-import Modal from "@/components/Modal.vue"
 import { User } from "@/@types/common"
 import { logoutStorage } from "@/plugins/session"
 import { signInForm } from "@/@types/user"
-import { isSuccessResponse } from "@/plugins/axios-accessor"
+import { isSuccessResponse, errorMessage } from "@/plugins/axios-accessor"
 
 interface Data {
   user: User
@@ -84,17 +83,18 @@ export default Vue.extend({
     },
     async userLogin() {
       try {
-        const response: any = await this.$auth.loginWith("local", { data: this.form })
-        if (response.error) {
-          ;(this.$refs.modal as Modal).open("エラー", "ログインに失敗しました")
-          this.userLogout()
+        const SIGN_IN_API = "/api/v1/auth/sign_in"
+        const response = await this.$axios.$post(SIGN_IN_API, this.form)
+        if (isSuccessResponse(response)) {
+          await this.sessionCheck()
+          await this.$auth.fetchUser()
+          this.$router.push("/")
+        } else {
+          await this.userLogout()
+          this.errorModalTxt = errorMessage(response)
           throw new Error("ログインエラー")
         }
-        await this.sessionCheck()
-        await this.$auth.fetchUser()
-        this.$router.push("/")
       } catch (error) {
-        this.errorModalTxt = "ログインに失敗しました。"
         this.displayErrorModal = true
         setTimeout(() => {
           this.displayErrorModal = false
@@ -119,7 +119,7 @@ export default Vue.extend({
           this.user.nickname = response.data.nickname
           this.user.image = response.data.image
         } else {
-          this.userLogout()
+          throw new Error("セッションエラー")
         }
       } catch (error) {
         this.userLogout()

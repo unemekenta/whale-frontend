@@ -44,7 +44,7 @@
         <v-btn
           class="primary"
           :disabled="isPasswordTooShort || isPasswordMismatch || !isEmailExist"
-          @click="userSignup"
+          @click.prevent="userSignup"
           >アカウント登録</v-btn
         >
       </div>

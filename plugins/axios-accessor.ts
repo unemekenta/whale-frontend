@@ -72,5 +72,9 @@ export function isSuccessResponse(response: any): boolean {
 
 // エラーメッセージの取得
 export function errorMessage(response: any): string {
-  return response?.errors?.full_messages?.join(" ") || "エラーが発生しました"
+  return (
+    response?.errors?.full_messages?.join(" ") ||
+    response?.errors?.join(" ") ||
+    "エラーが発生しました"
+  )
 }
