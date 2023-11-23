@@ -49,7 +49,7 @@ export default Vue.extend({
       displaySuccessModal: false,
       successModalTxt: "",
       displayErrorModal: false,
-      errorModalTxt: "",
+      errorModalTxt: "エラーが発生しました",
       previewImage: null as string | null,
     }
   },

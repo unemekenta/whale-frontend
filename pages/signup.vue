@@ -20,6 +20,7 @@
         outlined
         dense
         type="email"
+        :error-messages="!isEmailExist ? ['メールアドレスを入力してください'] : []"
       ></v-text-field>
       <v-text-field
         v-model="signUpForm.password"
@@ -42,7 +43,7 @@
       <div class="text-center">
         <v-btn
           class="primary"
-          :disabled="isPasswordTooShort || isPasswordMismatch"
+          :disabled="isPasswordTooShort || isPasswordMismatch || !isEmailExist"
           @click="userSignup"
           >アカウント登録</v-btn
         >
@@ -56,7 +57,8 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { signUpForm } from "@/@types/user"
+import { signUpForm, signInForm } from "@/@types/user"
+import { isSuccessResponse, errorMessage } from "@/plugins/axios-accessor"
 
 interface Data {
   signUpForm: signUpForm
@@ -65,6 +67,7 @@ interface Data {
   successModalTxt: string
   displayErrorModal: boolean
   errorModalTxt: string
+  loginForm: signInForm
 }
 
 export default Vue.extend({
@@ -79,11 +82,18 @@ export default Vue.extend({
       displaySuccessModal: false,
       successModalTxt: "",
       displayErrorModal: false,
-      errorModalTxt: "",
+      errorModalTxt: "エラーが発生しました",
+      loginForm: {
+        email: "",
+        password: "",
+      },
     } as Data
   },
 
   computed: {
+    isEmailExist() {
+      return this.signUpForm.email.length > 0
+    },
     isPasswordTooShort() {
       return this.signUpForm.password.length < this.passwordMinLength
     },
@@ -97,18 +107,15 @@ export default Vue.extend({
       try {
         const SIGN_UP_API = "/api/v1/auth"
         const response = await this.$axios.$post(SIGN_UP_API, this.signUpForm)
-        if (response.data && !response.data.error) {
-          await this.$auth.fetchUser()
-          this.$router.push("/")
+        if (isSuccessResponse(response)) {
+          alert("新規登録に成功しました。作成したアカウントでログインしてください")
+          this.$router.push("/login")
         } else {
+          this.errorModalTxt = errorMessage(response)
           throw new Error("アカウント登録エラー")
         }
       } catch (error) {
-        this.errorModalTxt = "アカウント登録に失敗しました。"
         this.displayErrorModal = true
-        setTimeout(() => {
-          this.displayErrorModal = false
-        }, 4000)
       }
     },
   },

@@ -46,6 +46,7 @@ import Modal from "@/components/Modal.vue"
 import { User } from "@/@types/common"
 import { logoutStorage } from "@/plugins/session"
 import { signInForm } from "@/@types/user"
+import { isSuccessResponse } from "@/plugins/axios-accessor"
 
 interface Data {
   user: User
@@ -74,7 +75,7 @@ export default Vue.extend({
       displaySuccessModal: false,
       successModalTxt: "",
       displayErrorModal: false,
-      errorModalTxt: "",
+      errorModalTxt: "エラーが発生しました",
     } as Data
   },
   methods: {
@@ -84,7 +85,7 @@ export default Vue.extend({
     async userLogin() {
       try {
         const response: any = await this.$auth.loginWith("local", { data: this.form })
-        if (response.data && response.data.success === false) {
+        if (response.error) {
           ;(this.$refs.modal as Modal).open("エラー", "ログインに失敗しました")
           this.userLogout()
           throw new Error("ログインエラー")
@@ -105,7 +106,7 @@ export default Vue.extend({
       try {
         const USER_API = "/api/v1/auth/sessions"
         const response = await this.$axios.$get(USER_API)
-        if (response.data && !response.data.error) {
+        if (isSuccessResponse(response)) {
           const info = {
             id: response.data.id,
             name: response.data.name,

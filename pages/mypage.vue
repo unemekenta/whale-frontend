@@ -37,6 +37,7 @@
 <script lang="ts">
 import { Component, Vue } from "nuxt-property-decorator"
 import { User } from "@/@types/common"
+import { isSuccessResponse } from "@/plugins/axios-accessor"
 
 @Component
 export default class Mypage extends Vue {
@@ -63,7 +64,7 @@ export default class Mypage extends Vue {
     try {
       const USER_API = "/api/v1/auth/sessions"
       const response = await this.$axios.$get(USER_API)
-      if (response.data && !response.data.error) {
+      if (isSuccessResponse(response)) {
         this.user.id = response.data.id
         this.user.name = response.data.name
         this.user.nickname = response.data.nickname
