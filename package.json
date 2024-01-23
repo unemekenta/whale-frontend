@@ -15,7 +15,6 @@
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxt/typescript": "^2.8.1",
     "@nuxt/typescript-runtime": "^3.0.0",
-    "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/dayjs": "^1.4.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/proxy": "^2.1.0",

@@ -42,13 +42,12 @@
 
 <script lang="ts">
 import Vue from "vue"
-import { User } from "@/@types/common"
 import { logoutStorage } from "@/plugins/session"
 import { signInForm } from "@/@types/user"
 import { isSuccessResponse, errorMessage } from "@/plugins/axios-accessor"
 
 interface Data {
-  user: User
+  // user: User
   form: signInForm
   displaySuccessModal: boolean
   successModalTxt: string
@@ -59,14 +58,6 @@ interface Data {
 export default Vue.extend({
   data() {
     return {
-      user: {
-        id: 0,
-        name: "",
-        nickname: "",
-        image: {
-          url: "",
-        },
-      },
       form: {
         email: "",
         password: "",
@@ -86,8 +77,6 @@ export default Vue.extend({
         const SIGN_IN_API = "/api/v1/auth/sign_in"
         const response = await this.$axios.$post(SIGN_IN_API, this.form)
         if (isSuccessResponse(response)) {
-          await this.sessionCheck()
-          await this.$auth.fetchUser()
           this.$router.push("/")
         } else {
           await this.userLogout()
@@ -101,43 +90,19 @@ export default Vue.extend({
         }, 4000)
       }
     },
-    // フロント側でログイン状態に変更するにはsetLoginをtrueにする
     async sessionCheck() {
       try {
         const USER_API = "/api/v1/auth/sessions"
         const response = await this.$axios.$get(USER_API)
         if (isSuccessResponse(response)) {
-          const info = {
-            id: response.data.id,
-            name: response.data.name,
-            nickname: response.data.nickname,
-            image: response.data.image,
-          }
-          this.$auth.setUser(info)
-          this.user.id = response.data.id
-          this.user.name = response.data.name
-          this.user.nickname = response.data.nickname
-          this.user.image = response.data.image
-        } else {
-          throw new Error("セッションエラー")
+          this.$router.push("/")
         }
       } catch (error) {
         this.userLogout()
       }
     },
-    async userLogout() {
-      await this.$auth.logout().then(() => {
-        this.user = {
-          id: 0,
-          name: "",
-          nickname: "",
-          image: {
-            url: "",
-          },
-        }
-        logoutStorage()
-      })
-      await this.$auth.fetchUser()
+    userLogout() {
+      logoutStorage()
     },
   },
 })

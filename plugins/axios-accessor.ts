@@ -2,7 +2,7 @@ import { Plugin } from "@nuxt/types"
 import { AxiosError } from "axios"
 import { initializeAxios } from "~/utils/api"
 
-export const accessor: Plugin = ({ $axios }): void => {
+export const accessor: Plugin = ({ $axios, redirect }): void => {
   initializeAxios($axios)
 
   // axiosの共通設定
@@ -59,6 +59,10 @@ export const accessor: Plugin = ({ $axios }): void => {
 
   // エラー処理共通化
   $axios.onError((error: AxiosError) => {
+    if (error.response?.status === 401) {
+      // 401は認証エラーを示すHTTPステータスコードです
+      redirect("/login") // ログインページにリダイレクト
+    }
     return Promise.resolve(error.response)
   })
 }

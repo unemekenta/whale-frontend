@@ -37,6 +37,13 @@
           outlined
           dense
         ></v-text-field>
+        <v-textarea
+          v-model="userInfoSubmitForm.introduction"
+          placeholder="自己紹介"
+          label="introduction"
+          outlined
+          dense
+        ></v-textarea>
       </v-col>
     </v-row>
     <!-- <p class="pointer" @click="forgetPw">パスワードを忘れた方</p> -->
@@ -47,18 +54,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue"
+import Vue, { PropType } from "vue"
 import ImageBasic from "@/components/common/ImageBasic.vue"
 import UserImageUploader from "@/components/UserImageUploader.vue"
-
-interface UserInfoForm {
-  id: number
-  name: string
-  nickname: string
-  image: {
-    url: string
-  }
-}
+import { UserInfoForm } from "@/@types/user"
 
 export default Vue.extend({
   components: {
@@ -67,7 +66,7 @@ export default Vue.extend({
   },
   props: {
     userInfoForm: {
-      type: Object,
+      type: Object as PropType<UserInfoForm>,
       required: true,
     },
     callbackFunc: {
@@ -83,6 +82,7 @@ export default Vue.extend({
         name: "",
         nickname: "",
         image: { url: "" },
+        introduction: "",
       } as UserInfoForm,
       selectedFile: "", // 画像ファイルを保持するデータ
     }
@@ -112,6 +112,7 @@ export default Vue.extend({
         const params = new URLSearchParams()
         params.append("name", this.userInfoSubmitForm.name)
         params.append("nickname", this.userInfoSubmitForm.nickname)
+        params.append("introduction", this.userInfoSubmitForm.introduction)
         this.callbackFunc(params, formData)
       } catch (error) {
         console.error(error)

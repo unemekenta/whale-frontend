@@ -5,6 +5,7 @@ export interface User {
   image: {
     url: string
   }
+  introduction: string
 }
 
 export interface ImageUrl {

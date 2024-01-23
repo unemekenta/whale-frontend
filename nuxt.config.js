@@ -63,7 +63,6 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     "@nuxtjs/axios",
-    "@nuxtjs/auth",
     "@nuxtjs/dayjs",
     "@nuxtjs/style-resources",
     "@nuxtjs/proxy",
@@ -88,31 +87,6 @@ export default {
       target: process.env.API_DOMAIN,
       changeOrigin: true,
       secure: false,
-    },
-  },
-
-  auth: {
-    redirect: {
-      login: false,
-      logout: false,
-      callback: false,
-      home: false,
-    },
-    strategies: {
-      local: {
-        token: {
-          property: "access_token",
-        },
-        user: {
-          property: false,
-          autoFetch: false,
-        },
-        endpoints: {
-          login: { url: "/api/v1/auth/sign_in", method: "post", propertyName: "access_token" },
-          logout: { url: "/api/v1/auth/sign_out", method: "delete" },
-          user: { url: "/api/v1/auth/sessions", method: "get", propertyName: false },
-        },
-      },
     },
   },
 
