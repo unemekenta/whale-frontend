@@ -7,7 +7,12 @@
           :class="{ selected: localSelectedImages.includes(image.id) }"
           @click="toggleSelected(image.id)"
         >
-          <ImageBasic :src="image.image.url" :aspect-ratio="16 / 9" :show-expansion="false" />
+          <ImageBasic
+            :src="image.image.url"
+            :aspect-ratio="16 / 9"
+            :show-expansion="false"
+            class="image"
+          />
         </div>
       </div>
     </v-row>
@@ -94,7 +99,7 @@ export default Vue.extend({
 }
 .image-list {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .image-container {
@@ -103,19 +108,19 @@ export default Vue.extend({
   border: 2px solid $color-gray;
   cursor: pointer;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .image-container.selected {
   border-color: $color-secondary;
 }
 
-.image-container .v-image {
+.image-container .image {
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
-.image-container .v-image img {
+.image-container .image img {
   object-fit: cover;
 }
 </style>

@@ -43,12 +43,12 @@ export default Vue.extend({
     },
     width: {
       type: Number,
-      default: 80,
+      default: 600,
       required: false,
     },
     height: {
       type: Number,
-      default: 80,
+      default: 600,
       required: false,
     },
     showExpansion: {
@@ -71,6 +71,8 @@ export default Vue.extend({
   height: 100%;
   width: 100%;
   img {
+    height: 100%;
+    width: 100%;
     display: inline-block;
   }
 }
