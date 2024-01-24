@@ -15,25 +15,29 @@
         </v-col>
         <v-col cols="6">
           <v-row mx-0 justify="end">
-            <v-avatar size="40" class="avatar">
-              <ImageBasic
-                v-if="diary.user.image.url"
-                :src="diary.user.image.url"
-                :aspect-ratio="1"
-                alt="avatarImage"
-                class="avatar-image"
-              />
-              <ImageBasic
-                v-else
-                :src="require('@/assets/images/common/icon-user.png')"
-                :aspect-ratio="1"
-                alt="avatarImage"
-                class="avatar-image"
-              />
-            </v-avatar>
-            <p class="text-center my-auto nickname">
-              <small>{{ diary.user.nickname }}</small>
-            </p>
+            <nuxt-link :to="'/user/' + diary.user.id" class="user-link">
+              <v-avatar size="40" class="avatar">
+                <ImageBasic
+                  v-if="diary.user.image.url"
+                  :src="diary.user.image.url"
+                  :aspect-ratio="1"
+                  alt="avatarImage"
+                  class="avatar-image"
+                  :show-expansion="false"
+                />
+                <ImageBasic
+                  v-else
+                  :src="require('@/assets/images/common/icon-user.png')"
+                  :aspect-ratio="1"
+                  alt="avatarImage"
+                  class="avatar-image"
+                  :show-expansion="false"
+                />
+              </v-avatar>
+              <p class="text-center my-auto nickname">
+                <small>{{ diary.user.nickname }}</small>
+              </p>
+            </nuxt-link>
           </v-row>
         </v-col>
       </v-row>
@@ -238,6 +242,9 @@ export default Vue.extend({
   line-height: 1.8em;
 }
 
+.user-link {
+  text-decoration: none;
+}
 .nickname {
   display: inline;
   vertical-align: center;

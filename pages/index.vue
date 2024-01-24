@@ -6,7 +6,7 @@
     </div>
 
     <v-row justify="justify-space-between">
-      <v-col cols="12" md="6">
+      <v-col cols="12">
         <h1>みんなの投稿</h1>
       </v-col>
     </v-row>

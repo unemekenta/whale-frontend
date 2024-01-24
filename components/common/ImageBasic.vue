@@ -1,8 +1,23 @@
 <template>
   <a v-if="showExpansion" :href="fmtImageUrl" target="_blank" class="image">
-    <v-img :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
+    <img
+      :src="fmtImageUrl"
+      :width="width"
+      :height="height"
+      :aspect-ratio="aspectRatio"
+      decoding="async"
+      :alt="alt"
+    />
   </a>
-  <v-img v-else :src="fmtImageUrl" :aspect-ratio="aspectRatio" decoding="async" :alt="alt" />
+  <img
+    v-else
+    :src="fmtImageUrl"
+    :width="width"
+    :height="height"
+    :aspect-ratio="aspectRatio"
+    decoding="async"
+    :alt="alt"
+  />
 </template>
 
 <script lang="ts">
@@ -26,6 +41,16 @@ export default Vue.extend({
       default: "",
       required: false,
     },
+    width: {
+      type: Number,
+      default: 80,
+      required: false,
+    },
+    height: {
+      type: Number,
+      default: 80,
+      required: false,
+    },
     showExpansion: {
       type: Boolean,
       default: true,
@@ -40,11 +65,14 @@ export default Vue.extend({
 })
 </script>
 
-<style>
+<style lang="scss" scoped>
 .image {
   display: block;
   height: 100%;
   width: 100%;
+  img {
+    display: inline-block;
+  }
 }
 
 .line-clamp-1 {
