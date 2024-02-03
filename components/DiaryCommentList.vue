@@ -46,22 +46,6 @@
               </v-col>
             </v-row>
           </v-list-item-content>
-          <v-list-item-action
-            v-if="$auth.user?.data?.id === comment.user.id"
-            class="ml-3"
-            @click="callEditComment(comment)"
-          >
-            <v-icon>mdi-pencil</v-icon>
-          </v-list-item-action>
-          <v-list-item-action v-else></v-list-item-action>
-          <v-list-item-action
-            v-if="$auth.user?.data?.id === comment.user.id"
-            class="ml-3"
-            @click="callDeleteComment(comment)"
-          >
-            <v-icon>mdi-delete</v-icon>
-          </v-list-item-action>
-          <v-list-item-action v-else></v-list-item-action>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -83,45 +67,10 @@ export default Vue.extend({
       type: Array as PropType<DiaryComment[]>,
       required: true,
     },
-    editComment: {
-      type: Function,
-      required: true,
-    },
-    deleteComment: {
-      type: Function,
-      required: true,
-    },
   },
   methods: {
-    callEditComment(comment: DiaryComment) {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-
-      try {
-        this.editComment(comment)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-
     fmtDate(date: string) {
       return dateFilter(date)
-    },
-
-    callDeleteComment(comment: DiaryComment) {
-      // フォームの入力内容を親コンポーネントに送信する
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-
-      try {
-        this.deleteComment(comment)
-      } catch (error) {
-        console.error(error)
-      }
     },
   },
 })

@@ -163,7 +163,6 @@ export default Vue.extend({
         id: 0,
         title: "",
         description: "",
-        uid: "",
         priority: "",
         status: "",
         deadline: new Date().toLocaleDateString(),
@@ -176,11 +175,6 @@ export default Vue.extend({
     },
 
     submitTask() {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-      this.taskFormForSubmit.uid = uid
       this.selectedTagsForSubmit.forEach((tag: Tag) => {
         this.taskFormForSubmit.taggings.push({ tag_id: tag.id })
       })

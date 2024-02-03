@@ -12,7 +12,6 @@ export interface TaskForm {
   id: number
   title: string
   description: string
-  uid: string
   priority: string
   status: string
   deadline: string

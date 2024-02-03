@@ -131,7 +131,6 @@ export default Vue.extend({
       taskForm: {
         title: "",
         description: "",
-        uid: "",
         priority: "",
         status: "",
         deadline: new Date().toLocaleDateString(),

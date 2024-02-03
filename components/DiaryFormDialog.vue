@@ -38,7 +38,6 @@ interface DiaryForm {
   content: string
   is_public: boolean
   date: string
-  uid: string
   diaries_image_relations: string
 }
 
@@ -79,11 +78,6 @@ export default class AddDiaryFormDialog extends Vue {
 
   submitDiary() {
     // フォームの入力内容を親コンポーネントに送信する
-    const uid = window.localStorage.getItem("uid")
-    if (uid === null) {
-      return
-    }
-    this.diaryForm.uid = uid
     this.diaryForm.diaries_image_relations = this.selectedImagesString(
       this.selectedDiariesImageRelation
     )

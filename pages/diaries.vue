@@ -116,7 +116,6 @@ export default Vue.extend({
         content: "",
         is_public: false,
         date: new Date().toLocaleDateString(),
-        uid: "",
         diaries_image_relations: "",
       },
 

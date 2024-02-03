@@ -61,11 +61,7 @@
           </v-row>
         </v-col>
       </v-row>
-      <DiaryCommentList
-        :comments="diary.diary_comments"
-        :edit-comment="editComment"
-        :delete-comment="deleteComment"
-      />
+      <DiaryCommentList :comments="diary.diary_comments" />
       <v-dialog v-model="showCommentForm" max-width="500px">
         <v-card>
           <v-toolbar color="primary" dark>
@@ -83,23 +79,6 @@
           </v-card-text>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="showEditCommentForm" max-width="500px">
-        <v-card>
-          <v-toolbar color="primary" dark>
-            <v-toolbar-title>コメント編集</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="showEditCommentForm = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-          <v-card-text>
-            <v-form @submit.prevent="updateComment">
-              <v-textarea v-model="editCommentForm.content" label="コメント"></v-textarea>
-              <v-btn type="submit" color="primary" class="mt-2">保存する</v-btn>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </div>
     <div class="side-contents"></div>
   </v-container>
@@ -108,7 +87,6 @@
 <script lang="ts">
 import Vue from "vue"
 import { dateWithoutTimeFilter } from "@/plugins/filter/date-filter"
-import { DiaryComment, Diary } from "@/@types/common"
 import ImageBasic from "@/components/common/ImageBasic.vue"
 
 export default Vue.extend({
@@ -126,15 +104,8 @@ export default Vue.extend({
     return {
       commentForm: {
         content: "",
-        uid: "",
-      },
-      editCommentForm: {
-        id: 0,
-        content: "",
       },
       showCommentForm: false,
-      showEditCommentForm: false,
-      showEditDiaryForm: false,
 
       displaySuccessModal: false,
       successModalTxt: "",
@@ -153,22 +124,12 @@ export default Vue.extend({
       this.diary = diaryRes.data.diary
     },
 
-    async editComment(comment: DiaryComment) {
-      const EDIT_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
-      const res = await this.$axios.$get(EDIT_COMMENT_API)
-      this.editCommentForm.id = comment.id
-      this.editCommentForm.content = res.data.diary_comment.content
-
-      this.showEditCommentForm = true
-    },
-
     async submitComment() {
       try {
         const uid = window.localStorage.getItem("uid")
         if (uid === null) {
           return
         }
-        this.commentForm.uid = uid
         const POST_COMMENT_API = "/api/v1/diaries/" + this.diary.id + "/diary_comments"
         await this.$axios.$post(POST_COMMENT_API, this.commentForm)
         this.successModalTxt = "コメントを登録しました。"
@@ -182,48 +143,6 @@ export default Vue.extend({
         this.errorModalTxt = "登録に失敗しました。"
         this.displayErrorModal = true
         this.showCommentForm = false
-        setTimeout(() => {
-          this.displayErrorModal = false
-        }, 4000)
-      }
-    },
-
-    async deleteComment(comment: DiaryComment) {
-      const DELETE_COMMENT_API =
-        "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + comment.id
-      await this.$axios.$delete(DELETE_COMMENT_API)
-      try {
-        this.successModalTxt = "コメントを削除しました。"
-        this.displaySuccessModal = true
-        setTimeout(() => {
-          this.displaySuccessModal = false
-        }, 4000)
-        this.fetchDiary()
-      } catch (error) {
-        this.errorModalTxt = "削除に失敗しました。"
-        this.displayErrorModal = true
-        setTimeout(() => {
-          this.displayErrorModal = false
-        }, 4000)
-      }
-    },
-
-    async updateComment() {
-      const UPDATE_COMMENT_API =
-        "/api/v1/diaries/" + this.diary.id + "/diary_comments/" + this.editCommentForm.id
-      await this.$axios.$put(UPDATE_COMMENT_API, this.editCommentForm)
-      try {
-        this.successModalTxt = "コメントを更新しました。"
-        this.displaySuccessModal = true
-        this.showEditCommentForm = false
-        setTimeout(() => {
-          this.displaySuccessModal = false
-        }, 4000)
-        this.fetchDiary()
-      } catch (error) {
-        this.errorModalTxt = "更新に失敗しました。"
-        this.displayErrorModal = true
-        this.showEditCommentForm = false
         setTimeout(() => {
           this.displayErrorModal = false
         }, 4000)

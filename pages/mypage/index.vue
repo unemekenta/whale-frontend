@@ -27,6 +27,7 @@
         <SettingUserInfo :user-info-form="user" :callback-func="submitUserInfoForm" />
       </v-col>
     </div>
+    <nuxt-link :to="'/mypage/comments'"> コメント一覧 </nuxt-link>
   </v-container>
 </template>
 
