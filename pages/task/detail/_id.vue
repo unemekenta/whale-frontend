@@ -28,7 +28,6 @@
         <div v-if="displayErrorModal" class="ma-3">
           <ErrorAlert :txt="errorModalTxt" />
         </div>
-        <!-- <v-btn class="ma-3" color="primary" @click="showEditTaskForm = true">編集</v-btn> -->
       </v-row>
       <v-row>
         <v-col cols="12">
@@ -100,17 +99,6 @@
           </v-card-text>
         </v-card>
       </v-dialog>
-      <v-dialog v-model="showEditTaskForm" max-width="500px">
-        <v-card>
-          <v-toolbar color="primary" dark>
-            <v-toolbar-title>タスク編集</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon @click="showEditTaskForm = false">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
-        </v-card>
-      </v-dialog>
     </div>
     <div class="side-contents"></div>
   </v-container>
@@ -151,7 +139,6 @@ export default class TaskDetail extends Vue {
 
   commentForm = {
     content: "",
-    uid: "",
   }
 
   editCommentForm = {
@@ -161,7 +148,6 @@ export default class TaskDetail extends Vue {
 
   showCommentForm = false
   showEditCommentForm = false
-  showEditTaskForm = false
 
   displaySuccessModal = false
   successModalTxt = ""
@@ -206,11 +192,6 @@ export default class TaskDetail extends Vue {
 
   async submitComment() {
     try {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-      this.commentForm.uid = uid
       const POST_COMMENT_API = "/api/v1/tasks/" + this.task.id + "/comments"
       await this.$axios.$post(POST_COMMENT_API, this.commentForm)
       this.successModalTxt = "コメントを登録しました。"

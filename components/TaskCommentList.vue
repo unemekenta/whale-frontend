@@ -47,7 +47,7 @@
             </v-row>
           </v-list-item-content>
           <v-list-item-action
-            v-if="$auth.user.data?.id === comment.user.id"
+            v-if="comment.is_own_comment"
             class="ml-3"
             @click="callEditComment(comment)"
           >
@@ -55,7 +55,7 @@
           </v-list-item-action>
           <v-list-item-action v-else></v-list-item-action>
           <v-list-item-action
-            v-if="$auth.user.data?.id === comment.user.id"
+            v-if="comment.is_own_comment"
             class="ml-3"
             @click="callDeleteComment(comment)"
           >
@@ -94,11 +94,6 @@ export default Vue.extend({
   },
   methods: {
     callEditComment(comment: DiaryComment) {
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-
       try {
         this.editComment(comment)
       } catch (error) {
@@ -111,12 +106,6 @@ export default Vue.extend({
     },
 
     callDeleteComment(comment: DiaryComment) {
-      // フォームの入力内容を親コンポーネントに送信する
-      const uid = window.localStorage.getItem("uid")
-      if (uid === null) {
-        return
-      }
-
       try {
         this.deleteComment(comment)
       } catch (error) {

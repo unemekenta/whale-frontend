@@ -46,6 +46,22 @@
               </v-col>
             </v-row>
           </v-list-item-content>
+          <v-list-item-action
+            v-if="comment.is_own_comment"
+            class="ml-3"
+            @click="callEditComment(comment)"
+          >
+            <v-icon>mdi-pencil</v-icon>
+          </v-list-item-action>
+          <v-list-item-action v-else></v-list-item-action>
+          <v-list-item-action
+            v-if="comment.is_own_comment"
+            class="ml-3"
+            @click="callDeleteComment(comment)"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-list-item-action>
+          <v-list-item-action v-else></v-list-item-action>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -67,8 +83,30 @@ export default Vue.extend({
       type: Array as PropType<DiaryComment[]>,
       required: true,
     },
+    editComment: {
+      type: Function,
+      required: true,
+    },
+    deleteComment: {
+      type: Function,
+      required: true,
+    },
   },
   methods: {
+    callEditComment(comment: DiaryComment) {
+      try {
+        this.editComment(comment)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    callDeleteComment(comment: DiaryComment) {
+      try {
+        this.deleteComment(comment)
+      } catch (error) {
+        console.error(error)
+      }
+    },
     fmtDate(date: string) {
       return dateFilter(date)
     },

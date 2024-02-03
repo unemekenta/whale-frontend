@@ -72,6 +72,7 @@ export interface DiaryComment {
   content: string
   updated_at: string
   user: User
+  is_own_comment: boolean
 }
 
 export interface TaskComment {
@@ -79,6 +80,7 @@ export interface TaskComment {
   content: string
   updated_at: string
   user: User
+  is_own_comment: boolean
 }
 
 export interface PagiNation {
