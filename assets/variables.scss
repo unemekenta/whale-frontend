@@ -11,7 +11,7 @@ $breakpoint-lg: 992px;
 $breakpoint-xl: 1200px;
 
 $font-micro: 6px;
-$font-small: 8px;
+$font-small: 10px;
 $font-middle: 12px;
 $font-normal: 14px;
 $font-large: 16px;
@@ -37,6 +37,8 @@ $color-orange: #f6aa00;
 $color-blue: #0000ff;
 $color-green: #00ff00;
 
+$standard-radius: 4px;
+
 .hide-above-pc {
   display: none !important;
 }
@@ -55,4 +57,9 @@ $color-green: #00ff00;
   .hide-above-pc {
     display: block !important;
   }
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }

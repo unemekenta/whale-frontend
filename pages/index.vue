@@ -1,20 +1,19 @@
 <template>
   <v-container fluid>
-    <div v-for="(info, index) in informationContents" :key="index">
-      <InformationBanner v-if="info.display_link" :txt="info.content" :link="info.link" />
-      <InformationBanner v-else :txt="info.content" />
-    </div>
+    <div class="contents-main">
+      <div v-for="(info, index) in informationContents" :key="index">
+        <InformationBanner v-if="info.display_link" :txt="info.content" :link="info.link" />
+        <InformationBanner v-else :txt="info.content" />
+      </div>
 
-    <v-row justify="justify-space-between">
-      <v-col cols="12">
-        <h1>みんなの投稿</h1>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col v-for="(diary, index) in diaries" :key="index" cols="12" sm="6" md="3">
-        <DiaryCard :diary="diary" />
-      </v-col>
-    </v-row>
+      <h1>みんなの投稿</h1>
+      <div class="post-contents">
+        <div v-for="(diary, index) in diaries" :key="index">
+          <DiaryCard :diary="diary" />
+        </div>
+      </div>
+    </div>
+    <div class="side-contents"></div>
   </v-container>
 </template>
 
@@ -47,3 +46,13 @@ export default Vue.extend({
   },
 })
 </script>
+
+<style lang="scss" scoped>
+.contents-main {
+  max-width: 800px;
+}
+
+.post-contents {
+  margin-top: 24px;
+}
+</style>
